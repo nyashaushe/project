@@ -12,8 +12,8 @@
   body {
     @apply bg-[#0A0B14] text-white font-sans;
     background-image: 
-      radial-gradient(circle at 20% 20%, rgba(88, 28, 135, 0.15) 0%, transparent 40%),
-      radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.15) 0%, transparent 40%);
+      radial-gradient(circle at 20% 20%, rgba(8, 1, 14, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(6, 1, 15, 0.15) 0%, transparent 40%);
   }
 }
 
@@ -72,7 +72,7 @@
 
 .star {
   @apply absolute rounded-full;
-  animation: twinkle var(--duration, 3s) ease-in-out infinite;
+  animation: twinkle var(--duration, s) ease-in-out infinite;
   transform-origin: center;
   will-change: transform, opacity;
 }

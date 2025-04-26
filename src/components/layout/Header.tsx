@@ -22,7 +22,7 @@ const Header: React.FC = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
-    <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-transparent'}`}>
+    <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-blue/90 backdrop-blur-md shadow-sm' : 'bg-dark'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
@@ -45,18 +45,18 @@ const Header: React.FC = () => {
           
           <nav className="hidden md:flex space-x-10">
             <div className="relative">
-              <a href="#" className="group inline-flex items-center text-base font-medium text-gray-700 hover:text-indigo-600">
+              <a href="#" className="group inline-flex items-center text-base font-medium text-purple-400 hover:text-indigo-600">
                 <span>Products</span>
                 <ChevronDown size={16} className="ml-1 text-gray-500 group-hover:text-indigo-600" />
               </a>
             </div>
-            <a href="#" className="text-base font-medium text-gray-700 hover:text-indigo-600">Solutions</a>
-            <a href="#" className="text-base font-medium text-gray-700 hover:text-indigo-600">Pricing</a>
-            <a href="#" className="text-base font-medium text-gray-700 hover:text-indigo-600">About</a>
+            <a href="#" className="text-base font-medium text-purple-400 hover:text-indigo-600">Solutions</a>
+            <a href="#" className="text-base font-medium text-purple-400 hover:text-indigo-600">Pricing</a>
+            <a href="#" className="text-base font-medium text-purple-400 hover:text-indigo-600">About</a>
           </nav>
           
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <a href="#" className="whitespace-nowrap text-base font-medium text-gray-700 hover:text-indigo-600 mr-6">
+            <a href="#" className="whitespace-nowrap text-base font-medium text-purple-400 hover:text-indigo-600 mr-6">
               Sign in
             </a>
             <Button variant="primary">Get Started</Button>
