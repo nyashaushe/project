@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import Button from '../ui/Button';
+import debounce from 'lodash.debounce';
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = debounce(() => {
       if (window.scrollY > 10) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
       }
-    };
+    }, 100);
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -50,29 +51,29 @@ const Header: React.FC = () => {
                 <ChevronDown size={16} className="ml-1 text-gray-500 group-hover:text-indigo-600" />
               </a>
             </div>
-            <a href="#" className="text-base font-medium text-purple-400 hover:text-indigo-600">Solutions</a>
-            <a href="#" className="text-base font-medium text-purple-400 hover:text-indigo-600">Pricing</a>
-            <a href="#" className="text-base font-medium text-purple-400 hover:text-indigo-600">About</a>
+            <a href="/solutions" className="text-base font-medium text-purple-400 hover:text-indigo-600">Solutions</a>
+            <a href="/pricing" className="text-base font-medium text-purple-400 hover:text-indigo-600">Pricing</a>
+            <a href="/about" className="text-base font-medium text-purple-400 hover:text-indigo-600">About</a>
           </nav>
-          
+
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <a href="#" className="whitespace-nowrap text-base font-medium text-purple-400 hover:text-indigo-600 mr-6">
+            <a href="/signin" className="whitespace-nowrap text-base font-medium text-purple-400 hover:text-indigo-600 mr-6">
               Sign in
             </a>
             <Button variant="primary">Get Started</Button>
           </div>
         </div>
       </div>
-      
+
       {/* Mobile menu */}
       <div className={`${isOpen ? 'block' : 'hidden'} md:hidden absolute top-full left-0 w-full bg-white shadow-lg py-2`}>
         <div className="px-4 pt-2 pb-3 space-y-1">
-          <a href="#" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">Products</a>
-          <a href="#" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">Solutions</a>
-          <a href="#" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">Pricing</a>
-          <a href="#" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">About</a>
+          <a href="/products" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">Products</a>
+          <a href="/solutions" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">Solutions</a>
+          <a href="/pricing" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">Pricing</a>
+          <a href="/about" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">About</a>
           <div className="pt-4 pb-2 border-t border-gray-200">
-            <a href="#" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">Sign in</a>
+            <a href="/signin" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">Sign in</a>
             <div className="mt-2 px-3">
               <Button variant="primary" className="w-full">Get Started</Button>
             </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import debounce from 'lodash.debounce';
 
 const StarField: React.FC = () => {
   const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; delay: number; color: string; duration: number; brightness: number }[]>([]);
@@ -18,7 +19,7 @@ const StarField: React.FC = () => {
       ];
 
       // Generate regular stars
-      const regularStars = Array.from({ length: 200 }, (_, i) => ({
+      const regularStars = Array.from({ length: 100 }, (_, i) => ({
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -30,8 +31,8 @@ const StarField: React.FC = () => {
       }));
 
       // Generate bright stars
-      const brightStars = Array.from({ length: 50 }, (_, i) => ({
-        id: i + 200,
+      const brightStars = Array.from({ length: 25 }, (_, i) => ({
+        id: i + 100,
         x: Math.random() * 100,
         y: Math.random() * 100,
         size: Math.random() * 3 + 2,
@@ -42,8 +43,8 @@ const StarField: React.FC = () => {
       }));
 
       // Generate super bright stars
-      const superBrightStars = Array.from({ length: 15 }, (_, i) => ({
-        id: i + 250,
+      const superBrightStars = Array.from({ length: 5 }, (_, i) => ({
+        id: i + 125,
         x: Math.random() * 100,
         y: Math.random() * 100,
         size: Math.random() * 4 + 3,
@@ -58,9 +59,9 @@ const StarField: React.FC = () => {
 
     generateStars();
 
-    const handleResize = () => {
+    const handleResize = debounce(() => {
       generateStars();
-    };
+    }, 200);
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -93,4 +94,4 @@ const StarField: React.FC = () => {
   );
 };
 
-export default StarField;
+export default React.memo(StarField);

@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Button from '../ui/Button';
 import { ArrowRight } from 'lucide-react';
 
 const Hero: React.FC = () => {
+  const textStrings = [
+    'Scale Your Business with Intelligent Tech Solutions',
+    'Empower Your Business with AI Automations',
+    'Drive Growth and Efficiency with Digital Marketing Services',
+  ];
+
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTextIndex((prevIndex) => (prevIndex + 1) % textStrings.length);
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 py-32">
       <div className="text-center max-w-4xl mx-auto">
@@ -13,12 +29,11 @@ const Hero: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6"
         >
-          <span className="text-purple-400">Scale Your Business</span>{' '}
-          <span className="text-white">with</span>
-          <br />
-          <span className="text-white">Intelligent Tech</span>
-          <br />
-          <span className="text-white">Solutions</span>
+          {textStrings[currentTextIndex].split(' ').map((word, index) => (
+            <React.Fragment key={index}>
+              <span className="text-purple-400">{word}</span>{' '}
+            </React.Fragment>
+          ))}
         </motion.h1>
         
         <motion.p 
