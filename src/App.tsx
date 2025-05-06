@@ -1,14 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/layout/Header';
-import Hero from './components/sections/Hero';
+import HomePage from './components/pages/HomePage';
 import ServicesPage from './components/sections/ServicesPage';
 import PortfolioPage from './components/sections/PortfolioPage';
 import PricingPage from './components/sections/PricingPage';
 import ContactPage from './components/sections/ContactPage';
 import Footer from './components/layout/Footer';
 import StarField from './components/ui/StarField';
-import TechStack from './components/sections/TechStack';
 import FeaturesPage from './components/sections/FeaturesPage';
 import AboutPage from './components/sections/AboutPage';
 import TestimonialsPage from './components/sections/TestimonialsPage';
@@ -23,7 +22,7 @@ function App() {
         <Header />
         <main>
           <Routes>
-            <Route path="/" element={<Hero />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/features" element={<FeaturesPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/about" element={<AboutPage />} />
@@ -34,7 +33,6 @@ function App() {
             <Route path="/newsletter" element={<NewsletterPage />} />
             <Route path="/blog" element={<Blog title="My First Blog Post" content="This is the content of my first blog post." author="John Doe" date="April 29, 2025" />} />
           </Routes>
-          <TechStack />
         </main>
         <Footer />
       </div>

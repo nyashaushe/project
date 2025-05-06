@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Facebook, Twitter, Instagram, Linkedin, Github as GitHub } from 'lucide-react';
 
 const navigation = {
@@ -38,90 +39,218 @@ const navigation = {
 };
 
 const Footer: React.FC = () => {
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
+  };
+
+  const socialIconVariants = {
+    hidden: { scale: 0 },
+    visible: { scale: 1, transition: { type: "spring", stiffness: 300 } },
+    hover: { 
+      scale: 1.2, 
+      rotate: 15, 
+      color: "#A78BFA",
+      transition: { type: "spring", stiffness: 500 }
+    }
+  };
+
+  const linkVariants = {
+    hover: { 
+      x: 5, 
+      color: "#A78BFA",
+      transition: { type: "spring", stiffness: 300 }
+    }
+  };
+
   return (
-    <footer className="bg-gray-900" aria-labelledby="footer-heading">
+    <footer className="bg-gray-900 relative overflow-hidden" aria-labelledby="footer-heading">
+      <motion.div 
+        className="absolute inset-0 z-0"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+        viewport={{ once: true }}
+        style={{
+          background: "radial-gradient(circle at bottom, rgba(139, 92, 246, 0.1), transparent 70%)"
+        }}
+      />
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
-      <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8">
+      <motion.div 
+        className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 relative z-10"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+      >
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-          <div className="space-y-8">
-            <div className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent">
+          <motion.div className="space-y-8" variants={itemVariants}>
+            <motion.div 
+              className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
               Baobab Stack
-            </div>
-            <p className="text-sm leading-6 text-gray-300">
+            </motion.div>
+            <motion.p 
+              className="text-sm leading-6 text-gray-300"
+              variants={itemVariants}
+            >
               Making the world a better place through innovative software solutions and development tools.
-            </p>
-            <div className="flex space-x-6">
-              {navigation.social.map((item) => (
-                <a key={item.name} href={item.href} className="text-gray-400 hover:text-gray-300">
+            </motion.p>
+            <motion.div className="flex space-x-6" variants={containerVariants}>
+              {navigation.social.map((item, index) => (
+                <motion.a 
+                  key={item.name} 
+                  href={item.href} 
+                  className="text-gray-400 hover:text-gray-300"
+                  variants={socialIconVariants}
+                  whileHover="hover"
+                  custom={index}
+                >
                   <span className="sr-only">{item.name}</span>
                   <item.icon className="h-5 w-5" aria-hidden="true" />
-                </a>
+                </motion.a>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
           <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
             <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold leading-6 text-white">Product</h3>
-                <ul role="list" className="mt-6 space-y-4">
+              <motion.div variants={itemVariants}>
+                <motion.h3 
+                  className="text-sm font-semibold leading-6 text-white"
+                  whileHover={{ color: "#A78BFA" }}
+                >
+                  Product
+                </motion.h3>
+                <motion.ul 
+                  role="list" 
+                  className="mt-6 space-y-4"
+                  variants={containerVariants}
+                >
                   {navigation.product.map((item) => (
-                    <li key={item.name}>
-                      <a href={item.href} className="text-sm leading-6 text-gray-300 hover:text-white">
+                    <motion.li key={item.name} variants={itemVariants}>
+                      <motion.a 
+                        href={item.href} 
+                        className="text-sm leading-6 text-gray-300 hover:text-white"
+                        variants={linkVariants}
+                        whileHover="hover"
+                      >
                         {item.name}
-                      </a>
-                    </li>
+                      </motion.a>
+                    </motion.li>
                   ))}
-                </ul>
-              </div>
-              <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6 text-white">Company</h3>
-                <ul role="list" className="mt-6 space-y-4">
+                </motion.ul>
+              </motion.div>
+              <motion.div className="mt-10 md:mt-0" variants={itemVariants}>
+                <motion.h3 
+                  className="text-sm font-semibold leading-6 text-white"
+                  whileHover={{ color: "#A78BFA" }}
+                >
+                  Company
+                </motion.h3>
+                <motion.ul 
+                  role="list" 
+                  className="mt-6 space-y-4"
+                  variants={containerVariants}
+                >
                   {navigation.company.map((item) => (
-                    <li key={item.name}>
-                      <a href={item.href} className="text-sm leading-6 text-gray-300 hover:text-white">
+                    <motion.li key={item.name} variants={itemVariants}>
+                      <motion.a 
+                        href={item.href} 
+                        className="text-sm leading-6 text-gray-300 hover:text-white"
+                        variants={linkVariants}
+                        whileHover="hover"
+                      >
                         {item.name}
-                      </a>
-                    </li>
+                      </motion.a>
+                    </motion.li>
                   ))}
-                </ul>
-              </div>
+                </motion.ul>
+              </motion.div>
             </div>
             <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold leading-6 text-white">Support</h3>
-                <ul role="list" className="mt-6 space-y-4">
+              <motion.div variants={itemVariants}>
+                <motion.h3 
+                  className="text-sm font-semibold leading-6 text-white"
+                  whileHover={{ color: "#A78BFA" }}
+                >
+                  Support
+                </motion.h3>
+                <motion.ul 
+                  role="list" 
+                  className="mt-6 space-y-4"
+                  variants={containerVariants}
+                >
                   {navigation.support.map((item) => (
-                    <li key={item.name}>
-                      <a href={item.href} className="text-sm leading-6 text-gray-300 hover:text-white">
+                    <motion.li key={item.name} variants={itemVariants}>
+                      <motion.a 
+                        href={item.href} 
+                        className="text-sm leading-6 text-gray-300 hover:text-white"
+                        variants={linkVariants}
+                        whileHover="hover"
+                      >
                         {item.name}
-                      </a>
-                    </li>
+                      </motion.a>
+                    </motion.li>
                   ))}
-                </ul>
-              </div>
-              <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6 text-white">Legal</h3>
-                <ul role="list" className="mt-6 space-y-4">
+                </motion.ul>
+              </motion.div>
+              <motion.div className="mt-10 md:mt-0" variants={itemVariants}>
+                <motion.h3 
+                  className="text-sm font-semibold leading-6 text-white"
+                  whileHover={{ color: "#A78BFA" }}
+                >
+                  Legal
+                </motion.h3>
+                <motion.ul 
+                  role="list" 
+                  className="mt-6 space-y-4"
+                  variants={containerVariants}
+                >
                   {navigation.legal.map((item) => (
-                    <li key={item.name}>
-                      <a href={item.href} className="text-sm leading-6 text-gray-300 hover:text-white">
+                    <motion.li key={item.name} variants={itemVariants}>
+                      <motion.a 
+                        href={item.href} 
+                        className="text-sm leading-6 text-gray-300 hover:text-white"
+                        variants={linkVariants}
+                        whileHover="hover"
+                      >
                         {item.name}
-                      </a>
-                    </li>
+                      </motion.a>
+                    </motion.li>
                   ))}
-                </ul>
-              </div>
+                </motion.ul>
+              </motion.div>
             </div>
           </div>
         </div>
-        <div className="mt-16 border-t border-gray-700 pt-8 sm:mt-20 lg:mt-24">
-          <p className="text-xs leading-5 text-gray-400">
+        <motion.div 
+          className="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24"
+          variants={itemVariants}
+        >
+          <motion.p 
+            className="text-xs leading-5 text-gray-400"
+            whileHover={{ color: "#E9D5FF" }}
+          >
             &copy; {new Date().getFullYear()} Baobab Stack, Inc. All rights reserved.
-          </p>
-        </div>
-      </div>
+          </motion.p>
+        </motion.div>
+      </motion.div>
     </footer>
   );
 };
