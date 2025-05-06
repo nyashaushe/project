@@ -48,19 +48,21 @@ const Header: React.FC = () => {
             <div className="relative">
               <a href="#" className="group inline-flex items-center text-base font-medium text-purple-400 hover:text-indigo-600">
                 <span>Products</span>
-                <ChevronDown size={16} className="ml-1 text-gray-500 group-hover:text-indigo-600" />
+                <ChevronDown size={16} className="ml-1 text-white-500 group-hover:text-indigo-600" />
               </a>
             </div>
             <a href="/solutions" className="text-base font-medium text-purple-400 hover:text-indigo-600">Solutions</a>
             <a href="/pricing" className="text-base font-medium text-purple-400 hover:text-indigo-600">Pricing</a>
             <a href="/about" className="text-base font-medium text-purple-400 hover:text-indigo-600">About</a>
+            <a href="/blog" className="text-base font-medium text-purple-400 hover:text-indigo-600">Blog</a>
+            <a href="/contact" className="text-base font-medium text-purple-400 hover:text-indigo-600">Contact</a>
           </nav>
 
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <a href="/signin" className="whitespace-nowrap text-base font-medium text-purple-400 hover:text-indigo-600 mr-6">
               Sign in
             </a>
-            <Button variant="primary">Get Started</Button>
+            <Button variant="primary">Book a Call</Button>
           </div>
         </div>
       </div>
@@ -72,6 +74,8 @@ const Header: React.FC = () => {
           <a href="/solutions" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">Solutions</a>
           <a href="/pricing" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">Pricing</a>
           <a href="/about" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">About</a>
+          <a href="/blog" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">Blog</a>
+          <a href="/contact" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">contact</a>
           <div className="pt-4 pb-2 border-t border-gray-200">
             <a href="/signin" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 rounded-md">Sign in</a>
             <div className="mt-2 px-3">

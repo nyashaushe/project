@@ -13,6 +13,7 @@ import FeaturesPage from './components/sections/FeaturesPage';
 import AboutPage from './components/sections/AboutPage';
 import TestimonialsPage from './components/sections/TestimonialsPage';
 import NewsletterPage from './components/sections/NewsletterPage';
+import Blog from './components/sections/Blog';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/testimonials" element={<TestimonialsPage />} />
             <Route path="/newsletter" element={<NewsletterPage />} />
+            <Route path="/blog" element={<Blog title="My First Blog Post" content="This is the content of my first blog post." author="John Doe" date="April 29, 2025" />} />
           </Routes>
           <TechStack />
         </main>
