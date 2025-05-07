@@ -4,6 +4,7 @@ import Services from '../sections/Services';
 import Testimonials from '../sections/Testimonials';
 import Stats from '../sections/Stats';
 import TechStack from '../sections/TechStack';
+import ProjectPortfolio from '../sections/ProjectPortfolio';
 
 const HomePage: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ const HomePage: React.FC = () => {
       <Hero />
       <Services />
       <Stats />
+      <ProjectPortfolio />
       <Testimonials />
       <TechStack />
     </>

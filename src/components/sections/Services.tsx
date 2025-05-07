@@ -4,24 +4,24 @@ import { motion } from 'framer-motion';
 
 const services = [
   {
-    icon: <Monitor className="w-6 h-6 text-white" />,
+    icon: <Monitor className="w-6 h-6 text-white" />, 
     title: "Website Development",
-    description: "Responsive, SEO-optimized, and conversion-focused websites tailored to your business needs."
+    description: "We craft modern, responsive, and SEO-optimized websites tailored to your brand and business goals. From landing pages to complex web apps, our solutions are built for performance, accessibility, and growth."
   },
   {
-    icon: <Zap className="w-6 h-6 text-white" />,
+    icon: <Zap className="w-6 h-6 text-white" />, 
     title: "AI Automations",
-    description: "Streamline workflows and reduce manual tasks with custom AI-powered automation solutions."
+    description: "Automate repetitive tasks, streamline workflows, and unlock new efficiencies with custom AI-powered solutions. We design intelligent automations that save you time and let your team focus on what matters most."
   },
   {
-    icon: <Bot className="w-6 h-6 text-white" />,
+    icon: <Bot className="w-6 h-6 text-white" />, 
     title: "AI Agent Creation",
-    description: "Custom AI agents that handle customer service, lead generation, and data processing tasks."
+    description: "Deploy smart AI agents for customer support, lead generation, and data processing. Our agents are tailored to your business needs, providing 24/7 assistance and actionable insights."
   },
   {
-    icon: <BarChart className="w-6 h-6 text-white" />,
+    icon: <BarChart className="w-6 h-6 text-white" />, 
     title: "Digital Marketing",
-    description: "Data-driven marketing strategies that boost your online presence and drive qualified leads."
+    description: "Grow your online presence with data-driven marketing strategies. We offer SEO, content marketing, and targeted campaigns to attract, engage, and convert your ideal customers."
   }
 ];
 
@@ -65,7 +65,7 @@ const Services: React.FC = () => {
             className="text-3xl font-bold text-white mb-4"
             whileHover={{ scale: 1.05, color: "#A78BFA" }}
           >
-            Our Services
+            Our Solutions
           </motion.h2>
           <motion.p 
             className="text-gray-400 max-w-2xl mx-auto"
@@ -73,7 +73,7 @@ const Services: React.FC = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            Comprehensive digital solutions designed to elevate your business in today's technology-driven marketplace.
+            Discover how our comprehensive digital solutions can transform your business, drive innovation, and deliver measurable results in a rapidly evolving world.
           </motion.p>
         </motion.div>
 

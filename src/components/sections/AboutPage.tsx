@@ -7,7 +7,7 @@ const AboutPage: React.FC = () => {
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-white mb-4">About Us</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Learn more about our company and our mission.
+            Baobab Stack is a team of passionate technologists, designers, and strategists dedicated to helping businesses thrive in the digital era. Our mission is to empower organizations with innovative, scalable, and intelligent solutions that drive real results. With expertise in web development, AI automation, and digital marketing, we partner with clients to turn ambitious ideas into reality. We believe in transparency, collaboration, and delivering measurable value at every stage of your journey.
           </p>
         </div>
       </div>

@@ -14,6 +14,10 @@ import TestimonialsPage from './components/sections/TestimonialsPage';
 import NewsletterPage from './components/sections/NewsletterPage';
 import Blog from './components/sections/Blog';
 
+// Import new blog and podcast pages
+import BlogPage from './components/pages/BlogPage';
+import PodcastPage from './components/pages/PodcastPage';
+
 function App() {
   return (
     <BrowserRouter>
@@ -31,7 +35,10 @@ function App() {
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/testimonials" element={<TestimonialsPage />} />
             <Route path="/newsletter" element={<NewsletterPage />} />
-            <Route path="/blog" element={<Blog title="My First Blog Post" content="This is the content of my first blog post." author="John Doe" date="April 29, 2025" />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/podcasts" element={<PodcastPage />} />
+            {/* Keep the old blog route for backward compatibility */}
+            <Route path="/blog-old" element={<Blog title="My First Blog Post" content="This is the content of my first blog post." author="John Doe" date="April 29, 2025" />} />
           </Routes>
         </main>
         <Footer />
