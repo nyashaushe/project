@@ -218,14 +218,28 @@ const AudioPlayer: React.FC<{ currentEpisode: typeof MOCK_PODCASTS[0] | null; is
 };
 
 const PodcastPage: React.FC = () => {
+  const [episodes, setEpisodes] = useState<Podcast[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [currentEpisode, setCurrentEpisode] = useState<typeof MOCK_PODCASTS[0] | null>(null);
+  const [currentEpisode, setCurrentEpisode] = useState<Podcast | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Filter episodes based on search term and category
-  const filteredEpisodes = MOCK_PODCASTS.filter(episode => {
+  useEffect(() => {
+    getPodcasts()
+      .then((data) => {
+        setEpisodes(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError("Failed to load podcast episodes.");
+        setLoading(false);
+      });
+  }, []);
+
+  const filteredEpisodes = episodes.filter(episode => {
     const matchesSearch = episode.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           episode.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || episode.category === selectedCategory;
@@ -337,7 +351,11 @@ const PodcastPage: React.FC = () => {
           initial="hidden"
           animate="visible"
         >
-          {filteredEpisodes.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-12 text-gray-400">Loading podcast episodes...</div>
+          ) : error ? (
+            <div className="text-center py-12 text-red-400">{error}</div>
+          ) : filteredEpisodes.length > 0 ? (
             filteredEpisodes.map((episode) => (
               <PodcastEpisode 
                 key={episode.id} 

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Filter, Calendar, User, Tag, Share2 } from 'lucide-react';
+import { fetchBlogPosts, BlogPost as Blog } from "../../services/api/blog";
 
 // Mock data for blog posts
 const MOCK_BLOG_POSTS = [
@@ -103,13 +104,33 @@ const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
 };
 
 const BlogPage: React.FC = () => {
+  const [posts, setPosts] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Filter posts based on search term and category
-  const filteredPosts = MOCK_BLOG_POSTS.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          post.content.toLowerCase().includes(searchTerm.toLowerCase());
+  useEffect(() => {
+    fetchBlogPosts()
+      .then((data) => {
+        setPosts(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError("Failed to load blog posts.");
+        setLoading(false);
+      });
+  }, []);
+
+  // Filter posts based on search term and category using API data
+  const filteredPosts = posts.filter(post => {
+    const postTitle = post.title || "";
+    const postContent = post.content || ""; // Assuming Blog type has content
+    const postExcerpt = post.excerpt || ""; // Assuming Blog type has excerpt
+
+    const matchesSearch = postTitle.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          postContent.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          postExcerpt.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
