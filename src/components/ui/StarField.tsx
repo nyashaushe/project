@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import debounce from 'lodash.debounce';
 
-const StarField: React.FC = () => {
+interface StarFieldProps {
+  children?: React.ReactNode;
+}
+
+const StarField: React.FC<StarFieldProps> = ({ children }) => {
   const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; delay: number; color: string; duration: number; brightness: number }[]>([]);
 
   useEffect(() => {
@@ -90,6 +94,7 @@ const StarField: React.FC = () => {
         />
       ))}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
+      {children}
     </div>
   );
 };

@@ -1,214 +1,101 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
+import { ArrowRight, Code, Cloud, Cpu } from 'lucide-react';
 import Button from '../ui/Button';
-import { ArrowRight } from 'lucide-react';
-import ContactForm from '../forms/ContactForm';
-import CalendarBooking from '../forms/CalendarBooking';
 
 const Hero: React.FC = () => {
-  const textStrings = [
-    'Scale Your Business with Intelligent Tech Solutions',
-    'Empower Your Business with AI Automations',
-    'Drive Growth and Efficiency with Digital Marketing Services',
-  ];
-
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentTextIndex((prevIndex) => (prevIndex + 1) % textStrings.length);
-    }, 3000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
-  };
-
-  const buttonVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } },
-    hover: { scale: 1.05, transition: { type: "spring", stiffness: 400 } }
-  };
-
-  const floatingAnimation = {
-    y: ['-5px', '5px', '-5px'],
-    transition: {
-      duration: 4,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }
-  };
-
   return (
-    <>
-      <section className="relative min-h-screen flex items-center justify-center px-4 py-32 overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 z-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 2 }}
-          style={{
-            background: "radial-gradient(circle at center, rgba(139, 92, 246, 0.2), transparent 70%)"
-          }}
-        />
-        
-        <motion.div 
-          className="text-center max-w-4xl mx-auto relative z-10"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.h1 
-            animate={floatingAnimation}
-            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6"
-          >
-            {textStrings[currentTextIndex].split(' ').map((word, index) => (
-              <motion.span 
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="inline-block"
-              >
-                <span className="text-purple-400 inline-block hover:text-purple-300 transition-colors duration-300">{word}</span>{' '}
-              </motion.span>
-            ))}
-          </motion.h1>
-          
-          <motion.p 
-            variants={itemVariants}
-            className="text-gray-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto"
-            whileHover={{ color: "#E9D5FF" }}
-          >
-            Empower your business with website development, AI automations, and digital marketing services that drive growth and efficiency.
-          </motion.p>
-          
-          <motion.div 
-            variants={containerVariants}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <motion.div variants={buttonVariants} whileHover="hover" whileTap={{ scale: 0.95 }}>
-              <Button variant="primary" size="lg" className="group">
-                Get Started
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
+    <div className="relative overflow-hidden bg-gradient-to-b from-dark via-blue-900 to-dark">
+      {/* Background gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10" />
+      
+      {/* Animated background elements */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
+      </div>
+
+      <div className="relative pt-32 pb-16 sm:pt-40 sm:pb-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+                Transforming Ideas into{' '}
+                <span className="bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent">
+                  Digital Reality
+                </span>
+              </h1>
             </motion.div>
-            <motion.div variants={buttonVariants} whileHover="hover" whileTap={{ scale: 0.95 }}>
-              <Button variant="ghost" size="lg">
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="mt-6 text-lg leading-8 text-gray-300"
+            >
+              We build cutting-edge web applications, mobile apps, and cloud solutions
+              that help businesses thrive in the digital age.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="mt-10 flex items-center justify-center gap-x-6"
+            >
+              <Button variant="primary" size="lg">
+                Get Started
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+              <Button variant="secondary" size="lg">
                 Learn More
               </Button>
             </motion.div>
-          </motion.div>
-        </motion.div>
-      </section>
+          </div>
 
-      <section className="py-24 px-4 bg-gradient-to-b from-background to-background/80 relative overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 z-0"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          style={{
-            background: "radial-gradient(circle at center, rgba(139, 92, 246, 0.1), transparent 70%)"
-          }}
-        />
-        <div className="max-w-7xl mx-auto relative z-10">
+          {/* Feature highlights */}
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none"
           >
-            <motion.h2 
-              variants={itemVariants}
-              className="text-3xl font-bold text-white mb-4"
-              whileHover={{ scale: 1.05, color: "#A78BFA" }}
-            >
-              Schedule a Consultation
-            </motion.h2>
-            <motion.p 
-              variants={itemVariants}
-              className="text-gray-400 max-w-2xl mx-auto"
-              whileHover={{ color: "#E9D5FF" }}
-            >
-              Book a free 30-minute call with our experts to discuss your project needs and explore solutions.
-            </motion.p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            <CalendarBooking />
+            <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
+              <div className="flex flex-col">
+                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-white">
+                  <Code className="h-5 w-5 flex-none text-indigo-400" aria-hidden="true" />
+                  Modern Web Development
+                </dt>
+                <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-300">
+                  <p className="flex-auto">Build scalable web applications with the latest technologies and best practices.</p>
+                </dd>
+              </div>
+              <div className="flex flex-col">
+                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-white">
+                  <Cloud className="h-5 w-5 flex-none text-indigo-400" aria-hidden="true" />
+                  Cloud Solutions
+                </dt>
+                <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-300">
+                  <p className="flex-auto">Deploy and scale your applications with our cloud infrastructure expertise.</p>
+                </dd>
+              </div>
+              <div className="flex flex-col">
+                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-white">
+                  <Cpu className="h-5 w-5 flex-none text-indigo-400" aria-hidden="true" />
+                  AI & Machine Learning
+                </dt>
+                <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-300">
+                  <p className="flex-auto">Leverage the power of AI and ML to create intelligent applications.</p>
+                </dd>
+              </div>
+            </dl>
           </motion.div>
         </div>
-      </section>
-
-      <section className="py-24 px-4 relative overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 z-0"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          style={{
-            background: "radial-gradient(circle at center, rgba(139, 92, 246, 0.1), transparent 70%)"
-          }}
-        />
-        <div className="max-w-7xl mx-auto relative z-10">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <motion.h2 
-              variants={itemVariants}
-              className="text-3xl font-bold text-white mb-4"
-              whileHover={{ scale: 1.05, color: "#A78BFA" }}
-            >
-              Get in Touch
-            </motion.h2>
-            <motion.p 
-              variants={itemVariants}
-              className="text-gray-400 max-w-2xl mx-auto"
-              whileHover={{ color: "#E9D5FF" }}
-            >
-              Have questions or ready to start your project? Reach out to us today.
-            </motion.p>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            <ContactForm />
-          </motion.div>
-        </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
 };
 
