@@ -72,29 +72,34 @@ const StarField: React.FC<StarFieldProps> = ({ children }) => {
   }, []);
 
   return (
-    <div className="star-field">
-      <div className="absolute inset-0 bg-gradient-radial from-cosmic-purple/20 via-transparent to-transparent opacity-40" />
-      <div className="absolute inset-0 bg-gradient-radial from-cosmic-blue/10 via-transparent to-transparent opacity-30" />
-      {stars.map((star) => (
-        <div
-          key={star.id}
-          className="star"
-          style={{
-            left: `${star.x}%`,
-            top: `${star.y}%`,
-            width: `${star.size}px`,
-            height: `${star.size}px`,
-            backgroundColor: star.color,
-            animationDelay: `${star.delay}s`,
-            animationDuration: `${star.duration}s`,
-            boxShadow: `0 0 ${star.size * star.brightness}px ${star.color}`,
-            filter: `brightness(${star.brightness})`,
-            '--duration': `${star.duration}s`,
-          } as React.CSSProperties}
-        />
-      ))}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
-      {children}
+    <div className="relative w-full h-full">
+      <div className="star-field absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute inset-0 bg-gradient-radial from-cosmic-purple/20 via-transparent to-transparent opacity-40" />
+        <div className="absolute inset-0 bg-gradient-radial from-cosmic-blue/10 via-transparent to-transparent opacity-30" />
+        {stars.map((star) => (
+          <div
+            key={star.id}
+            className="star"
+            style={{
+              left: `${star.x}%`,
+              top: `${star.y}%`,
+              width: `${star.size}px`,
+              height: `${star.size}px`,
+              backgroundColor: star.color,
+              animationDelay: `${star.delay}s`,
+              animationDuration: `${star.duration}s`,
+              boxShadow: `0 0 ${star.size * star.brightness}px ${star.color}`,
+              filter: `brightness(${star.brightness})`,
+              '--duration': `${star.duration}s`,
+              position: 'absolute',
+            } as React.CSSProperties}
+          />
+        ))}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
+      </div>
+      <div className="relative z-10">
+        {children}
+      </div>
     </div>
   );
 };

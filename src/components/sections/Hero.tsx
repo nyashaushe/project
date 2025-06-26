@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Code, Cloud, Cpu } from 'lucide-react';
 import Button from '../ui/Button';
+import CalendarBooking from '../forms/CalendarBooking';
 
 const Hero: React.FC = () => {
+  const [showBooking, setShowBooking] = useState(false);
+
   return (
     <div className="relative overflow-hidden bg-gradient-to-b from-dark via-blue-900 to-dark">
       {/* Background gradient overlay */}
@@ -46,7 +49,7 @@ const Hero: React.FC = () => {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="mt-10 flex items-center justify-center gap-x-6"
             >
-              <Button variant="primary" size="lg">
+              <Button variant="primary" size="lg" onClick={() => setShowBooking(true)}>
                 Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -95,6 +98,22 @@ const Hero: React.FC = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Modal for CalendarBooking */}
+      {showBooking && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-[#18192a] rounded-xl shadow-lg p-6 max-w-lg w-full relative max-h-[90vh] overflow-y-auto">
+            <button
+              className="absolute top-2 right-2 text-gray-400 hover:text-white text-2xl"
+              onClick={() => setShowBooking(false)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+            <CalendarBooking />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

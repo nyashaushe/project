@@ -1,16 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Pause, SkipBack, SkipForward, Volume2, Download, Clock, Filter, Search, Mic, Video, Share2, Heart, MessageSquare } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, MessageSquare } from 'lucide-react';
 import Button from '../ui/Button';
 import ShareButtons from '../ui/ShareButtons';
 import { useAudioPlayer } from '../../hooks/useAudioPlayer';
 import LikeButton from '../ui/LikeButton';
 import { useLikes } from '../../hooks/useLikes';
 import CommentSection from '../ui/CommentSection';
-import { useComments, PodcastComment, User } from '../../hooks/useComments';
+import { useComments, PodcastComment } from '../../hooks/useComments';
 import { Link } from 'react-router-dom';
 import { useToast } from '../../contexts/ToastContext';
-import StarField from '../ui/StarField';
+// import StarField from '../ui/StarField';
 
 // Define Podcast type
 interface Podcast {
@@ -301,12 +301,6 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
 
   const { showToast } = useToast();
 
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
-
   const handleShare = () => {
     showToast('Link copied to clipboard!', 'success');
   };
@@ -461,6 +455,7 @@ const AudioPlayer: React.FC<{
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={onPlayPause}
+              title="Play or pause episode"
             >
               {isPlaying ? <Pause size={20} /> : <Play size={20} />}
             </motion.button>
@@ -482,6 +477,7 @@ const AudioPlayer: React.FC<{
               value={volume} 
               onChange={(e) => onVolumeChange(Number(e.target.value))}
               className="w-20 accent-blue-500"
+              title="Volume control"
             />
           </div>
         </div>
@@ -492,9 +488,6 @@ const AudioPlayer: React.FC<{
 
 const PodcastPage: React.FC = () => {
   const [episodes, setEpisodes] = useState<Podcast[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentEpisode, setCurrentEpisode] = useState<Podcast | null>(null);
   const {
@@ -504,13 +497,11 @@ const PodcastPage: React.FC = () => {
     volume,
     togglePlayPause,
     setVolume,
-    seek,
     skipForward,
     skipBackward
   } = useAudioPlayer({
     audioUrl: currentEpisode?.audioUrl || '',
     onEnded: () => {
-      // Handle episode end
       setCurrentEpisode(null);
     }
   });
@@ -519,286 +510,261 @@ const PodcastPage: React.FC = () => {
     getPodcasts()
       .then((data: Podcast[]) => {
         setEpisodes(data);
-        setLoading(false);
       })
       .catch((err: Error) => {
-        setError("Failed to load podcast episodes.");
-        setLoading(false);
         console.error('Error loading podcasts:', err);
       });
   }, []);
 
   const filteredEpisodes = episodes.filter(episode => {
-    const matchesSearch = episode.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          episode.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || episode.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    return matchesCategory;
   });
 
-  const handlePlayEpisode = (episode: Podcast) => {
-    if (currentEpisode?.id === episode.id) {
-      togglePlayPause();
-    } else {
-      setCurrentEpisode(episode);
-      // The useAudioPlayer hook will automatically start playing the new episode
-    }
-  };
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3
-      }
-    }
-  };
-
   return (
-    <StarField>
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
-        {/* Hero Section */}
-        <section className="relative py-32 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent" />
-          <div className="container mx-auto px-4 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-center max-w-3xl mx-auto"
-            >
-              <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-                Tech Podcast
-              </h1>
-              <p className="text-xl text-gray-300 mb-8">
-                Listen to our latest episodes about technology, development, and design.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Button variant="primary" className="group">
-                  Latest Episodes
-                  <Play className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button variant="ghost">
-                  Subscribe on Spotify
-                </Button>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Featured Episode */}
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="bg-gray-800 rounded-xl overflow-hidden"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="relative h-64 md:h-full">
-                  <img
-                    src={currentEpisode?.imageUrl}
-                    alt={currentEpisode?.title}
-                    className="w-full h-full object-cover"
-                  />
-                  </div>
-                <div className="p-8">
-                  <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full mb-4 inline-block">
-                    {currentEpisode?.category}
-                  </span>
-                  <h3 className="text-2xl font-bold text-white mb-4">
-                    {currentEpisode?.title}
-                  </h3>
-                  <p className="text-gray-400 mb-6">
-                    {currentEpisode?.description}
-                  </p>
-                  <div className="flex items-center gap-4 text-sm text-gray-400 mb-8">
-                    <span>{currentEpisode?.date}</span>
-                    <span>•</span>
-                    <span>{currentEpisode?.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <button
-                      onClick={togglePlayPause}
-                      className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
-                    >
-                      {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-                    </button>
-                    <button 
-                      onClick={skipBackward}
-                      className="p-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors"
-                    >
-                      <SkipBack className="h-6 w-6" />
-                    </button>
-                    <button 
-                      onClick={skipForward}
-                      className="p-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors"
-                    >
-                      <SkipForward className="h-6 w-6" />
-                    </button>
-                    <button className="p-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors">
-                      <Volume2 className="h-6 w-6" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Episodes List */}
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-3xl font-bold text-white mb-4">All Episodes</h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">
-                Browse through our collection of podcast episodes
-              </p>
-            </motion.div>
-
-            {/* Categories */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="flex flex-wrap gap-2 justify-center mb-12"
-            >
-              {CATEGORIES.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    selectedCategory === category
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
-            </motion.div>
-
-            {/* Episodes Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredEpisodes.map((episode, index) => (
-                <motion.div
-                  key={episode.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.1 * index }}
-                  className="bg-gray-800 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-transform duration-300"
-                >
-                  <div className="relative h-48">
-                    <img
-                      src={episode.imageUrl}
-                      alt={episode.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full">
-                        {episode.category}
-                      </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-2">{episode.title}</h3>
-                  <p className="text-gray-400 mb-4">{episode.description}</p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 text-sm text-gray-400">
-                      <span>{episode.date}</span>
-                      <span>•</span>
-                      <span>{episode.duration}</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="p-2 bg-gray-700 text-gray-400 rounded-full hover:bg-blue-500 hover:text-white transition-colors">
-                        <Heart className="h-4 w-4" />
-                      </button>
-                      <ShareButtons 
-                        url={`${window.location.origin}/podcasts/${episode.id}`}
-                        title={episode.title}
-                        description={episode.description}
-                      />
-                      <button className="p-2 bg-gray-700 text-gray-400 rounded-full hover:bg-blue-500 hover:text-white transition-colors">
-                        <MessageSquare className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
+      {/* Hero Section */}
+      <section className="relative py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent" />
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center max-w-3xl mx-auto"
+          >
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+              Tech Podcast
+            </h1>
+            <p className="text-xl text-gray-300 mb-8">
+              Listen to our latest episodes about technology, development, and design.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button variant="primary" className="group">
+                Latest Episodes
+                <Play className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button variant="ghost">
+                Subscribe on Spotify
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Subscription CTA */}
-      <motion.div 
-        className="mt-16 bg-gradient-to-r from-purple-900/50 to-indigo-900/50 rounded-xl p-8 backdrop-blur-sm"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 className="text-2xl font-bold text-white mb-2">Subscribe to Our Podcast</h3>
-            <p className="text-gray-300">Never miss an episode. Get notified when new content is available.</p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <motion.button 
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg flex items-center"
-              whileHover={{ scale: 1.05, backgroundColor: "#7C3AED" }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm-1-5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm0-4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"></path>
-              </svg>
-              Apple Podcasts
-            </motion.button>
-            <motion.button 
-              className="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center"
-              whileHover={{ scale: 1.05, backgroundColor: "#059669" }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path>
-              </svg>
-              Spotify
-            </motion.button>
-            <motion.button 
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg flex items-center"
-              whileHover={{ scale: 1.05, backgroundColor: "#2563EB" }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path>
-              </svg>
-              Google Podcasts
-            </motion.button>
-          </div>
+      {/* Featured Episode */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="bg-gray-800 rounded-xl overflow-hidden"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="relative h-64 md:h-full">
+                <img
+                  src={currentEpisode?.imageUrl}
+                  alt={currentEpisode?.title}
+                  className="w-full h-full object-cover"
+                />
+                </div>
+              <div className="p-8">
+                <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full mb-4 inline-block">
+                  {currentEpisode?.category}
+                </span>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  {currentEpisode?.title}
+                </h3>
+                <p className="text-gray-400 mb-6">
+                  {currentEpisode?.description}
+                </p>
+                <div className="flex items-center gap-4 text-sm text-gray-400 mb-8">
+                  <span>{currentEpisode?.date}</span>
+                  <span>•</span>
+                  <span>{currentEpisode?.duration}</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={togglePlayPause}
+                    className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
+                    title="Play or pause episode"
+                  >
+                    {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+                  </button>
+                  <button 
+                    onClick={skipBackward}
+                    className="p-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors"
+                    title="Skip backward"
+                  >
+                    <SkipBack className="h-6 w-6" />
+                  </button>
+                  <button 
+                    onClick={skipForward}
+                    className="p-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors"
+                    title="Skip forward"
+                  >
+                    <SkipForward className="h-6 w-6" />
+                  </button>
+                  <button className="p-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors" title="Volume">
+                    <Volume2 className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
+      </section>
+
+      {/* Episodes List */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl font-bold text-white mb-4">All Episodes</h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              Browse through our collection of podcast episodes
+            </p>
+          </motion.div>
+
+          {/* Categories */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="flex flex-wrap gap-2 justify-center mb-12"
+          >
+            {CATEGORIES.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  selectedCategory === category
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </motion.div>
+
+          {/* Episodes Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredEpisodes.map((episode, index) => (
+              <motion.div
+                key={episode.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 * index }}
+                className="bg-gray-800 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-transform duration-300"
+              >
+                <div className="relative h-48">
+                  <img
+                    src={episode.imageUrl}
+                    alt={episode.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full">
+                      {episode.category}
+                    </span>
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-white mb-2">{episode.title}</h3>
+                <p className="text-gray-400 mb-4">{episode.description}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4 text-sm text-gray-400">
+                    <span>{episode.date}</span>
+                    <span>•</span>
+                    <span>{episode.duration}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="p-2 bg-gray-700 text-gray-400 rounded-full hover:bg-blue-500 hover:text-white transition-colors" title="Like">
+                      <Heart className="h-4 w-4" />
+                    </button>
+                    <ShareButtons 
+                      url={`${window.location.origin}/podcasts/${episode.id}`}
+                      title={episode.title}
+                      description={episode.description}
+                    />
+                    <button className="p-2 bg-gray-700 text-gray-400 rounded-full hover:bg-blue-500 hover:text-white transition-colors" title="Comment">
+                      <MessageSquare className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* Subscription CTA */}
+    <motion.div 
+      className="mt-16 bg-gradient-to-r from-purple-900/50 to-indigo-900/50 rounded-xl p-8 backdrop-blur-sm"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2 }}
+    >
+      <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <h3 className="text-2xl font-bold text-white mb-2">Subscribe to Our Podcast</h3>
+          <p className="text-gray-300">Never miss an episode. Get notified when new content is available.</p>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <motion.button 
+            className="px-4 py-2 bg-purple-600 text-white rounded-lg flex items-center"
+            whileHover={{ scale: 1.05, backgroundColor: "#7C3AED" }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm-1-5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm0-4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"></path>
+            </svg>
+            Apple Podcasts
+          </motion.button>
+          <motion.button 
+            className="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center"
+            whileHover={{ scale: 1.05, backgroundColor: "#059669" }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path>
+            </svg>
+            Spotify
+          </motion.button>
+          <motion.button 
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg flex items-center"
+            whileHover={{ scale: 1.05, backgroundColor: "#2563EB" }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path>
+            </svg>
+            Google Podcasts
+          </motion.button>
+        </div>
+      </div>
     </motion.div>
 
-      {/* Audio player */}
-      <AudioPlayer
-        currentEpisode={currentEpisode}
-        isPlaying={isPlaying}
-        currentTime={currentTime}
-        duration={duration}
-        volume={volume}
-        onPlayPause={togglePlayPause}
-        onVolumeChange={setVolume}
-        onSeek={seek}
-        onSkipForward={skipForward}
-        onSkipBackward={skipBackward}
-      />
-    </StarField>
+    {/* Audio player */}
+    <AudioPlayer
+      currentEpisode={currentEpisode}
+      isPlaying={isPlaying}
+      currentTime={currentTime}
+      duration={duration}
+      volume={volume}
+      onPlayPause={togglePlayPause}
+      onVolumeChange={setVolume}
+      onSkipForward={skipForward}
+      onSkipBackward={skipBackward}
+    />
+    </div>
   );
 };
 
