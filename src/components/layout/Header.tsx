@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Button from '../ui/Button';
 import debounce from 'lodash.debounce';
 
@@ -16,7 +17,7 @@ const navigation = {
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const location = useLocation();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = debounce(() => {
@@ -32,14 +33,14 @@ const Header: React.FC = () => {
   }, []);
 
   const toggleMenu = () => setIsOpen(!isOpen);
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => router.pathname === path;
 
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-blue/90 backdrop-blur-md shadow-sm' : 'bg-dark'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <Link to="/" className="flex items-center">
+            <Link href="/" className="flex items-center">
               <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-pink-500 bg-clip-text text-transparent">
                 Baobab Stack
               </span>
@@ -61,7 +62,7 @@ const Header: React.FC = () => {
             {navigation.main.map((item) => (
               <Link
                 key={item.name}
-                to={item.href}
+                href={item.href}
                 className={`text-base font-medium ${
                   isActive(item.href)
                     ? 'text-indigo-600'
@@ -74,7 +75,7 @@ const Header: React.FC = () => {
           </nav>
 
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <Link to="/signin" className="whitespace-nowrap text-base font-medium text-purple-400 hover:text-indigo-600 mr-6">
+            <Link href="/signin" className="whitespace-nowrap text-base font-medium text-purple-400 hover:text-indigo-600 mr-6">
               Sign in
             </Link>
             <Button variant="primary">Book a Call</Button>
@@ -88,7 +89,7 @@ const Header: React.FC = () => {
           <div className="pt-5 pb-6 px-5">
             <div className="flex items-center justify-between">
               <div>
-                <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-pink-500 bg-clip-text text-transparent">
+                <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-pink-500 bg-clip-text text-transparent">
                   Baobab Stack
                 </Link>
               </div>
@@ -97,6 +98,7 @@ const Header: React.FC = () => {
                   type="button"
                   className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none"
                   onClick={toggleMenu}
+                  aria-label="Close menu"
                 >
                   <X size={24} />
                 </button>
@@ -107,7 +109,7 @@ const Header: React.FC = () => {
                 {navigation.main.map((item) => (
                   <Link
                     key={item.name}
-                    to={item.href}
+                    href={item.href}
                     className={`-m-3 p-3 flex items-center rounded-md hover:bg-gray-50 ${
                       isActive(item.href) ? 'bg-gray-50' : ''
                     }`}
@@ -122,7 +124,7 @@ const Header: React.FC = () => {
           <div className="py-6 px-5 space-y-6">
             <div>
               <Link
-                to="/signin"
+                href="/signin"
                 className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
                 onClick={toggleMenu}
               >

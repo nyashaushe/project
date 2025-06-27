@@ -1,28 +1,42 @@
-import js from '@eslint/js';
 import globals from 'globals';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
+import nextPlugin from '@next/eslint-plugin-next';
 
 export default tseslint.config(
-  { ignores: ['dist'] },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-    },
+    // Global ignores
+    ignores: ['dist', '.next', 'node_modules'],
+  },
+  {
+    // Next.js specific configuration
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    extends: ['plugin:@next/next/recommended'],
     plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      '@next/next': nextPlugin,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      // Add or override Next.js specific rules here
+    },
+  },
+  {
+    // General TypeScript/JavaScript configuration
+    files: ['**/*.{ts,tsx,js,jsx}'],
+    extends: [
+      tseslint.configs.recommended,
+      // Add other recommended configs if needed, e.g., 'eslint:recommended'
+    ],
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    rules: {
+      // General rules for TypeScript/JavaScript
+      'prefer-const': 'error',
+      'no-unused-vars': 'warn',
     },
   }
 );

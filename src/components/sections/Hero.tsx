@@ -59,7 +59,7 @@ const Hero: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Feature highlights */}
+          Feature highlights
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
