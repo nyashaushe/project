@@ -6,18 +6,16 @@ import Stats from '../sections/Stats';
 import TechStack from '../sections/TechStack';
 import ProjectPortfolio from '../sections/ProjectPortfolio';
 
-import StarField from '../ui/StarField';
-
 const HomePage: React.FC = () => {
   return (
-    <StarField>
+    <>
       <Hero />
       <Services />
       <Stats />
       <ProjectPortfolio />
       <Testimonials />
       <TechStack />
-    </StarField>
+    </>
   );
 };
 

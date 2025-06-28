@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, MessageSquare } from 'lucide-react';
@@ -8,7 +10,7 @@ import LikeButton from '../ui/LikeButton';
 import { useLikes } from '../../hooks/useLikes';
 import CommentSection from '../ui/CommentSection';
 import { useComments, PodcastComment } from '../../hooks/useComments';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useToast } from '../../contexts/ToastContext';
 // import StarField from '../ui/StarField';
 
@@ -306,14 +308,13 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
   };
 
   return (
-    
-      <motion.div 
-        className={`bg-gray-900/50 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transition-all duration-300 ${isActive ? 'border border-purple-500 shadow-purple-500/20' : 'hover:shadow-purple-500/10'}`}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 100 }}
-        whileHover={{ y: -5 }}
-      >
+    <motion.div
+      className={`bg-gray-900/50 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transition-all duration-300 ${isActive ? 'border border-purple-500 shadow-purple-500/20' : 'hover:shadow-purple-500/10'}`}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 100 }}
+      whileHover={{ y: -5 }}
+    >
         <div className="relative">
           <img 
             src={episode?.imageUrl} 
@@ -376,7 +377,7 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
 
       <div className="mt-4">
         <Link
-          to={`/podcast/${episode?.id}`}
+          href={`/podcast/${episode?.id}`}
           className="inline-flex items-center text-blue-500 hover:text-blue-400 transition-colors"
         >
           <span>View full episode</span>
@@ -498,7 +499,8 @@ const PodcastPage: React.FC = () => {
     togglePlayPause,
     setVolume,
     skipForward,
-    skipBackward
+    skipBackward,
+    seek
   } = useAudioPlayer({
     audioUrl: currentEpisode?.audioUrl || '',
     onEnded: () => {
@@ -522,7 +524,7 @@ const PodcastPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
+    <div className="">
       {/* Hero Section */}
       <section className="relative py-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent" />
@@ -761,6 +763,7 @@ const PodcastPage: React.FC = () => {
       volume={volume}
       onPlayPause={togglePlayPause}
       onVolumeChange={setVolume}
+      onSeek={seek}
       onSkipForward={skipForward}
       onSkipBackward={skipBackward}
     />

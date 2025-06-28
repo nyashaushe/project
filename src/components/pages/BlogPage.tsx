@@ -1,14 +1,14 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Button from '../ui/Button';
-import StarField from '../ui/StarField';
 import Blog from '../sections/Blog';
 
 const BlogPage: React.FC = () => {
   return (
-    <StarField>
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
+    <div className="">
         {/* Hero Section */}
         <section className="relative py-32 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent" />
@@ -116,7 +116,6 @@ const BlogPage: React.FC = () => {
         {/* Blog Listing */}
         <Blog />
       </div>
-    </StarField>
   );
 };
 

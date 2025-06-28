@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Monitor, Zap, Bot, BarChart } from 'lucide-react';
 import { motion } from 'framer-motion';
