@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import Image from 'next/image'; // Import Next.js Image component
 import Button from '../ui/Button';
 
 // Mock data for testimonials
@@ -98,9 +99,11 @@ const Testimonials: React.FC = () => {
                 <div className="flex flex-col md:flex-row gap-8">
                   <div className="md:w-1/3">
                     <div className="relative">
-                      <img
+                      <Image
                         src={testimonials[currentIndex].image}
                         alt={testimonials[currentIndex].name}
+                        width={128}
+                        height={128}
                         className="w-32 h-32 rounded-full object-cover mx-auto"
                       />
                       <Quote className="absolute -top-4 -right-4 text-purple-500 w-8 h-8" />
@@ -169,9 +172,11 @@ const Testimonials: React.FC = () => {
                 whileHover={{ scale: 1.1 }}
                 className="grayscale hover:grayscale-0 transition-all duration-300"
               >
-                <img
+                <Image
                   src={client.logo}
                   alt={client.name}
+                  width={48} // Assuming a reasonable default width for logos
+                  height={48} // Assuming a reasonable default height for logos
                   className="h-12 w-auto"
                 />
               </motion.div>

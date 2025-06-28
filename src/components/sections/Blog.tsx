@@ -1,6 +1,9 @@
+'use client';
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Calendar, User, Tag, ChevronRight, Clock } from 'lucide-react';
+import Image from 'next/image'; // Import Next.js Image component
 import Button from '../ui/Button';
 
 // Mock data for blog posts
@@ -120,9 +123,11 @@ const Blog: React.FC = () => {
               className="bg-gray-800 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-transform duration-300"
             >
               <div className="relative h-48">
-                <img
+                <Image
                   src={post.image}
                   alt={post.title}
+                  layout="fill" // Use layout="fill" for responsive images
+                  objectFit="cover" // Ensure object-fit is applied
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-4 left-4">

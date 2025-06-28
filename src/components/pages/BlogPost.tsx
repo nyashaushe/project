@@ -1,7 +1,10 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'next/navigation'; // Use next/navigation for useParams
 import { Clock, Calendar, User, Facebook, Twitter, Linkedin, ChevronLeft } from 'lucide-react';
+import Image from 'next/image'; // Import Next.js Image component
 import Button from '../ui/Button';
 
 // Mock data for a single blog post
@@ -54,14 +57,13 @@ const relatedPosts = [
   }
 ];
 
-import StarField from '../ui/StarField';
+// import StarField from '../ui/StarField'; // StarField is now in ClientLayoutWrapper
 
 const BlogPost: React.FC = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate(); // No longer needed with Next.js Link
 
   return (
-    <StarField>
       <article className="py-20 bg-gradient-to-b from-gray-900 to-black">
         <div className="container mx-auto px-4">
           {/* Back Button */}
@@ -73,7 +75,7 @@ const BlogPost: React.FC = () => {
             <Button
               variant="ghost"
               className="group"
-              onClick={() => navigate('/blog')}
+              onClick={() => window.history.back()} // Use window.history.back() or Next.js Link
             >
               <ChevronLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
               Back to Blog
@@ -116,10 +118,13 @@ const BlogPost: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mb-12">
-            <img
+            <Image
               src={blogPost.image}
               alt={blogPost.title}
+              width={1024} // Adjust based on typical image width
+              height={400} // h-[400px] = 400px
               className="w-full h-[400px] object-cover rounded-xl"
+              style={{ objectFit: 'cover' }} // Ensure object-fit is applied
             />
           </motion.div>
 
@@ -157,10 +162,13 @@ const BlogPost: React.FC = () => {
               transition={{ duration: 0.5, delay: 0.5 }}
               className="mt-12 p-6 bg-gray-800 rounded-xl">
               <div className="flex items-center gap-4">
-                <img
+                <Image
                   src={blogPost.author.avatar}
                   alt={blogPost.author.name}
+                  width={64}
+                  height={64}
                   className="w-16 h-16 rounded-full"
+                  style={{ objectFit: 'cover' }} // Ensure object-fit is applied
                 />
                 <div>
                   <h3 className="text-xl font-bold text-white">{blogPost.author.name}</h3>
@@ -179,13 +187,13 @@ const BlogPost: React.FC = () => {
               <div className="flex items-center gap-4">
                 <span className="text-gray-400">Share this article:</span>
                 <div className="flex gap-2">
-                  <button className="p-2 bg-gray-800 text-gray-400 rounded-full hover:bg-blue-500 hover:text-white transition-colors">
+                  <button className="p-2 bg-gray-800 text-gray-400 rounded-full hover:bg-blue-500 hover:text-white transition-colors" title="Share on Facebook">
                     <Facebook className="h-5 w-5" />
                   </button>
-                  <button className="p-2 bg-gray-800 text-gray-400 rounded-full hover:bg-blue-500 hover:text-white transition-colors">
+                  <button className="p-2 bg-gray-800 text-gray-400 rounded-full hover:bg-blue-500 hover:text-white transition-colors" title="Share on Twitter">
                     <Twitter className="h-5 w-5" />
                   </button>
-                  <button className="p-2 bg-gray-800 text-gray-400 rounded-full hover:bg-blue-500 hover:text-white transition-colors">
+                  <button className="p-2 bg-gray-800 text-gray-400 rounded-full hover:bg-blue-500 hover:text-white transition-colors" title="Share on LinkedIn">
                     <Linkedin className="h-5 w-5" />
                   </button>
                 </div>
@@ -207,10 +215,13 @@ const BlogPost: React.FC = () => {
                   className="bg-gray-800 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-transform duration-300 cursor-pointer"
                   onClick={() => navigate(`/blog/${post.id}`)}
                 >
-                  <img
+                  <Image
                     src={post.image}
                     alt={post.title}
+                    width={768} // Assuming a common width for blog post images
+                    height={192} // h-48 = 192px
                     className="w-full h-48 object-cover"
+                    style={{ objectFit: 'cover' }} // Ensure object-fit is applied
                   />
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-white mb-2">{post.title}</h3>
@@ -226,7 +237,6 @@ const BlogPost: React.FC = () => {
           </motion.div>
         </div>
       </article>
-    </StarField>
   );
 };
 

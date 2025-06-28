@@ -1,5 +1,7 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'next/navigation'; // Use next/navigation for useParams
 import { motion } from 'framer-motion';
 import { useAudioPlayer } from '../../hooks/useAudioPlayer';
 import { useLikes } from '../../hooks/useLikes';
@@ -8,7 +10,8 @@ import LikeButton from '../ui/LikeButton';
 import ShareButtons from '../ui/ShareButtons';
 import CommentSection from '../ui/CommentSection';
 import { useToast } from '../../contexts/ToastContext';
-import StarField from '../ui/StarField';
+import Image from 'next/image'; // Import Next.js Image component
+// import StarField from '../ui/StarField'; // StarField is now in ClientLayoutWrapper
 
 interface Podcast {
   id: string;
@@ -30,7 +33,7 @@ interface Podcast {
 
 const PodcastEpisodePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  // const navigate = useNavigate(); // No longer needed with Next.js Link
   const [episode, setEpisode] = useState<Podcast | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -82,12 +85,12 @@ const PodcastEpisodePage: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-500 mb-4">{error || 'Episode not found'}</h2>
-          <button
-            onClick={() => navigate('/podcast')}
+          <a
+            href="/podcast" // Use Next.js Link or direct href
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
           >
             Back to Podcasts
-          </button>
+          </a>
         </div>
       </div>
     );
@@ -129,7 +132,6 @@ const PodcastEpisodePage: React.FC = () => {
   };
 
   return (
-    <StarField>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -140,10 +142,13 @@ const PodcastEpisodePage: React.FC = () => {
           <div className="max-w-4xl mx-auto">
             {/* Hero Section */}
             <div className="relative rounded-lg overflow-hidden mb-8">
-              <img
+              <Image
                 src={episode.imageUrl}
                 alt={episode.title}
+                width={1024} // Adjust based on typical image width
+                height={384} // h-96 = 384px
                 className="w-full h-96 object-cover"
+                style={{ objectFit: 'cover' }} // Ensure object-fit is applied
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8">
@@ -186,6 +191,7 @@ const PodcastEpisodePage: React.FC = () => {
                       value={audioPlayer.currentTime}
                       onChange={(e) => audioPlayer.seek(Number(e.target.value))}
                       className="w-64"
+                      aria-label="Seek audio" // Add aria-label for accessibility
                     />
                     <span className="text-sm text-gray-400">{formatTime(audioPlayer.duration)}</span>
                   </div>
@@ -239,7 +245,6 @@ const PodcastEpisodePage: React.FC = () => {
           </div>
         </div>
       </motion.div>
-    </StarField>
   );
 };
 

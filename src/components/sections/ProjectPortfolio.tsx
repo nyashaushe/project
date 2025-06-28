@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image'; // Import Next.js Image component
 
 interface ProjectProps {
   title: string;
@@ -145,12 +146,13 @@ const ProjectPortfolio: React.FC = () => {
                 className="relative h-48 overflow-hidden"
                 variants={imageVariants}
               >
-                <motion.img 
-                  src={project.image} 
-                  alt={project.title} 
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  width={750} // Specify appropriate width
+                  height={480} // Specify appropriate height (h-48 = 192px, but use a larger original for quality)
                   className="w-full h-full object-cover"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  style={{ objectFit: 'cover' }} // Ensure object-fit is applied
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-60"></div>
                 <motion.div 

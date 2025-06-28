@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, MessageSquare } from 'lucide-react';
+import Image from 'next/image'; // Import Next.js Image component
 import Button from '../ui/Button';
 import ShareButtons from '../ui/ShareButtons';
 import { useAudioPlayer } from '../../hooks/useAudioPlayer';
@@ -316,10 +317,13 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
       whileHover={{ y: -5 }}
     >
         <div className="relative">
-          <img 
-            src={episode?.imageUrl} 
+          <Image
+            src={episode?.imageUrl}
             alt={episode?.title}
+            width={768} // Assuming a common width for podcast images
+            height={192} // h-48 = 192px
             className="w-full h-48 object-cover"
+            style={{ objectFit: 'cover' }} // Ensure object-fit is applied
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -430,10 +434,13 @@ const AudioPlayer: React.FC<{
     >
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center space-x-4 w-full md:w-auto">
-          <img 
-            src={currentEpisode?.imageUrl} 
-            alt={currentEpisode?.title} 
+          <Image
+            src={currentEpisode?.imageUrl}
+            alt={currentEpisode?.title}
+            width={48}
+            height={48}
             className="w-12 h-12 rounded object-cover"
+            style={{ objectFit: 'cover' }} // Ensure object-fit is applied
           />
           <div>
             <h4 className="text-white font-medium text-sm">{currentEpisode?.title}</h4>
@@ -565,10 +572,13 @@ const PodcastPage: React.FC = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="relative h-64 md:h-full">
-                <img
+                <Image
                   src={currentEpisode?.imageUrl}
                   alt={currentEpisode?.title}
+                  width={768} // Assuming a common width for podcast images
+                  height={256} // h-64 = 256px
                   className="w-full h-full object-cover"
+                  style={{ objectFit: 'cover' }} // Ensure object-fit is applied
                 />
                 </div>
               <div className="p-8">
@@ -666,10 +676,13 @@ const PodcastPage: React.FC = () => {
                 className="bg-gray-800 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-transform duration-300"
               >
                 <div className="relative h-48">
-                  <img
+                  <Image
                     src={episode.imageUrl}
                     alt={episode.title}
+                    width={768} // Assuming a common width for podcast images
+                    height={192} // h-48 = 192px
                     className="w-full h-full object-cover"
+                    style={{ objectFit: 'cover' }} // Ensure object-fit is applied
                   />
                   <div className="absolute top-4 left-4">
                     <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full">

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MessageSquare, Heart, Send } from 'lucide-react';
+import Image from 'next/image'; // Import Next.js Image component
 import type { PodcastComment, User } from '../../hooks/useComments';
 import { useToast } from '../../contexts/ToastContext';
 
@@ -78,9 +79,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({
           >
             <div className="flex items-start gap-3">
               {comment.user.avatar ? (
-                <img
+                <Image
                   src={comment.user.avatar}
                   alt={comment.user.name}
+                  width={32} // Specify width
+                  height={32} // Specify height
                   className="w-8 h-8 rounded-full"
                 />
               ) : (

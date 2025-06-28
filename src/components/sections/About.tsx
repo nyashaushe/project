@@ -1,6 +1,9 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, Target, Award, Heart, Lightbulb, Zap } from 'lucide-react';
+import Image from 'next/image'; // Import Next.js Image component
 import Button from '../ui/Button';
 
 // Mock data for team members
@@ -144,10 +147,13 @@ const About: React.FC = () => {
                 className="bg-gray-900/50 backdrop-blur-sm rounded-xl overflow-hidden"
               >
                 <div className="aspect-w-1 aspect-h-1">
-                  <img
+                  <Image
                     src={member.image}
                     alt={member.name}
+                    width={256} // Specify appropriate width
+                    height={256} // Specify appropriate height
                     className="w-full h-64 object-cover"
+                    style={{ objectFit: 'cover' }} // Ensure object-fit is applied
                   />
                 </div>
                 <div className="p-6">
