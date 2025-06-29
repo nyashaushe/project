@@ -61,43 +61,6 @@ const Hero: React.FC = () => {
             </motion.div>
           </div>
 
-          Feature highlights
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none"
-          >
-            <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
-              <div className="flex flex-col">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-white">
-                  <Code className="h-5 w-5 flex-none text-indigo-400" aria-hidden="true" />
-                  Modern Web Development
-                </dt>
-                <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-300">
-                  <p className="flex-auto">Build scalable web applications with the latest technologies and best practices.</p>
-                </dd>
-              </div>
-              <div className="flex flex-col">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-white">
-                  <Cloud className="h-5 w-5 flex-none text-indigo-400" aria-hidden="true" />
-                  Cloud Solutions
-                </dt>
-                <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-300">
-                  <p className="flex-auto">Deploy and scale your applications with our cloud infrastructure expertise.</p>
-                </dd>
-              </div>
-              <div className="flex flex-col">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-white">
-                  <Cpu className="h-5 w-5 flex-none text-indigo-400" aria-hidden="true" />
-                  AI & Machine Learning
-                </dt>
-                <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-300">
-                  <p className="flex-auto">Leverage the power of AI and ML to create intelligent applications.</p>
-                </dd>
-              </div>
-            </dl>
-          </motion.div>
         </div>
       </div>
 

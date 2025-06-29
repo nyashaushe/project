@@ -99,13 +99,15 @@ const Testimonials: React.FC = () => {
                 <div className="flex flex-col md:flex-row gap-8">
                   <div className="md:w-1/3">
                     <div className="relative">
-                      <Image
-                        src={testimonials[currentIndex].image}
-                        alt={testimonials[currentIndex].name}
-                        width={128}
-                        height={128}
-                        className="w-32 h-32 rounded-full object-cover mx-auto"
-                      />
+                      {testimonials[currentIndex].image && (
+                        <Image
+                          src={testimonials[currentIndex].image}
+                          alt={testimonials[currentIndex].name}
+                          width={128}
+                          height={128}
+                          className="w-32 h-32 rounded-full object-cover mx-auto"
+                        />
+                      )}
                       <Quote className="absolute -top-4 -right-4 text-purple-500 w-8 h-8" />
                     </div>
                     <div className="mt-4 text-center">

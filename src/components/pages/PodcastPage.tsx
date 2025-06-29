@@ -317,14 +317,16 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
       whileHover={{ y: -5 }}
     >
         <div className="relative">
-          <Image
-            src={episode?.imageUrl}
-            alt={episode?.title}
-            width={768} // Assuming a common width for podcast images
-            height={192} // h-48 = 192px
-            className="w-full h-48 object-cover"
-            style={{ objectFit: 'cover' }} // Ensure object-fit is applied
-          />
+          {episode?.imageUrl && (
+            <Image
+              src={episode.imageUrl}
+              alt={episode.title}
+              width={768} // Assuming a common width for podcast images
+              height={192} // h-48 = 192px
+              className="w-full h-48 object-cover"
+              style={{ objectFit: 'cover' }} // Ensure object-fit is applied
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-4">
             <h3 className="text-white text-lg font-semibold mb-1">{episode?.title}</h3>
@@ -434,14 +436,16 @@ const AudioPlayer: React.FC<{
     >
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center space-x-4 w-full md:w-auto">
-          <Image
-            src={currentEpisode?.imageUrl}
-            alt={currentEpisode?.title}
-            width={48}
-            height={48}
-            className="w-12 h-12 rounded object-cover"
-            style={{ objectFit: 'cover' }} // Ensure object-fit is applied
-          />
+          {currentEpisode?.imageUrl && (
+            <Image
+              src={currentEpisode.imageUrl}
+              alt={currentEpisode.title}
+              width={48}
+              height={48}
+              className="w-12 h-12 rounded object-cover"
+              style={{ objectFit: 'cover' }} // Ensure object-fit is applied
+            />
+          )}
           <div>
             <h4 className="text-white font-medium text-sm">{currentEpisode?.title}</h4>
             <p className="text-gray-400 text-xs">{currentEpisode?.host}</p>
@@ -482,7 +486,7 @@ const AudioPlayer: React.FC<{
               type="range"
               min={0}
               max={duration}
-              value={volume} 
+              value={currentTime}
               onChange={(e) => onVolumeChange(Number(e.target.value))}
               className="w-20 accent-blue-500"
               title="Volume control"
@@ -572,15 +576,17 @@ const PodcastPage: React.FC = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="relative h-64 md:h-full">
-                <Image
-                  src={currentEpisode?.imageUrl}
-                  alt={currentEpisode?.title}
-                  width={768} // Assuming a common width for podcast images
-                  height={256} // h-64 = 256px
-                  className="w-full h-full object-cover"
-                  style={{ objectFit: 'cover' }} // Ensure object-fit is applied
-                />
-                </div>
+                {currentEpisode?.imageUrl && (
+                  <Image
+                    src={currentEpisode.imageUrl}
+                    alt={currentEpisode.title}
+                    width={768} // Assuming a common width for podcast images
+                    height={256} // h-64 = 256px
+                    className="w-full h-full object-cover"
+                    style={{ objectFit: 'cover' }} // Ensure object-fit is applied
+                  />
+                )}
+              </div>
               <div className="p-8">
                 <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full mb-4 inline-block">
                   {currentEpisode?.category}
@@ -676,14 +682,16 @@ const PodcastPage: React.FC = () => {
                 className="bg-gray-800 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-transform duration-300"
               >
                 <div className="relative h-48">
-                  <Image
-                    src={episode.imageUrl}
-                    alt={episode.title}
-                    width={768} // Assuming a common width for podcast images
-                    height={192} // h-48 = 192px
-                    className="w-full h-full object-cover"
-                    style={{ objectFit: 'cover' }} // Ensure object-fit is applied
-                  />
+                  {episode.imageUrl && (
+                    <Image
+                      src={episode.imageUrl}
+                      alt={episode.title}
+                      width={768} // Assuming a common width for podcast images
+                      height={192} // h-48 = 192px
+                      className="w-full h-full object-cover"
+                      style={{ objectFit: 'cover' }} // Ensure object-fit is applied
+                    />
+                  )}
                   <div className="absolute top-4 left-4">
                     <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full">
                       {episode.category}
