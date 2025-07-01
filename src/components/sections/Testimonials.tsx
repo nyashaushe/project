@@ -6,39 +6,9 @@ import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import Image from 'next/image'; // Import Next.js Image component
 import Button from '../ui/Button';
 
-// Mock data for testimonials
-const testimonials = [
-  {
-    id: 1,
-    name: 'Sarah Johnson',
-    role: 'CEO at TechStart',
-    company: 'TechStart Inc.',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80',
-    content: 'Baobab Stack transformed our digital presence completely. Their team delivered beyond our expectations, and the results have been outstanding.',
-    rating: 5,
-    logo: '/logos/techstart.svg'
-  },
-  {
-    id: 2,
-    name: 'Michael Chen',
-    role: 'CTO at InnovateX',
-    company: 'InnovateX',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80',
-    content: 'Working with Baobab Stack was a game-changer for our business. Their expertise in cloud solutions helped us scale our operations efficiently.',
-    rating: 5,
-    logo: '/logos/innovatex.svg'
-  },
-  {
-    id: 3,
-    name: 'Emily Rodriguez',
-    role: 'Product Manager at GrowthLabs',
-    company: 'GrowthLabs',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80',
-    content: 'The team at Baobab Stack are true professionals. They understood our needs perfectly and delivered a solution that exceeded our expectations.',
-    rating: 5,
-    logo: '/logos/growthlabs.svg'
-  }
-];
+import { fetchTestimonials, Testimonial } from '@/services/api/testimonial';
+
+// Mock data for client logos (can be fetched from Strapi if a 'ClientLogo' collection type exists)
 
 // Mock data for client logos
 const clientLogos = [
@@ -51,7 +21,30 @@ const clientLogos = [
 ];
 
 const Testimonials: React.FC = () => {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  React.useEffect(() => {
+    const getTestimonials = async () => {
+      try {
+        setLoading(true);
+        const fetchedTestimonials = await fetchTestimonials();
+        setTestimonials(fetchedTestimonials);
+      } catch (err) {
+        setError('Failed to fetch testimonials.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getTestimonials();
+  }, []);
+
+  if (loading) return <div className="text-center text-white py-20">Loading testimonials...</div>;
+  if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
+  if (testimonials.length === 0) return <div className="text-center text-gray-400 py-20">No testimonials available.</div>;
 
   const nextTestimonial = () => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
@@ -99,10 +92,29 @@ const Testimonials: React.FC = () => {
                 <div className="flex flex-col md:flex-row gap-8">
                   <div className="md:w-1/3">
                     <div className="relative">
-                      {testimonials[currentIndex].image && (
+                      {testimonials[currentIndex].image && typeof testimonials[currentIndex].image === 'object' && (
+                        <Image
+                          src={testimonials[currentIndex].image.url}
+                          alt={testimonials[currentIndex].author}
+                          width={128}
+                          height={128}
+                          className="w-32 h-32 rounded-full object-cover mx-auto"
+                        />
+                      )}
+                      {/* Fallback for string image URL or if image is not an object */}
+                      {testimonials[currentIndex].image && typeof testimonials[currentIndex].image === 'string' && (
                         <Image
                           src={testimonials[currentIndex].image}
-                          alt={testimonials[currentIndex].name}
+                          alt={testimonials[currentIndex].author}
+                          width={128}
+                          height={128}
+                          className="w-32 h-32 rounded-full object-cover mx-auto"
+                        />
+                      )}
+                      {!testimonials[currentIndex].image && (
+                        <Image
+                          src="/avatars/default.jpg" // Default avatar if no image is provided
+                          alt="Default avatar"
                           width={128}
                           height={128}
                           className="w-32 h-32 rounded-full object-cover mx-auto"
@@ -112,15 +124,18 @@ const Testimonials: React.FC = () => {
                     </div>
                     <div className="mt-4 text-center">
                       <h3 className="text-xl font-semibold text-white">
-                        {testimonials[currentIndex].name}
+                        {testimonials[currentIndex].author}
                       </h3>
-                      <p className="text-gray-400">{testimonials[currentIndex].role}</p>
-                      <p className="text-purple-400">{testimonials[currentIndex].company}</p>
-                      <div className="flex justify-center mt-2">
-                        {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
-                          <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                        ))}
-                      </div>
+                      {testimonials[currentIndex].role && <p className="text-gray-400">{testimonials[currentIndex].role}</p>}
+                      {/* Assuming 'company' is not directly from Strapi testimonial, or needs to be added to schema */}
+                      {/* <p className="text-purple-400">{testimonials[currentIndex].company}</p> */}
+                      {testimonials[currentIndex].rating && (
+                        <div className="flex justify-center mt-2">
+                          {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
+                            <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="md:w-2/3">

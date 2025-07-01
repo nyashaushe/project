@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Button from '../ui/Button';
 import debounce from 'lodash.debounce';
 
@@ -35,7 +35,8 @@ const Header: React.FC = () => {
   }, []);
 
   const toggleMenu = () => setIsOpen(!isOpen);
-  const isActive = (path: string) => router.pathname === path;
+  const pathname = usePathname();
+  const isActive = (path: string) => pathname === path;
 
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-blue/90 backdrop-blur-md shadow-sm' : 'bg-dark'}`}>
@@ -69,8 +70,7 @@ const Header: React.FC = () => {
                   isActive(item.href)
                     ? 'text-indigo-600'
                     : 'text-purple-400 hover:text-indigo-600'
-                }`}
-              >
+                }`}>
                 {item.name}
               </Link>
             ))}
@@ -84,7 +84,6 @@ const Header: React.FC = () => {
           </div>
         </div>
       </div>
-
       {/* Mobile menu */}
       <div className={`${isOpen ? 'block' : 'hidden'} absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden z-50`}>
         <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
@@ -114,10 +113,8 @@ const Header: React.FC = () => {
                     href={item.href}
                     className={`-m-3 p-3 flex items-center rounded-md hover:bg-gray-50 ${
                       isActive(item.href) ? 'bg-gray-50' : ''
-                    }`}
-                    onClick={toggleMenu}
-                  >
-                    <span className="ml-3 text-base font-medium text-gray-900">{item.name}</span>
+                    }`}>
+                    <span className="ml-3 text-base font-medium text-gray-900" onClick={toggleMenu}>{item.name}</span>
                   </Link>
                 ))}
               </nav>

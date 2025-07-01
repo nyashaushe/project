@@ -1,11 +1,10 @@
 'use client';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import BlogPost from '../../../src/components/pages/BlogPost';
 
-export default function DynamicBlogPost() {
-  const router = useRouter();
-  const { id } = router.query;
+export default function DynamicBlogPost({ params }: { params: { id: string } }) {
+  const { id } = params;
 
   if (!id) {
     return <div>Loading...</div>;

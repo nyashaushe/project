@@ -64,24 +64,23 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
       transition={{ type: "spring", stiffness: 100 }}
       whileHover={{ y: -5 }}
     >
-        <div className="relative">
-          {episode?.imageUrl && ( // Assuming imageUrl is available from Strapi
-            <Image
-              src={episode.imageUrl}
-              alt={episode.title}
-              width={768}
-              height={192}
-              className="w-full h-48 object-cover"
-              style={{ objectFit: 'cover' }}
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-4">
-            <h3 className="text-white text-lg font-semibold mb-1">{episode?.title}</h3>
-            <p className="text-gray-300 text-sm">{episode?.duration}</p>
-          </div>
+      <div className="relative">
+        {episode?.imageUrl && ( // Assuming imageUrl is available from Strapi
+          (<Image
+            src={episode.imageUrl}
+            alt={episode.title}
+            width={768}
+            height={192}
+            className="w-full h-48 object-cover"
+            style={{ objectFit: 'cover' }}
+          />)
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <h3 className="text-white text-lg font-semibold mb-1">{episode?.title}</h3>
+          <p className="text-gray-300 text-sm">{episode?.duration}</p>
         </div>
-
+      </div>
       <div className="p-4">
         <p className="text-gray-300 text-sm mb-4">{episode?.description}</p>
         
@@ -114,7 +113,6 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
           />
         </div>
       </div>
-
       {/* Comments Section */}
       <div className="p-6 border-t border-gray-800">
         <div className="flex items-center gap-2 mb-4">
@@ -128,12 +126,11 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
           onLikeComment={likeComment}
         />
       </div>
-
       <div className="mt-4">
         <Link
           href={`/podcast/${episode?.id}`}
           className="inline-flex items-center text-blue-500 hover:text-blue-400 transition-colors"
-        >
+          >
           <span>View full episode</span>
           <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

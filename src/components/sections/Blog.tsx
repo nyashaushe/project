@@ -39,9 +39,18 @@ const Blog: React.FC = () => {
     getBlogPosts();
   }, []);
 
+  console.log('blogPosts:', blogPosts); // Add this line for debugging
+
   const filteredPosts = blogPosts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.content.toLowerCase().includes(searchQuery.toLowerCase()); // Assuming content for excerpt
+    console.log('Filtering post:', post); // Add this line for debugging
+    // Ensure post and its properties exist before accessing them
+    if (!post || typeof post.title === 'undefined' || typeof post.content === 'undefined') {
+      console.log('Skipping invalid post:', post); // Add this line for debugging
+      return false; // Skip invalid posts
+    }
+
+    const matchesSearch = (post.title as string).toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         (post.content as string).toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || (post.categories && post.categories.includes(selectedCategory));
     return matchesSearch && matchesCategory;
   });
