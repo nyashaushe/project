@@ -1,76 +1,41 @@
 'use client';
 
-import React, { useState } => {
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Github } from 'lucide-react';
-import Image from 'next/image'; // Import Next.js Image component
+import Image from 'next/image';
 import Button from '../ui/Button';
+import { fetchPortfolioItems, PortfolioItem } from '@/services/api/portfolio';
 
 const categories = ['All', 'Web', 'Mobile', 'AI', 'Cloud'];
 
-const projects = [
-  {
-    title: 'E-Commerce Platform',
-    description: 'A modern e-commerce platform built with Next.js and Stripe integration.',
-    category: 'Web',
-    image: '/portfolio/ecommerce.jpg',
-    tags: ['Next.js', 'TypeScript', 'Stripe', 'Tailwind CSS'],
-    github: 'https://github.com/yourusername/project',
-    live: 'https://project-demo.com',
-  },
-  {
-    title: 'AI-Powered Analytics',
-    description: 'Real-time analytics dashboard with machine learning predictions.',
-    category: 'AI',
-    image: '/portfolio/analytics.jpg',
-    tags: ['Python', 'TensorFlow', 'React', 'D3.js'],
-    github: 'https://github.com/yourusername/project',
-    live: 'https://project-demo.com',
-  },
-  {
-    title: 'Mobile Banking App',
-    description: 'Secure and user-friendly mobile banking application.',
-    category: 'Mobile',
-    image: '/portfolio/banking.jpg',
-    tags: ['React Native', 'Node.js', 'MongoDB', 'AWS'],
-    github: 'https://github.com/yourusername/project',
-    live: 'https://project-demo.com',
-  },
-  {
-    title: 'Cloud Migration Tool',
-    description: 'Automated cloud migration and deployment solution.',
-    category: 'Cloud',
-    image: '/portfolio/cloud.jpg',
-    tags: ['AWS', 'Terraform', 'Python', 'Docker'],
-    github: 'https://github.com/yourusername/project',
-    live: 'https://project-demo.com',
-  },
-  {
-    title: 'Social Media Dashboard',
-    description: 'Comprehensive social media management platform.',
-    category: 'Web',
-    image: '/portfolio/social.jpg',
-    tags: ['Vue.js', 'Node.js', 'PostgreSQL', 'Redis'],
-    github: 'https://github.com/yourusername/project',
-    live: 'https://project-demo.com',
-  },
-  {
-    title: 'AI Content Generator',
-    description: 'AI-powered content creation and optimization tool.',
-    category: 'AI',
-    image: '/portfolio/content.jpg',
-    tags: ['GPT-4', 'Python', 'FastAPI', 'React'],
-    github: 'https://github.com/yourusername/project',
-    live: 'https://project-demo.com',
-  },
-];
-
 const Portfolio: React.FC = () => {
+  const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getPortfolio = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchPortfolioItems();
+        setPortfolio(data);
+      } catch (err) {
+        setError('Failed to load portfolio.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    getPortfolio();
+  }, []);
 
   const filteredProjects = selectedCategory === 'All'
-    ? projects
-    : projects.filter(project => project.category === selectedCategory);
+    ? portfolio
+    : portfolio.filter(project => project.category === selectedCategory);
+
+  if (loading) return <div className="text-center text-white py-20">Loading portfolio...</div>;
+  if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
   return (
     <section className="py-24 bg-gradient-to-b from-blue-900/20 to-dark">
@@ -94,7 +59,6 @@ const Portfolio: React.FC = () => {
             Explore our latest projects and success stories
           </motion.p>
         </div>
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -116,12 +80,11 @@ const Portfolio: React.FC = () => {
             </button>
           ))}
         </motion.div>
-
         <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="wait">
             {filteredProjects.map((project, index) => (
               <motion.div
-                key={project.title}
+                key={project.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -131,10 +94,10 @@ const Portfolio: React.FC = () => {
                 <div className="relative h-64 overflow-hidden rounded-2xl">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <Image
-                    src={project.image}
+                    src={project.image || '/portfolio/default.jpg'}
                     alt={project.title}
-                    layout="fill" // Use layout="fill" for responsive images
-                    objectFit="cover" // Ensure object-fit is applied
+                    layout="fill"
+                    objectFit="cover"
                     className="transition-transform duration-300 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 flex items-end p-6">
@@ -144,9 +107,8 @@ const Portfolio: React.FC = () => {
                     </div>
                   </div>
                 </div>
-
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
+                  {project.tags && project.tags.map((tag: string) => (
                     <span
                       key={tag}
                       className="inline-flex items-center rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-400"
@@ -155,30 +117,34 @@ const Portfolio: React.FC = () => {
                     </span>
                   ))}
                 </div>
-
                 <div className="mt-4 flex space-x-4">
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    <Github className="h-5 w-5" />
-                  </a>
-                  <a
-                    href={project.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    <ExternalLink className="h-5 w-5" />
-                  </a>
+                  {project.github && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-white transition-colors"
+                      title={`View ${project.title} on GitHub`}
+                    >
+                      <Github className="h-5 w-5" />
+                    </a>
+                  )}
+                  {project.live && (
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-white transition-colors"
+                      title={`View ${project.title} live`}
+                    >
+                      <ExternalLink className="h-5 w-5" />
+                    </a>
+                  )}
                 </div>
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

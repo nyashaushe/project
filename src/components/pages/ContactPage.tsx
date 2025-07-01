@@ -17,6 +17,13 @@ const ContactPage: React.FC = () => {
               transition={{ duration: 0.5 }}
               className="text-center max-w-3xl mx-auto"
             >
+              <div className="flex justify-center mb-8">
+                <div className="glass-card px-10 py-6 shadow-lg border-2 border-violet-400/30">
+                  <span className="text-4xl md:text-5xl font-extrabold text-violet-300 tracking-widest drop-shadow-lg select-none">
+                    Baobab Stack
+                  </span>
+                </div>
+              </div>
               <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
                 Contact Us
               </h1>
@@ -27,23 +34,10 @@ const ContactPage: React.FC = () => {
           </div>
         </section>
 
+        {/* Removed Contact Information section as requested */}
         <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="bg-gray-800 rounded-xl p-8"
-              >
-                <h2 className="text-2xl font-bold text-white mb-6">Contact Information</h2>
-                <div className="space-y-4">
-                  <p className="text-gray-300">Email: contact@baobabstack.com</p>
-                  <p className="text-gray-300">Phone: +1 (555) 123-4567</p>
-                  <p className="text-gray-300">Address: 123 Tech Street, Silicon Valley, CA 94043</p>
-                </div>
-              </motion.div>
-
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, y: 0 }}

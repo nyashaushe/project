@@ -1,28 +1,34 @@
 import React, { useState } from 'react';
 import { Send } from 'lucide-react';
 import Button from '../ui/Button';
+import { subscribe } from '@/services/api/subscriber';
 
 const Newsletter: React.FC = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!email) {
       setError('Email is required');
       return;
     }
-    
     if (!/^\S+@\S+\.\S+$/.test(email)) {
       setError('Please enter a valid email address');
       return;
     }
-    
-    // In a real app, you would submit to an API here
-    setIsSubmitted(true);
+    setLoading(true);
     setError('');
+    try {
+      await subscribe(email);
+      setIsSubmitted(true);
+    } catch (err) {
+      setError('Failed to subscribe. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -65,6 +71,7 @@ const Newsletter: React.FC = () => {
                         error ? 'ring-red-300' : 'ring-gray-300'
                       } placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 sm:text-sm`}
                       placeholder="Enter your email"
+                      disabled={loading}
                     />
                     {error && <p className="mt-2 text-sm text-red-200">{error}</p>}
                   </div>
@@ -74,8 +81,9 @@ const Newsletter: React.FC = () => {
                     type="submit"
                     variant="primary"
                     className="w-full py-2.5 bg-white text-indigo-600 hover:bg-indigo-50"
+                    disabled={loading}
                   >
-                    Subscribe
+                    {loading ? 'Subscribing...' : 'Subscribe'}
                     <Send className="ml-2 h-4 w-4" />
                   </Button>
                 </div>

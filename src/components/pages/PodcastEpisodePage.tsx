@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation'; // Use next/navigation for useParams
+import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useAudioPlayer } from '../../hooks/useAudioPlayer';
 import { useLikes } from '../../hooks/useLikes';
@@ -10,66 +10,30 @@ import LikeButton from '../ui/LikeButton';
 import ShareButtons from '../ui/ShareButtons';
 import CommentSection from '../ui/CommentSection';
 import { useToast } from '../../contexts/ToastContext';
-import Image from 'next/image'; // Import Next.js Image component
-// import StarField from '../ui/StarField'; // StarField is now in ClientLayoutWrapper
-
-interface Podcast {
-  id: string;
-  title: string;
-  description: string;
-  host: string;
-  guest: string;
-  date: string;
-  duration: string;
-  category: string;
-  type: string;
-  audioUrl: string;
-  videoUrl?: string;
-  imageUrl: string;
-  likes: number;
-  isLiked: boolean;
-  comments: any[];
-}
+import Image from 'next/image';
+import { fetchPodcast, Podcast } from '@/services/api/podcast';
 
 const PodcastEpisodePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  // const navigate = useNavigate(); // No longer needed with Next.js Link
   const [episode, setEpisode] = useState<Podcast | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { showToast } = useToast();
 
   useEffect(() => {
-    // Simulate fetching episode data
-    const fetchEpisode = async () => {
+    if (!id) return;
+    const getEpisode = async () => {
       try {
-        // In a real app, this would be an API call
-        const mockEpisode: Podcast = {
-          id: id || '1',
-          title: 'The Future of Web Development',
-          description: 'In this episode, we explore the latest trends and technologies shaping the future of web development. Our guest, a renowned tech expert, shares insights about upcoming frameworks, tools, and best practices that developers should be aware of.',
-          host: 'John Doe',
-          guest: 'Jane Smith',
-          date: '2024-03-15',
-          duration: '45:30',
-          category: 'Technology',
-          type: 'Interview',
-          audioUrl: 'https://example.com/podcast.mp3',
-          videoUrl: 'https://example.com/podcast.mp4',
-          imageUrl: 'https://example.com/podcast.jpg',
-          likes: 1234,
-          isLiked: false,
-          comments: []
-        };
-        setEpisode(mockEpisode);
-        setLoading(false);
+        setLoading(true);
+        const data = await fetchPodcast(Number(id));
+        setEpisode(data);
       } catch (err) {
         setError('Failed to load episode');
+      } finally {
         setLoading(false);
       }
     };
-
-    fetchEpisode();
+    getEpisode();
   }, [id]);
 
   if (loading) {
@@ -86,7 +50,7 @@ const PodcastEpisodePage: React.FC = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-500 mb-4">{error || 'Episode not found'}</h2>
           <a
-            href="/podcast" // Use Next.js Link or direct href
+            href="/podcast"
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
           >
             Back to Podcasts

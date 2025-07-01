@@ -17,6 +17,6 @@ export async function fetchSubscribers(params?: Record<string, any>): Promise<Su
 }
 
 export async function subscribe(email: string): Promise<Subscriber> {
-  const response = await axios.post(`${API_URL}/subscribers`, { email });
+  const response = await axios.post(`${API_URL}/subscribers`, { data: { email } });
   return { id: response.data.data.id, ...response.data.data.attributes };
 }

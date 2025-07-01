@@ -24,3 +24,8 @@ export async function fetchBlogPost(id: number): Promise<BlogPost> {
   const response = await axios.get(`${API_URL}/blogs/${id}`);
   return { id: response.data.data.id, ...response.data.data.attributes };
 }
+
+export async function createBlogPost(blogPostData: Omit<BlogPost, 'id' | 'publishedAt'>): Promise<BlogPost> {
+  const response = await axios.post(`${API_URL}/blogs`, { data: blogPostData });
+  return { id: response.data.data.id, ...response.data.data.attributes };
+}

@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, MessageSquare } from 'lucide-react';
-import Image from 'next/image'; // Import Next.js Image component
+import Image from 'next/image';
 import Button from '../ui/Button';
 import ShareButtons from '../ui/ShareButtons';
 import { useAudioPlayer } from '../../hooks/useAudioPlayer';
@@ -13,268 +13,10 @@ import CommentSection from '../ui/CommentSection';
 import { useComments, PodcastComment } from '../../hooks/useComments';
 import Link from 'next/link';
 import { useToast } from '../../contexts/ToastContext';
-// import StarField from '../ui/StarField';
+import { fetchPodcasts, Podcast } from '@/services/api/podcast'; // Import Strapi podcast service
 
-// Define Podcast type
-interface Podcast {
-  id: number;
-  title: string;
-  description: string;
-  host: string;
-  guest?: string;
-  date: string;
-  duration: string;
-  category: string;
-  type: 'audio' | 'video';
-  audioUrl: string;
-  videoUrl?: string;
-  imageUrl: string;
-  likes?: number;
-  isLiked?: boolean;
-  comments: PodcastComment[];
-}
-
-// Mock data for podcast episodes
-const MOCK_PODCASTS: Podcast[] = [
-  {
-    id: 1,
-    title: 'The Future of Web Development',
-    description: 'In this episode, we discuss emerging trends in web development and what skills will be most valuable in the coming years.',
-    host: 'Sarah Johnson',
-    guest: 'Michael Chen, CTO at TechForward',
-    date: 'June 15, 2023',
-    duration: '45:22',
-    category: 'Technology',
-    type: 'audio',
-    audioUrl: '/podcasts/web-dev.mp3',
-    imageUrl: '/podcasts/web-dev.jpg',
-    likes: 128,
-    isLiked: false,
-    comments: [
-      {
-        id: 1,
-        user: {
-          name: 'John Doe',
-          avatar: '/avatars/john.jpg'
-        },
-        content: 'Great episode! Really enjoyed the discussion about future trends.',
-        date: 'June 16, 2023',
-        likes: 5,
-        isLiked: false
-      },
-      {
-        id: 2,
-        user: {
-          name: 'Jane Smith'
-        },
-        content: 'The insights about AI were particularly interesting.',
-        date: 'June 15, 2023',
-        likes: 3,
-        isLiked: true
-      }
-    ]
-  },
-  {
-    id: 2,
-    title: 'Building Scalable Backend Systems',
-    description: 'Learn about architecture patterns and best practices for building backend systems that can scale to millions of users.',
-    host: 'David Wilson',
-    guest: 'Emily Rodriguez, Lead Engineer at ScaleUp',
-    date: 'May 22, 2023',
-    duration: '52:10',
-    category: 'Development',
-    type: 'video',
-    audioUrl: '/podcasts/scalable.mp3',
-    imageUrl: '/podcasts/scalable.jpg',
-    likes: 95,
-    isLiked: false,
-    comments: [
-      {
-        id: 1,
-        user: {
-          name: 'John Doe',
-          avatar: '/avatars/john.jpg'
-        },
-        content: 'Great episode! Really enjoyed the discussion about future trends.',
-        date: 'June 16, 2023',
-        likes: 5,
-        isLiked: false
-      },
-      {
-        id: 2,
-        user: {
-          name: 'Jane Smith'
-        },
-        content: 'The insights about AI were particularly interesting.',
-        date: 'June 15, 2023',
-        likes: 3,
-        isLiked: true
-      }
-    ]
-  },
-  {
-    id: 3,
-    title: 'AI in Modern Business Applications',
-    description: 'Exploring how artificial intelligence is transforming business operations and decision making processes.',
-    host: 'Sarah Johnson',
-    guest: 'Dr. James Lee, AI Researcher',
-    date: 'April 10, 2023',
-    duration: '38:45',
-    category: 'Technology',
-    type: 'audio',
-    audioUrl: '/podcasts/ai-business.mp3',
-    imageUrl: '/podcasts/ai-business.jpg',
-    likes: 110,
-    isLiked: false,
-    comments: [
-      {
-        id: 1,
-        user: {
-          name: 'John Doe',
-          avatar: '/avatars/john.jpg'
-        },
-        content: 'Great episode! Really enjoyed the discussion about future trends.',
-        date: 'June 16, 2023',
-        likes: 5,
-        isLiked: false
-      },
-      {
-        id: 2,
-        user: {
-          name: 'Jane Smith'
-        },
-        content: 'The insights about AI were particularly interesting.',
-        date: 'June 15, 2023',
-        likes: 3,
-        isLiked: true
-      }
-    ]
-  },
-  {
-    id: 4,
-    title: 'UI/UX Design Principles',
-    description: 'Essential design principles for creating intuitive and engaging user experiences.',
-    host: 'Lisa Chen',
-    guest: 'Alex Thompson, Senior Designer at DesignCo',
-    date: 'March 28, 2023',
-    duration: '41:15',
-    category: 'Design',
-    type: 'audio',
-    audioUrl: '/podcasts/design-principles.mp3',
-    imageUrl: '/podcasts/design-principles.jpg',
-    likes: 80,
-    isLiked: false,
-    comments: [
-      {
-        id: 1,
-        user: {
-          name: 'John Doe',
-          avatar: '/avatars/john.jpg'
-        },
-        content: 'Great episode! Really enjoyed the discussion about future trends.',
-        date: 'June 16, 2023',
-        likes: 5,
-        isLiked: false
-      },
-      {
-        id: 2,
-        user: {
-          name: 'Jane Smith'
-        },
-        content: 'The insights about AI were particularly interesting.',
-        date: 'June 15, 2023',
-        likes: 3,
-        isLiked: true
-      }
-    ]
-  },
-  {
-    id: 5,
-    title: 'Cloud Computing Best Practices',
-    description: 'Expert insights on optimizing cloud infrastructure and reducing costs.',
-    host: 'David Wilson',
-    guest: 'Sarah Martinez, Cloud Architect at CloudScale',
-    date: 'March 15, 2023',
-    duration: '48:30',
-    category: 'Technology',
-    type: 'video',
-    audioUrl: '/podcasts/cloud-computing.mp3',
-    imageUrl: '/podcasts/cloud-computing.jpg',
-    likes: 100,
-    isLiked: false,
-    comments: [
-      {
-        id: 1,
-        user: {
-          name: 'John Doe',
-          avatar: '/avatars/john.jpg'
-        },
-        content: 'Great episode! Really enjoyed the discussion about future trends.',
-        date: 'June 16, 2023',
-        likes: 5,
-        isLiked: false
-      },
-      {
-        id: 2,
-        user: {
-          name: 'Jane Smith'
-        },
-        content: 'The insights about AI were particularly interesting.',
-        date: 'June 15, 2023',
-        likes: 3,
-        isLiked: true
-      }
-    ]
-  },
-  {
-    id: 6,
-    title: 'Startup Growth Strategies',
-    description: 'Proven strategies for scaling your startup and attracting investors.',
-    host: 'Sarah Johnson',
-    guest: 'Mark Anderson, Venture Capitalist',
-    date: 'February 28, 2023',
-    duration: '55:20',
-    category: 'Business',
-    type: 'audio',
-    audioUrl: '/podcasts/startup-growth.mp3',
-    imageUrl: '/podcasts/startup-growth.jpg',
-    likes: 70,
-    isLiked: false,
-    comments: [
-      {
-        id: 1,
-        user: {
-          name: 'John Doe',
-          avatar: '/avatars/john.jpg'
-        },
-        content: 'Great episode! Really enjoyed the discussion about future trends.',
-        date: 'June 16, 2023',
-        likes: 5,
-        isLiked: false
-      },
-      {
-        id: 2,
-        user: {
-          name: 'Jane Smith'
-        },
-        content: 'The insights about AI were particularly interesting.',
-        date: 'June 15, 2023',
-        likes: 3,
-        isLiked: true
-      }
-    ]
-  }
-];
-
-// Mock categories
+// Mock categories (can be fetched from Strapi if you have a categories collection)
 const CATEGORIES = ['All', 'Technology', 'Development', 'Business', 'Design'];
-
-// Mock function to get podcasts (replace with actual API call later)
-const getPodcasts = async (): Promise<Podcast[]> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  return MOCK_PODCASTS;
-};
 
 interface PodcastEpisodeProps {
   episode: Podcast;
@@ -284,21 +26,27 @@ interface PodcastEpisodeProps {
 }
 
 const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlaying, isActive }) => {
+  // Note: Likes and Comments would ideally be managed via Strapi for persistence
+  // For now, keeping the local state for demonstration, but in a real app,
+  // these would interact with Strapi's API for likes/comments if you set them up.
   const { likes, isLiked, toggleLike } = useLikes({
-    initialLikes: episode.likes || 0,
-    isLiked: episode.isLiked || false,
+    initialLikes: 0, // Initial likes from Strapi, if available
+    isLiked: false, // Initial liked status from Strapi, if available
     onLikeChange: (isLiked) => {
       console.log(`Episode ${episode.id} ${isLiked ? 'liked' : 'unliked'}`);
+      // TODO: Implement API call to update likes in Strapi
     }
   });
 
   const { comments, addComment, likeComment } = useComments({
-    initialComments: episode.comments || [],
+    initialComments: [], // Initial comments from Strapi, if available
     onCommentAdd: async (comment) => {
       console.log('Adding comment:', comment);
+      // TODO: Implement API call to add comment to Strapi
     },
     onCommentLike: async (commentId) => {
       console.log('Liking comment:', commentId);
+      // TODO: Implement API call to like comment in Strapi
     }
   });
 
@@ -317,14 +65,14 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
       whileHover={{ y: -5 }}
     >
         <div className="relative">
-          {episode?.imageUrl && (
+          {episode?.imageUrl && ( // Assuming imageUrl is available from Strapi
             <Image
               src={episode.imageUrl}
               alt={episode.title}
-              width={768} // Assuming a common width for podcast images
-              height={192} // h-48 = 192px
+              width={768}
+              height={192}
               className="w-full h-48 object-cover"
-              style={{ objectFit: 'cover' }} // Ensure object-fit is applied
+              style={{ objectFit: 'cover' }}
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -396,9 +144,9 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
   );
 };
 
-const AudioPlayer: React.FC<{ 
-  currentEpisode: Podcast | null; 
-  isPlaying: boolean; 
+const AudioPlayer: React.FC<{
+  currentEpisode: Podcast | null;
+  isPlaying: boolean;
   currentTime: number;
   duration: number;
   volume: number;
@@ -407,8 +155,8 @@ const AudioPlayer: React.FC<{
   onSeek: (time: number) => void;
   onSkipForward: () => void;
   onSkipBackward: () => void;
-}> = ({ 
-  currentEpisode, 
+}> = ({
+  currentEpisode,
   isPlaying,
   currentTime,
   duration,
@@ -428,7 +176,7 @@ const AudioPlayer: React.FC<{
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="fixed bottom-0 left-0 right-0 bg-gray-900/90 backdrop-blur-md border-t border-gray-800 p-4 z-50"
       initial={{ y: 100 }}
       animate={{ y: 0 }}
@@ -443,18 +191,18 @@ const AudioPlayer: React.FC<{
               width={48}
               height={48}
               className="w-12 h-12 rounded object-cover"
-              style={{ objectFit: 'cover' }} // Ensure object-fit is applied
+              style={{ objectFit: 'cover' }}
             />
           )}
           <div>
             <h4 className="text-white font-medium text-sm">{currentEpisode?.title}</h4>
-            <p className="text-gray-400 text-xs">{currentEpisode?.host}</p>
+            <p className="text-gray-400 text-xs">{currentEpisode?.description}</p> {/* Using description as host for now */}
           </div>
         </div>
         
         <div className="flex-1 max-w-xl">
           <div className="flex items-center justify-center space-x-4">
-            <motion.button 
+            <motion.button
               className="text-gray-400 hover:text-white transition-colors"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -462,7 +210,7 @@ const AudioPlayer: React.FC<{
             >
               <SkipBack size={20} />
             </motion.button>
-            <motion.button 
+            <motion.button
               className="p-3 rounded-full bg-blue-500 text-white"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -471,7 +219,7 @@ const AudioPlayer: React.FC<{
             >
               {isPlaying ? <Pause size={20} /> : <Play size={20} />}
             </motion.button>
-            <motion.button 
+            <motion.button
               className="text-gray-400 hover:text-white transition-colors"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -500,6 +248,8 @@ const AudioPlayer: React.FC<{
 
 const PodcastPage: React.FC = () => {
   const [episodes, setEpisodes] = useState<Podcast[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentEpisode, setCurrentEpisode] = useState<Podcast | null>(null);
   const {
@@ -520,19 +270,31 @@ const PodcastPage: React.FC = () => {
   });
 
   useEffect(() => {
-    getPodcasts()
-      .then((data: Podcast[]) => {
+    const getPodcastsData = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchPodcasts();
         setEpisodes(data);
-      })
-      .catch((err: Error) => {
+        if (data.length > 0) {
+          setCurrentEpisode(data[0]); // Set the first episode as featured by default
+        }
+      } catch (err) {
+        setError('Failed to load podcasts.');
         console.error('Error loading podcasts:', err);
-      });
+      } finally {
+        setLoading(false);
+      }
+    };
+    getPodcastsData();
   }, []);
 
   const filteredEpisodes = episodes.filter(episode => {
-    const matchesCategory = selectedCategory === 'All' || episode.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'All' || (episode.category && episode.category === selectedCategory);
     return matchesCategory;
   });
+
+  if (loading) return <div className="text-center text-white py-20">Loading podcasts...</div>;
+  if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
   return (
     <div className="">
@@ -566,73 +328,77 @@ const PodcastPage: React.FC = () => {
       </section>
 
       {/* Featured Episode */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="bg-gray-800 rounded-xl overflow-hidden"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="relative h-64 md:h-full">
-                {currentEpisode?.imageUrl && (
-                  <Image
-                    src={currentEpisode.imageUrl}
-                    alt={currentEpisode.title}
-                    width={768} // Assuming a common width for podcast images
-                    height={256} // h-64 = 256px
-                    className="w-full h-full object-cover"
-                    style={{ objectFit: 'cover' }} // Ensure object-fit is applied
-                  />
-                )}
-              </div>
-              <div className="p-8">
-                <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full mb-4 inline-block">
-                  {currentEpisode?.category}
-                </span>
-                <h3 className="text-2xl font-bold text-white mb-4">
-                  {currentEpisode?.title}
-                </h3>
-                <p className="text-gray-400 mb-6">
-                  {currentEpisode?.description}
-                </p>
-                <div className="flex items-center gap-4 text-sm text-gray-400 mb-8">
-                  <span>{currentEpisode?.date}</span>
-                  <span>•</span>
-                  <span>{currentEpisode?.duration}</span>
+      {currentEpisode && (
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="bg-gray-800 rounded-xl overflow-hidden"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="relative h-64 md:h-full">
+                  {currentEpisode?.imageUrl && (
+                    <Image
+                      src={currentEpisode.imageUrl}
+                      alt={currentEpisode.title}
+                      width={768}
+                      height={256}
+                      className="w-full h-full object-cover"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  )}
                 </div>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={togglePlayPause}
-                    className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
-                    title="Play or pause episode"
-                  >
-                    {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-                  </button>
-                  <button 
-                    onClick={skipBackward}
-                    className="p-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors"
-                    title="Skip backward"
-                  >
-                    <SkipBack className="h-6 w-6" />
-                  </button>
-                  <button 
-                    onClick={skipForward}
-                    className="p-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors"
-                    title="Skip forward"
-                  >
-                    <SkipForward className="h-6 w-6" />
-                  </button>
-                  <button className="p-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors" title="Volume">
-                    <Volume2 className="h-6 w-6" />
-                  </button>
+                <div className="p-8">
+                  {currentEpisode?.category && (
+                    <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full mb-4 inline-block">
+                      {currentEpisode.category}
+                    </span>
+                  )}
+                  <h3 className="text-2xl font-bold text-white mb-4">
+                    {currentEpisode?.title}
+                  </h3>
+                  <p className="text-gray-400 mb-6">
+                    {currentEpisode?.description}
+                  </p>
+                  <div className="flex items-center gap-4 text-sm text-gray-400 mb-8">
+                    <span>{new Date(currentEpisode.publishedAt).toLocaleDateString()}</span>
+                    <span>•</span>
+                    <span>{currentEpisode?.duration}</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={togglePlayPause}
+                      className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
+                      title="Play or pause episode"
+                    >
+                      {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+                    </button>
+                    <button
+                      onClick={skipBackward}
+                      className="p-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors"
+                      title="Skip backward"
+                    >
+                      <SkipBack className="h-6 w-6" />
+                    </button>
+                    <button
+                      onClick={skipForward}
+                      className="p-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors"
+                      title="Skip forward"
+                    >
+                      <SkipForward className="h-6 w-6" />
+                    </button>
+                    <button className="p-3 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition-colors" title="Volume">
+                      <Volume2 className="h-6 w-6" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       {/* Episodes List */}
       <section className="py-20">
@@ -674,120 +440,78 @@ const PodcastPage: React.FC = () => {
           {/* Episodes Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredEpisodes.map((episode, index) => (
-              <motion.div
+              <PodcastEpisode
                 key={episode.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 * index }}
-                className="bg-gray-800 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-transform duration-300"
-              >
-                <div className="relative h-48">
-                  {episode.imageUrl && (
-                    <Image
-                      src={episode.imageUrl}
-                      alt={episode.title}
-                      width={768} // Assuming a common width for podcast images
-                      height={192} // h-48 = 192px
-                      className="w-full h-full object-cover"
-                      style={{ objectFit: 'cover' }} // Ensure object-fit is applied
-                    />
-                  )}
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full">
-                      {episode.category}
-                    </span>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-2">{episode.title}</h3>
-                <p className="text-gray-400 mb-4">{episode.description}</p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4 text-sm text-gray-400">
-                    <span>{episode.date}</span>
-                    <span>•</span>
-                    <span>{episode.duration}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <button className="p-2 bg-gray-700 text-gray-400 rounded-full hover:bg-blue-500 hover:text-white transition-colors" title="Like">
-                      <Heart className="h-4 w-4" />
-                    </button>
-                    <ShareButtons 
-                      url={`${window.location.origin}/podcasts/${episode.id}`}
-                      title={episode.title}
-                      description={episode.description}
-                    />
-                    <button className="p-2 bg-gray-700 text-gray-400 rounded-full hover:bg-blue-500 hover:text-white transition-colors" title="Comment">
-                      <MessageSquare className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                episode={episode}
+                onPlay={(ep) => setCurrentEpisode(ep)}
+                isPlaying={isPlaying}
+                isActive={currentEpisode?.id === episode.id}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    {/* Subscription CTA */}
-    <motion.div 
-      className="mt-16 bg-gradient-to-r from-purple-900/50 to-indigo-900/50 rounded-xl p-8 backdrop-blur-sm"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
-    >
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-        <div>
-          <h3 className="text-2xl font-bold text-white mb-2">Subscribe to Our Podcast</h3>
-          <p className="text-gray-300">Never miss an episode. Get notified when new content is available.</p>
+      {/* Subscription CTA */}
+      <motion.div
+        className="mt-16 bg-gradient-to-r from-purple-900/50 to-indigo-900/50 rounded-xl p-8 backdrop-blur-sm"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <h3 className="text-2xl font-bold text-white mb-2">Subscribe to Our Podcast</h3>
+            <p className="text-gray-300">Never miss an episode. Get notified when new content is available.</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <motion.button
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg flex items-center"
+              whileHover={{ scale: 1.05, backgroundColor: "#7C3AED" }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm-1-5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm0-4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"></path>
+              </svg>
+              Apple Podcasts
+            </motion.button>
+            <motion.button
+              className="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center"
+              whileHover={{ scale: 1.05, backgroundColor: "#059669" }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path>
+              </svg>
+              Spotify
+            </motion.button>
+            <motion.button
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg flex items-center"
+              whileHover={{ scale: 1.05, backgroundColor: "#2563EB" }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path>
+              </svg>
+              Google Podcasts
+            </motion.button>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-3">
-          <motion.button 
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg flex items-center"
-            whileHover={{ scale: 1.05, backgroundColor: "#7C3AED" }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm-1-5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm0-4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"></path>
-            </svg>
-            Apple Podcasts
-          </motion.button>
-          <motion.button 
-            className="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center"
-            whileHover={{ scale: 1.05, backgroundColor: "#059669" }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path>
-            </svg>
-            Spotify
-          </motion.button>
-          <motion.button 
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg flex items-center"
-            whileHover={{ scale: 1.05, backgroundColor: "#2563EB" }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path>
-            </svg>
-            Google Podcasts
-          </motion.button>
-        </div>
-      </div>
-    </motion.div>
+      </motion.div>
 
-    {/* Audio player */}
-    <AudioPlayer
-      currentEpisode={currentEpisode}
-      isPlaying={isPlaying}
-      currentTime={currentTime}
-      duration={duration}
-      volume={volume}
-      onPlayPause={togglePlayPause}
-      onVolumeChange={setVolume}
-      onSeek={seek}
-      onSkipForward={skipForward}
-      onSkipBackward={skipBackward}
-    />
+      {/* Audio player */}
+      <AudioPlayer
+        currentEpisode={currentEpisode}
+        isPlaying={isPlaying}
+        currentTime={currentTime}
+        duration={duration}
+        volume={volume}
+        onPlayPause={togglePlayPause}
+        onVolumeChange={setVolume}
+        onSeek={seek}
+        onSkipForward={skipForward}
+        onSkipBackward={skipBackward}
+      />
     </div>
   );
 };

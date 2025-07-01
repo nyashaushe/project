@@ -21,6 +21,6 @@ export async function fetchTestimonials(params?: Record<string, any>): Promise<T
 }
 
 export async function submitTestimonial(data: Omit<Testimonial, 'id' | 'publishedAt'>): Promise<Testimonial> {
-  const response = await axios.post(`${API_URL}/testimonials`, data);
+  const response = await axios.post(`${API_URL}/testimonials`, { data }); // Strapi expects data nested under 'data'
   return { id: response.data.data.id, ...response.data.data.attributes };
 }

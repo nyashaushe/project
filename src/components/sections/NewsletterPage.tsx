@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { fetchNewsletters, subscribeToNewsletter, Newsletter } from '../../services/api/newsletter';
+import { fetchNewsletters, Newsletter } from '../../services/api/newsletter';
+import { subscribe } from '../../services/api/subscriber';
 
 const NewsletterPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ const NewsletterPage: React.FC = () => {
     setStatus('loading');
     setError(null);
     try {
-      await subscribeToNewsletter(email);
+      await subscribe(email);
       setStatus('success');
       setEmail('');
     } catch (err) {
@@ -59,7 +60,7 @@ const NewsletterPage: React.FC = () => {
             {newsletters.map(newsletter => (
               <li key={newsletter.id} className="bg-gray-800 rounded-lg p-4 text-left">
                 <h4 className="text-lg font-semibold text-white">{newsletter.title}</h4>
-                <p className="text-gray-400">{newsletter.summary}</p>
+                <p className="text-gray-400">{newsletter.content}</p>
               </li>
             ))}
             {newsletters.length === 0 && <li className="text-gray-400">No newsletters yet.</li>}

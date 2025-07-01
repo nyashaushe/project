@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Calendar, Award, Briefcase } from 'lucide-react';
+import { fetchStats, Stat } from '@/services/api/stats';
 
 interface StatItemProps {
   icon: React.ReactNode;
@@ -58,29 +59,32 @@ const StatItem: React.FC<StatItemProps> = ({ icon, value, label }) => {
   );
 };
 
+const iconMap: Record<string, React.ReactNode> = {
+  users: <Users className="h-6 w-6 text-purple-400" />,
+  calendar: <Calendar className="h-6 w-6 text-purple-400" />,
+  award: <Award className="h-6 w-6 text-purple-400" />,
+  briefcase: <Briefcase className="h-6 w-6 text-purple-400" />,
+};
+
 const Stats: React.FC = () => {
-  const stats = [
-    {
-      icon: <Calendar className="h-6 w-6 text-purple-400" />,
-      value: "5+",
-      label: "Years Experience"
-    },
-    {
-      icon: <Briefcase className="h-6 w-6 text-purple-400" />,
-      value: "100+",
-      label: "Projects Completed"
-    },
-    {
-      icon: <Users className="h-6 w-6 text-purple-400" />,
-      value: "50+",
-      label: "Happy Clients"
-    },
-    {
-      icon: <Award className="h-6 w-6 text-purple-400" />,
-      value: "99%",
-      label: "Client Satisfaction"
-    }
-  ];
+  const [stats, setStats] = useState<Stat[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getStats = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchStats();
+        setStats(data);
+      } catch (err) {
+        setError('Failed to load stats.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    getStats();
+  }, []);
 
   return (
     <section className="py-16 px-4 bg-gray-900/50 relative overflow-hidden">
@@ -95,41 +99,47 @@ const Stats: React.FC = () => {
         }}
       />
       <div className="max-w-7xl mx-auto relative z-10">
-        <motion.div 
-          className="grid grid-cols-2 md:grid-cols-4 gap-8"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.2
+        {loading ? (
+          <div className="text-center text-white py-10">Loading stats...</div>
+        ) : error ? (
+          <div className="text-center text-red-500 py-10">{error}</div>
+        ) : (
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-8"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.2
+                }
               }
-            }
-          }}
-        >
-          {stats.map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ 
-                y: -10, 
-                filter: "drop-shadow(0 10px 15px rgba(167, 139, 250, 0.3))"
-              }}
-            >
-              <StatItem
-                icon={stat.icon}
-                value={stat.value}
-                label={stat.label}
-              />
-            </motion.div>
-          ))}
-        </motion.div>
+            }}
+          >
+            {stats.map((stat, index) => (
+              <motion.div
+                key={stat.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ 
+                  y: -10, 
+                  filter: "drop-shadow(0 10px 15px rgba(167, 139, 250, 0.3))"
+                }}
+              >
+                <StatItem
+                  icon={iconMap[stat.icon] || <Award className="h-6 w-6 text-purple-400" />} // fallback icon
+                  value={stat.value}
+                  label={stat.label}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </section>
   );

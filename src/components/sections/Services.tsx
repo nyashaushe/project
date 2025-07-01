@@ -1,33 +1,37 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Monitor, Zap, Bot, BarChart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { fetchServices, Service } from '@/services/api/services';
 
-const services = [
-  {
-    icon: <Monitor className="w-6 h-6 text-white" />, 
-    title: "Website Development",
-    description: "We craft modern, responsive, and SEO-optimized websites tailored to your brand and business goals. From landing pages to complex web apps, our solutions are built for performance, accessibility, and growth."
-  },
-  {
-    icon: <Zap className="w-6 h-6 text-white" />, 
-    title: "AI Automations",
-    description: "Automate repetitive tasks, streamline workflows, and unlock new efficiencies with custom AI-powered solutions. We design intelligent automations that save you time and let your team focus on what matters most."
-  },
-  {
-    icon: <Bot className="w-6 h-6 text-white" />, 
-    title: "AI Agent Creation",
-    description: "Deploy smart AI agents for customer support, lead generation, and data processing. Our agents are tailored to your business needs, providing 24/7 assistance and actionable insights."
-  },
-  {
-    icon: <BarChart className="w-6 h-6 text-white" />, 
-    title: "Digital Marketing",
-    description: "Grow your online presence with data-driven marketing strategies. We offer SEO, content marketing, and targeted campaigns to attract, engage, and convert your ideal customers."
-  }
-];
+const ICONS: Record<string, React.ElementType> = {
+  Monitor,
+  Zap,
+  Bot,
+  BarChart,
+};
 
 const Services: React.FC = () => {
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getServices = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchServices();
+        setServices(data);
+      } catch (err) {
+        setError('Failed to load services.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    getServices();
+  }, []);
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -38,17 +42,18 @@ const Services: React.FC = () => {
       }
     }
   };
-
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
   };
-
   const iconVariants = {
     hidden: { scale: 0, rotate: -180 },
     visible: { scale: 1, rotate: 0, transition: { type: "spring", stiffness: 200 } },
     hover: { scale: 1.2, rotate: 15, transition: { type: "spring", stiffness: 300 } }
   };
+
+  if (loading) return <div className="text-center text-white py-20">Loading services...</div>;
+  if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
   return (
     <section className="py-24 relative overflow-hidden">
@@ -78,44 +83,46 @@ const Services: React.FC = () => {
             Discover how our comprehensive digital solutions can transform your business, drive innovation, and deliver measurable results in a rapidly evolving world.
           </motion.p>
         </motion.div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              whileHover={{ 
-                y: -10, 
-                boxShadow: "0 10px 25px -5px rgba(167, 139, 250, 0.4)",
-                background: "linear-gradient(to bottom right, rgba(126, 34, 206, 0.3), rgba(79, 70, 229, 0.2))"
-              }}
-              className="card-gradient rounded-lg p-6 transition-all duration-300 backdrop-blur-sm border border-purple-500/10"
-            >
-              <motion.div 
-                className="bg-white/10 rounded-lg p-3 w-fit mb-4"
-                variants={iconVariants}
-                whileHover="hover"
+          {services.map((service, index) => {
+            const Icon = service.icon && ICONS[service.icon] ? ICONS[service.icon] : Monitor;
+            return (
+              <motion.div
+                key={service.id}
+                variants={itemVariants}
+                whileHover={{ 
+                  y: -10, 
+                  boxShadow: "0 10px 25px -5px rgba(167, 139, 250, 0.4)",
+                  background: "linear-gradient(to bottom right, rgba(126, 34, 206, 0.3), rgba(79, 70, 229, 0.2))"
+                }}
+                className="card-gradient rounded-lg p-6 transition-all duration-300 backdrop-blur-sm border border-purple-500/10"
               >
-                {service.icon}
+                <motion.div 
+                  className="bg-white/10 rounded-lg p-3 w-fit mb-4"
+                  variants={iconVariants}
+                  whileHover="hover"
+                >
+                  <Icon className="w-6 h-6 text-white" />
+                </motion.div>
+                <motion.h3 
+                  className="text-lg font-semibold text-white mb-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 + index * 0.1 }}
+                >
+                  {service.title}
+                </motion.h3>
+                <motion.p 
+                  className="text-gray-400 text-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
+                >
+                  {service.description}
+                </motion.p>
               </motion.div>
-              <motion.h3 
-                className="text-lg font-semibold text-white mb-2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 + index * 0.1 }}
-              >
-                {service.title}
-              </motion.h3>
-              <motion.p 
-                className="text-gray-400 text-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-              >
-                {service.description}
-              </motion.p>
-            </motion.div>
-          ))}
+            );
+          })}
         </div>
       </motion.div>
     </section>

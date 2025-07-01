@@ -1,73 +1,49 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Target, Award, Heart, Lightbulb, Zap } from 'lucide-react';
-import Image from 'next/image'; // Import Next.js Image component
+import Image from 'next/image';
 import Button from '../ui/Button';
+import { fetchTeamMembers, fetchCompanyValues, TeamMember, CompanyValue } from '@/services/api/about';
 
-// Mock data for team members
-const teamMembers = [
-  {
-    id: 1,
-    name: 'Sarah Johnson',
-    role: 'CEO & Founder',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80',
-    bio: 'Visionary leader with 15+ years of experience in tech innovation.',
-    social: {
-      linkedin: 'https://linkedin.com',
-      twitter: 'https://twitter.com'
-    }
-  },
-  {
-    id: 2,
-    name: 'Michael Chen',
-    role: 'CTO',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80',
-    bio: 'Tech expert specializing in cloud architecture and AI solutions.',
-    social: {
-      linkedin: 'https://linkedin.com',
-      github: 'https://github.com'
-    }
-  },
-  {
-    id: 3,
-    name: 'Emily Rodriguez',
-    role: 'Head of Design',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80',
-    bio: 'Award-winning designer with a passion for user experience.',
-    social: {
-      linkedin: 'https://linkedin.com',
-      dribbble: 'https://dribbble.com'
-    }
-  }
-];
-
-// Mock data for company values
-const values = [
-  {
-    icon: <Target className="w-6 h-6" />,
-    title: 'Innovation',
-    description: 'Pushing boundaries and embracing new technologies to solve complex problems.'
-  },
-  {
-    icon: <Heart className="w-6 h-6" />,
-    title: 'Customer First',
-    description: 'Putting our clients\' needs at the center of everything we do.'
-  },
-  {
-    icon: <Lightbulb className="w-6 h-6" />,
-    title: 'Excellence',
-    description: 'Striving for the highest quality in every project we undertake.'
-  },
-  {
-    icon: <Zap className="w-6 h-6" />,
-    title: 'Agility',
-    description: 'Adapting quickly to change and delivering results efficiently.'
-  }
-];
+const ICONS: Record<string, JSX.Element> = {
+  Target: <Target className="w-6 h-6" />,
+  Heart: <Heart className="w-6 h-6" />,
+  Lightbulb: <Lightbulb className="w-6 h-6" />,
+  Zap: <Zap className="w-6 h-6" />,
+  Award: <Award className="w-6 h-6" />,
+  Users: <Users className="w-6 h-6" />,
+};
 
 const About: React.FC = () => {
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [values, setValues] = useState<CompanyValue[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [team, vals] = await Promise.all([
+          fetchTeamMembers(),
+          fetchCompanyValues(),
+        ]);
+        setTeamMembers(team);
+        setValues(vals);
+      } catch (err) {
+        setError('Failed to load about data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) return <div className="text-center text-white py-20">Loading about info...</div>;
+  if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
+
   return (
     <section className="py-24 bg-gradient-to-b from-dark to-blue-900/20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -115,14 +91,14 @@ const About: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <motion.div
-                key={index}
+                key={value.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 className="bg-gray-900/50 backdrop-blur-sm rounded-xl p-6"
               >
-                <div className="text-purple-400 mb-4">{value.icon}</div>
+                <div className="text-purple-400 mb-4">{ICONS[value.icon] || <Users className="w-6 h-6" />}</div>
                 <h4 className="text-xl font-semibold text-white mb-2">{value.title}</h4>
                 <p className="text-gray-400">{value.description}</p>
               </motion.div>
@@ -150,10 +126,10 @@ const About: React.FC = () => {
                   <Image
                     src={member.image}
                     alt={member.name}
-                    width={256} // Specify appropriate width
-                    height={256} // Specify appropriate height
+                    width={256}
+                    height={256}
                     className="w-full h-64 object-cover"
-                    style={{ objectFit: 'cover' }} // Ensure object-fit is applied
+                    style={{ objectFit: 'cover' }}
                   />
                 </div>
                 <div className="p-6">
@@ -161,36 +137,17 @@ const About: React.FC = () => {
                   <p className="text-purple-400 mb-3">{member.role}</p>
                   <p className="text-gray-400 mb-4">{member.bio}</p>
                   <div className="flex space-x-4">
-                    {member.social.linkedin && (
+                    {member.social && Object.entries(member.social).map(([platform, url]) => (
                       <a
-                        href={member.social.linkedin}
+                        key={platform}
+                        href={url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-gray-400 hover:text-white transition-colors"
                       >
-                        LinkedIn
+                        {platform.charAt(0).toUpperCase() + platform.slice(1)}
                       </a>
-                    )}
-                    {member.social.twitter && (
-                      <a
-                        href={member.social.twitter}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-white transition-colors"
-                      >
-                        Twitter
-                      </a>
-                    )}
-                    {member.social.github && (
-                      <a
-                        href={member.social.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-white transition-colors"
-                      >
-                        GitHub
-                      </a>
-                    )}
+                    ))}
                   </div>
                 </div>
               </motion.div>
@@ -220,4 +177,4 @@ const About: React.FC = () => {
   );
 };
 
-export default About; 
+export default About;

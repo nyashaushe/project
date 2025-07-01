@@ -24,3 +24,8 @@ export async function fetchArticle(id: number): Promise<Article> {
   const response = await axios.get(`${API_URL}/articles/${id}`);
   return { id: response.data.data.id, ...response.data.data.attributes };
 }
+
+export async function createArticle(articleData: Omit<Article, 'id' | 'publishedAt'>): Promise<Article> {
+  const response = await axios.post(`${API_URL}/articles`, { data: articleData });
+  return { id: response.data.data.id, ...response.data.data.attributes };
+}

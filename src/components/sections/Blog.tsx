@@ -1,49 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Calendar, User, Tag, ChevronRight, Clock } from 'lucide-react';
-import Image from 'next/image'; // Import Next.js Image component
+import Image from 'next/image';
 import Button from '../ui/Button';
+import { fetchBlogPosts, BlogPost } from '@/services/api/blog';
 
-// Mock data for blog posts
-const blogPosts = [
-  {
-    id: 1,
-    title: 'The Future of Web Development',
-    excerpt: 'Exploring the latest trends and technologies shaping the future of web development.',
-    image: '/blog/web-dev.jpg',
-    author: 'John Doe',
-    date: 'April 29, 2025',
-    readTime: '5 min read',
-    category: 'Technology',
-    tags: ['Web Development', 'Future Tech', 'Trends']
-  },
-  {
-    id: 2,
-    title: 'Building Scalable Applications',
-    excerpt: 'Best practices and strategies for building applications that can handle growth.',
-    image: '/blog/scalable.jpg',
-    author: 'Jane Smith',
-    date: 'April 28, 2025',
-    readTime: '7 min read',
-    category: 'Development',
-    tags: ['Scalability', 'Architecture', 'Best Practices']
-  },
-  {
-    id: 3,
-    title: 'UI/UX Design Principles',
-    excerpt: 'Essential design principles for creating intuitive and engaging user experiences.',
-    image: '/blog/design.jpg',
-    author: 'Mike Johnson',
-    date: 'April 27, 2025',
-    readTime: '6 min read',
-    category: 'Design',
-    tags: ['UI/UX', 'Design', 'User Experience']
-  }
-];
-
-// Mock data for categories
 const categories = [
   'All',
   'Technology',
@@ -54,16 +17,37 @@ const categories = [
 ];
 
 const Blog: React.FC = () => {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Filter posts based on search query and selected category
+  useEffect(() => {
+    const getBlogPosts = async () => {
+      try {
+        setLoading(true);
+        const posts = await fetchBlogPosts();
+        setBlogPosts(posts);
+      } catch (err) {
+        setError('Failed to fetch blog posts.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getBlogPosts();
+  }, []);
+
   const filteredPosts = blogPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
+                         post.content.toLowerCase().includes(searchQuery.toLowerCase()); // Assuming content for excerpt
+    const matchesCategory = selectedCategory === 'All' || (post.categories && post.categories.includes(selectedCategory));
     return matchesSearch && matchesCategory;
   });
+
+  if (loading) return <div className="text-center text-white py-20">Loading blog posts...</div>;
+  if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
   return (
     <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
@@ -124,33 +108,36 @@ const Blog: React.FC = () => {
             >
               <div className="relative h-48">
                 <Image
-                  src={post.image}
+                  src={post.featuredImage || '/blog/default.jpg'} // Use a default image if none is provided
                   alt={post.title}
-                  layout="fill" // Use layout="fill" for responsive images
-                  objectFit="cover" // Ensure object-fit is applied
+                  layout="fill"
+                  objectFit="cover"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full">
-                    {post.category}
-                  </span>
+                  {post.categories && post.categories.length > 0 && (
+                    <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full">
+                      {post.categories[0]}
+                    </span>
+                  )}
                 </div>
               </div>
               <div className="p-6">
                 <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
                   <span>{post.author}</span>
                   <span>•</span>
-                  <span>{post.date}</span>
-                  <span>•</span>
+                  <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                  {/* Assuming readTime is not directly from Strapi, or needs calculation */}
+                  {/* <span>•</span>
                   <span className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
                     {post.readTime}
-                  </span>
+                  </span> */}
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">{post.title}</h3>
-                <p className="text-gray-400 mb-4">{post.excerpt}</p>
+                <p className="text-gray-400 mb-4">{post.content.substring(0, 150)}...</p> {/* Use content as excerpt */}
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {post.tags.map((tag) => (
+                  {post.categories && post.categories.map((tag: string) => (
                     <span
                       key={tag}
                       className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded-full"
@@ -173,12 +160,13 @@ const Blog: React.FC = () => {
         </div>
 
         {/* Load More Button */}
-        <div className="text-center mt-12">
+        {/* You might implement pagination with Strapi for this */}
+        {/* <div className="text-center mt-12">
           <Button variant="ghost" className="group">
             Load More Articles
             <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
-        </div>
+        </div> */}
       </div>
     </section>
   );

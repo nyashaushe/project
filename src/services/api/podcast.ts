@@ -24,3 +24,8 @@ export async function fetchPodcast(id: number): Promise<Podcast> {
   const response = await axios.get(`${API_URL}/podcasts/${id}`);
   return { id: response.data.data.id, ...response.data.data.attributes };
 }
+
+export async function createPodcast(podcastData: Omit<Podcast, 'id' | 'publishedAt'>): Promise<Podcast> {
+  const response = await axios.post(`${API_URL}/podcasts`, { data: podcastData });
+  return { id: response.data.data.id, ...response.data.data.attributes };
+}

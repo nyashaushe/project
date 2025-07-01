@@ -22,7 +22,7 @@ export async function fetchNewsletter(id: number): Promise<Newsletter> {
   return { id: response.data.data.id, ...response.data.data.attributes };
 }
 
-export async function subscribeToNewsletter(email: string): Promise<any> {
-  const response = await axios.post(`${API_URL}/newsletter-subscribers`, { email });
-  return response.data;
+export async function createNewsletter(newsletterData: Omit<Newsletter, 'id' | 'publishedAt'>): Promise<Newsletter> {
+  const response = await axios.post(`${API_URL}/newsletters`, { data: newsletterData });
+  return { id: response.data.data.id, ...response.data.data.attributes };
 }
