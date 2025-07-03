@@ -1,0 +1,5 @@
+/**
+ * testimonial service
+ */
+
+export default () => ({});

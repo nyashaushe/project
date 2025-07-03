@@ -4,8 +4,8 @@
  * blog router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreRouter('api::blog.blog');
+export default factories.createCoreRouter('api::blog.blog');
 
 export {};

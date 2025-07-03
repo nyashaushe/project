@@ -4,8 +4,8 @@
  * feature router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreRouter('api::feature.feature');
+export default factories.createCoreRouter('api::feature.feature');
 
 export {};

@@ -4,8 +4,8 @@
  * stat controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreController('api::stat.stat');
+export default factories.createCoreController('api::stat.stat');
 
 export {};

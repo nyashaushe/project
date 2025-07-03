@@ -4,8 +4,8 @@
  * techstack service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreService('api::techstack.techstack');
+export default factories.createCoreService('api::techstack.techstack');
 
 export {};

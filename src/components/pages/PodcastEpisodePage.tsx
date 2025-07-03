@@ -27,7 +27,7 @@ const PodcastEpisodePage: React.FC = () => {
         setLoading(true);
         const data = await fetchPodcast(Number(id));
         setEpisode(data);
-      } catch (err) {
+      } catch {
         setError('Failed to load episode');
       } finally {
         setLoading(false);
@@ -77,10 +77,10 @@ const PodcastEpisodePage: React.FC = () => {
 
   const commentsManager = useComments({
     initialComments: episode.comments,
-    onCommentAdd: async (comment) => {
+    onCommentAdd: async () => {
       showToast('Comment added successfully', 'success');
     },
-    onCommentLike: async (commentId) => {
+    onCommentLike: async () => {
       showToast('Comment liked', 'success');
     }
   });

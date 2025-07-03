@@ -4,8 +4,8 @@
  * pricing service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreService('api::pricing.pricing');
+export default factories.createCoreService('api::pricing.pricing');
 
 export {};

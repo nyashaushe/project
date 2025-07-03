@@ -4,8 +4,8 @@
  * pricing router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreRouter('api::pricing.pricing');
+export default factories.createCoreRouter('api::pricing.pricing');
 
 export {};

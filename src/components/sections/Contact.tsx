@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, Linkedin, Twitter, Github, Globe } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Linkedin, Twitter, Github } from 'lucide-react';
 import Button from '../ui/Button';
 
 interface ContactFormData {
@@ -30,7 +30,7 @@ const Contact: React.FC = () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       setSubmitStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch (error) {
+    } catch {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);

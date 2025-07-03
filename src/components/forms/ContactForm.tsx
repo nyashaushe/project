@@ -1,26 +1,40 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import Button from '../ui/Button';
 import { Phone, Mail, ArrowRight, ArrowLeft } from 'lucide-react';
-import { submitContactForm, ContactFormSubmission } from '../../services/api/contact';
+import { submitContactForm } from '../../services/api/contact';
+import { useToast } from '../../contexts/ToastContext';
 
-interface ContactFormData {
-  name: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  subject: string;
-  message: string;
-  subscribeToNewsletter: boolean;
-  agreeToPrivacyPolicy: boolean;
-}
+const schema = z.object({
+  name: z.string().min(1, { message: 'Name is required' }),
+  email: z.string().email({ message: 'Invalid email address' }),
+  phone: z.string().optional(),
+  company: z.string().optional(),
+  subject: z.string().min(1, { message: 'Please select a subject' }),
+  message: z.string().min(1, { message: 'Message is required' }),
+  subscribeToNewsletter: z.boolean(),
+  agreeToPrivacyPolicy: z.boolean().refine((val) => val === true, {
+    message: 'You must agree to the privacy policy',
+  }),
+});
+
+type ContactFormData = z.infer<typeof schema>;
 
 const ContactForm: React.FC = () => {
-  const { register, handleSubmit, formState: { errors }, trigger, getValues, reset } = useForm<ContactFormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    trigger,
+    reset,
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(schema),
+  });
+  const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
 
   const steps = [
@@ -41,44 +55,18 @@ const ContactForm: React.FC = () => {
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
-    setSubmitError(null);
-    
     try {
       await submitContactForm(data);
-      console.log('Form submitted:', data);
-      
-      setSubmitSuccess(true);
+      showToast('Message sent successfully!', 'success');
       reset();
-      setCurrentStep(0); // Reset to first step on success
+      setCurrentStep(0);
     } catch (error) {
-      setSubmitError('There was an error submitting your form. Please try again.');
+      showToast('There was an error submitting your form. Please try again.', 'error');
       console.error('Form submission error:', error);
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  if (submitSuccess) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="bg-white/5 border border-white/10 rounded-lg p-8 text-center"
-      >
-        <h3 className="text-xl font-semibold text-white mb-4">Thank You!</h3>
-        <p className="text-gray-300 mb-6">
-          Your message has been received. We'll get back to you as soon as possible.
-        </p>
-        <Button
-          variant="primary"
-          onClick={() => setSubmitSuccess(false)}
-          className="mx-auto"
-        >
-          Send Another Message
-        </Button>
-      </motion.div>
-    );
-  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -103,7 +91,7 @@ const ContactForm: React.FC = () => {
                 </label>
                 <input
                   id="name"
-                  {...register('name', { required: 'Name is required' })}
+                  {...register('name')}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="John Doe"
                 />
@@ -119,13 +107,7 @@ const ContactForm: React.FC = () => {
                 <input
                   id="email"
                   type="email"
-                  {...register('email', {
-                    required: 'Email is required',
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: 'Invalid email address'
-                    }
-                  })}
+                  {...register('email')}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="john@example.com"
                 />
@@ -177,7 +159,7 @@ const ContactForm: React.FC = () => {
                 </label>
                 <select
                   id="subject"
-                  {...register('subject', { required: 'Please select a subject' })}
+                  {...register('subject')}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   defaultValue=""
                   style={{ color: 'white' }}
@@ -200,7 +182,7 @@ const ContactForm: React.FC = () => {
                 </label>
                 <textarea
                   id="message"
-                  {...register('message', { required: 'Message is required' })}
+                  {...register('message')}
                   rows={4}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="Tell us about your project or questions..."
@@ -232,7 +214,7 @@ const ContactForm: React.FC = () => {
                     <input
                       id="agreeToPrivacyPolicy"
                       type="checkbox"
-                      {...register('agreeToPrivacyPolicy', { required: 'You must agree to the privacy policy' })}
+                      {...register('agreeToPrivacyPolicy')}
                       className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                     />
                   </div>
@@ -249,11 +231,7 @@ const ContactForm: React.FC = () => {
             </motion.div>
           )}
 
-          {submitError && (
-            <div className="p-3 bg-red-900/30 border border-red-500/50 rounded-lg">
-              <p className="text-sm text-red-400">{submitError}</p>
-            </div>
-          )}
+
 
           <div className="flex justify-between mt-6">
             {currentStep > 0 && (

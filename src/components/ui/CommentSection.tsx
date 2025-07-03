@@ -1,19 +1,17 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, Heart, Send } from 'lucide-react';
+import { Heart, Send } from 'lucide-react';
 import Image from 'next/image'; // Import Next.js Image component
 import type { PodcastComment, User } from '../../hooks/useComments';
 import { useToast } from '../../contexts/ToastContext';
 
 interface CommentSectionProps {
-  episodeId: number;
   comments: PodcastComment[];
-  onAddComment: (content: string, user: User) => Promise<void>;
-  onLikeComment: (commentId: number) => Promise<void>;
+  onAddComment: (content: string) => Promise<void>;
+  onLikeComment: () => Promise<void>;
 }
 
 const CommentSection: React.FC<CommentSectionProps> = ({
-  episodeId,
   comments,
   onAddComment,
   onLikeComment
@@ -34,10 +32,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         avatar: '/avatars/default.jpg'
       };
 
-      await onAddComment(newComment, currentUser);
+      await onAddComment(newComment);
       setNewComment('');
       showToast('Comment added successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to add comment', 'error');
     } finally {
       setIsSubmitting(false);
@@ -99,7 +97,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                 <p className="text-gray-300 mt-1">{comment.content}</p>
                 <div className="flex items-center gap-4 mt-2">
                   <motion.button
-                    onClick={() => onLikeComment(comment.id)}
+                    onClick={() => onLikeComment()}
                     className={`flex items-center gap-1 text-sm ${
                       comment.isLiked ? 'text-purple-400' : 'text-gray-400'
                     } hover:text-purple-400 transition-colors`}

@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337/api';
+import { fetchCollection, fetchSingleton, createItem } from './apiService';
 
 export interface Podcast {
   id: number;
@@ -10,22 +8,18 @@ export interface Podcast {
   videoUrl?: string;
   duration?: string;
   publishedAt: string;
+  imageUrl?: string;
+  category?: string;
+  likes?: number;
+  isLiked?: boolean;
+  comments?: any[];
+  host?: string;
+  date?: string;
+  guest?: string;
+  type?: string;
 }
 
-export async function fetchPodcasts(params?: Record<string, any>): Promise<Podcast[]> {
-  const response = await axios.get(`${API_URL}/podcasts`, { params });
-  return response.data.data.map((item: any) => ({
-    id: item.id,
-    ...item.attributes
-  }));
-}
-
-export async function fetchPodcast(id: number): Promise<Podcast> {
-  const response = await axios.get(`${API_URL}/podcasts/${id}`);
-  return { id: response.data.data.id, ...response.data.data.attributes };
-}
-
-export async function createPodcast(podcastData: Omit<Podcast, 'id' | 'publishedAt'>): Promise<Podcast> {
-  const response = await axios.post(`${API_URL}/podcasts`, { data: podcastData });
-  return { id: response.data.data.id, ...response.data.data.attributes };
-}
+export const fetchPodcasts = (params?: Record<string, {}>) => fetchCollection<Podcast>('podcasts', params);
+export const fetchPodcast = (id: number) => fetchSingleton<Podcast>(`podcasts/${id}`);
+export const createPodcast = (podcastData: Omit<Podcast, 'id' | 'publishedAt'>) => createItem<Podcast>('podcasts', podcastData);
+export const likePodcast = (id: number) => updateItem<Podcast>('podcasts', id, {});

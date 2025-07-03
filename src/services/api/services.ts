@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337/api';
+import { fetchCollection } from './apiService';
 
 export interface Service {
   id: number;
@@ -9,10 +7,4 @@ export interface Service {
   icon?: string;
 }
 
-export async function fetchServices(): Promise<Service[]> {
-  const response = await axios.get(`${API_URL}/services`);
-  return response.data.data.map((item: any) => ({
-    id: item.id,
-    ...item.attributes
-  }));
-}
+export const fetchServices = () => fetchCollection<Service>('services');

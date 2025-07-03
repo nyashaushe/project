@@ -21,7 +21,7 @@ const Portfolio: React.FC = () => {
         setLoading(true);
         const data = await fetchPortfolioItems();
         setPortfolio(data);
-      } catch (err) {
+      } catch {
         setError('Failed to load portfolio.');
       } finally {
         setLoading(false);

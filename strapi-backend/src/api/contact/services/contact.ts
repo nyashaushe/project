@@ -4,8 +4,8 @@
  * contact service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreService('api::contact.contact');
+export default factories.createCoreService('api::contact.contact');
 
 export {};

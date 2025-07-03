@@ -4,8 +4,8 @@
  * stat service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreService('api::stat.stat');
+export default factories.createCoreService('api::stat.stat');
 
 export {};

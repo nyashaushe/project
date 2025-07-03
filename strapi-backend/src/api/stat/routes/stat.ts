@@ -4,8 +4,8 @@
  * stat router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreRouter('api::stat.stat');
+export default factories.createCoreRouter('api::stat.stat');
 
 export {};

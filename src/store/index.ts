@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-// Import your reducers here
-import counterReducer from '../features/counterSlice';
+import audioPlayerReducer from '../features/audioPlayerSlice';
+import authReducer from '../features/authSlice';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      // Add your reducers here
-      counter: counterReducer,
+      audioPlayer: audioPlayerReducer,
+      auth: authReducer,
     },
   });
 };

@@ -22,7 +22,7 @@ const Features: React.FC = () => {
         setLoading(true);
         const data = await fetchFeatures();
         setFeatures(data);
-      } catch (err) {
+      } catch {
         setError('Failed to load features.');
       } finally {
         setLoading(false);

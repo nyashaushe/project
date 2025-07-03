@@ -10,8 +10,6 @@ import { SiAmazon } from 'react-icons/si';
 import { SiDocker } from 'react-icons/si';
 import { fetchTechStack, TechStackItem } from '@/services/api/techstack';
 
-const SiNodeDotJs = SiNodedotjs;
-
 const iconMap: Record<string, React.ReactNode> = {
   React: <SiReact className="w-8 h-8 text-cyan-400" />,
   'Node.js': <SiNodedotjs className="w-8 h-8 text-green-500" />,
@@ -32,7 +30,7 @@ const TechStack: React.FC = () => {
         setLoading(true);
         const data = await fetchTechStack();
         setTechStack(data);
-      } catch (err) {
+      } catch {
         setError('Failed to load tech stack.');
       } finally {
         setLoading(false);

@@ -36,6 +36,16 @@
     },
     "category": {
       "type": "string"
+    },
+    "comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "podcast"
+    },
+    "likes": {
+      "type": "integer",
+      "default": 0
     }
   }
 }

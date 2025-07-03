@@ -4,8 +4,8 @@
  * blog controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreController('api::blog.blog');
+export default factories.createCoreController('api::blog.blog');
 
 export {};

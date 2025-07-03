@@ -1,10 +1,26 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { fetchContactInfo, ContactInfo } from '../../services/api/contact';
 import { motion } from 'framer-motion';
 import ContactForm from '../forms/ContactForm';
 
 const ContactPage: React.FC = () => {
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
+
+  useEffect(() => {
+    const getContactInfo = async () => {
+      try {
+        const info = await fetchContactInfo();
+        setContactInfo(info);
+      } catch (error) {
+        console.error('Failed to fetch contact info:', error);
+      }
+    };
+
+    getContactInfo();
+  }, []);
+
   return (
     <div className=""> {/* Removed min-h-screen */}
         {/* Hero Section */}
@@ -34,10 +50,34 @@ const ContactPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Removed Contact Information section as requested */}
         <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="bg-gray-800 rounded-xl p-8"
+              >
+                <h2 className="text-2xl font-bold text-white mb-6">Contact Information</h2>
+                {contactInfo && (
+                  <div className="text-gray-300 space-y-4">
+                    <p>
+                      <strong>Email:</strong> {contactInfo.email}
+                    </p>
+                    {contactInfo.phone && (
+                      <p>
+                        <strong>Phone:</strong> {contactInfo.phone}
+                      </p>
+                    )}
+                    {contactInfo.address && (
+                      <p>
+                        <strong>Address:</strong> {contactInfo.address}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, y: 0 }}

@@ -1,16 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Twitter, Facebook, Linkedin, Link2 } from 'lucide-react';
 import { useToast } from '../../contexts/ToastContext';
 
 interface ShareButtonsProps {
   url: string;
   title: string;
-  description: string;
   onShare?: () => void;
 }
 
-export const ShareButtons: React.FC<ShareButtonsProps> = ({ url, title, description, onShare }) => {
+export const ShareButtons: React.FC<ShareButtonsProps> = ({ url, title, onShare }) => {
   const { showToast } = useToast();
 
   const handleShare = (platform: string) => {
@@ -30,7 +28,7 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ url, title, descript
       await navigator.clipboard.writeText(url);
       showToast('Link copied to clipboard!', 'success');
       onShare?.();
-    } catch (error) {
+    } catch {
       showToast('Failed to copy link', 'error');
     }
   };

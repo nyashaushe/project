@@ -4,8 +4,8 @@
  * contact controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreController('api::contact.contact');
+export default factories.createCoreController('api::contact.contact');
 
 export {};

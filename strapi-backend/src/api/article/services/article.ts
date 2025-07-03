@@ -4,8 +4,8 @@
  * article service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreService('api::article.article');
+export default factories.createCoreService('api::article.article');
 
 export {};

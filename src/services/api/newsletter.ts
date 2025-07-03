@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337/api';
+import { fetchCollection, fetchSingleton, createItem } from './apiService';
 
 export interface Newsletter {
   id: number;
@@ -9,20 +7,7 @@ export interface Newsletter {
   publishedAt: string;
 }
 
-export async function fetchNewsletters(params?: Record<string, any>): Promise<Newsletter[]> {
-  const response = await axios.get(`${API_URL}/newsletters`, { params });
-  return response.data.data.map((item: any) => ({
-    id: item.id,
-    ...item.attributes
-  }));
-}
-
-export async function fetchNewsletter(id: number): Promise<Newsletter> {
-  const response = await axios.get(`${API_URL}/newsletters/${id}`);
-  return { id: response.data.data.id, ...response.data.data.attributes };
-}
-
-export async function createNewsletter(newsletterData: Omit<Newsletter, 'id' | 'publishedAt'>): Promise<Newsletter> {
-  const response = await axios.post(`${API_URL}/newsletters`, { data: newsletterData });
-  return { id: response.data.data.id, ...response.data.data.attributes };
-}
+export const fetchNewsletters = (params?: Record<string, {}>) => fetchCollection<Newsletter>('newsletters', params);
+export const fetchNewsletter = (id: number) => fetchSingleton<Newsletter>(`newsletters/${id}`);
+export const createNewsletter = (newsletterData: Omit<Newsletter, 'id' | 'publishedAt'>) =>
+  createItem<Newsletter>('newsletters', newsletterData);

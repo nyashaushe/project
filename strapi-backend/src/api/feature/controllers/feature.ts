@@ -4,8 +4,8 @@
  * feature controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreController('api::feature.feature');
+export default factories.createCoreController('api::feature.feature');
 
 export {};

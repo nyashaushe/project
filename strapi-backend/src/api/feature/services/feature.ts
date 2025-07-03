@@ -4,8 +4,8 @@
  * feature service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreService('api::feature.feature');
+export default factories.createCoreService('api::feature.feature');
 
 export {};

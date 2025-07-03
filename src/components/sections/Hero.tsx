@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Code, Cloud, Cpu } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Button from '../ui/Button';
 import CalendarBooking from '../forms/CalendarBooking';
 

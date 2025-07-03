@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+import PodcastPage from '../../src/components/pages/PodcastPage';
 
-export default function PodcastsIndexPage() {
-  redirect('/podcast');
+export default function Podcasts() {
+  return <PodcastPage />;
 }

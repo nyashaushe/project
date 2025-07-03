@@ -4,8 +4,8 @@
  * techstack controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreController('api::techstack.techstack');
+export default factories.createCoreController('api::techstack.techstack');
 
 export {};

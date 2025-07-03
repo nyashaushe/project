@@ -4,8 +4,8 @@
  * subscriber service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreService('api::subscriber.subscriber');
+export default factories.createCoreService('api::subscriber.subscriber');
 
 export {};

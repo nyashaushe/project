@@ -4,8 +4,8 @@
  * newsletter controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreController('api::newsletter.newsletter');
+export default factories.createCoreController('api::newsletter.newsletter');
 
 export {};

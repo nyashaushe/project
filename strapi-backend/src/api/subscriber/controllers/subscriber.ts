@@ -4,8 +4,8 @@
  * subscriber controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreController('api::subscriber.subscriber');
+export default factories.createCoreController('api::subscriber.subscriber');
 
 export {};

@@ -1,13 +1,32 @@
 import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { fetchTestimonials, submitTestimonial, Testimonial } from '../../services/api/testimonial';
+import { useToast } from '../../contexts/ToastContext';
+
+const schema = z.object({
+  author: z.string().min(1, { message: 'Name is required' }),
+  company: z.string().optional(),
+  content: z.string().min(1, { message: 'Testimonial is required' }),
+});
+
+type TestimonialFormData = z.infer<typeof schema>;
 
 const TestimonialsPage: React.FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<TestimonialFormData>({
+    resolver: zodResolver(schema),
+  });
+  const { showToast } = useToast();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [form, setForm] = useState({ author: '', company: '', content: '' });
-  const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [formError, setFormError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchTestimonials()
@@ -21,22 +40,17 @@ const TestimonialsPage: React.FC = () => {
       });
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormStatus('loading');
-    setFormError(null);
+  const onSubmit = async (data: TestimonialFormData) => {
+    setIsSubmitting(true);
     try {
-      const newTestimonial = await submitTestimonial(form);
+      const newTestimonial = await submitTestimonial(data);
       setTestimonials([newTestimonial, ...testimonials]);
-      setForm({ author: '', company: '', content: '' });
-      setFormStatus('success');
-    } catch (err) {
-      setFormStatus('error');
-      setFormError('Failed to submit testimonial. Please try again.');
+      reset();
+      showToast('Thank you for your feedback!', 'success');
+    } catch {
+      showToast('Failed to submit testimonial. Please try again.', 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -51,41 +65,39 @@ const TestimonialsPage: React.FC = () => {
         </div>
         <div className="max-w-xl mx-auto mb-12">
           <h3 className="text-xl font-bold text-white mb-4">Submit Your Testimonial</h3>
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="author"
-              required
-              placeholder="Your Name"
-              className="w-full px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none"
-              value={form.author}
-              onChange={handleChange}
-            />
-            <input
-              type="text"
-              name="company"
-              placeholder="Your Company (optional)"
-              className="w-full px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none"
-              value={form.company}
-              onChange={handleChange}
-            />
-            <textarea
-              name="content"
-              required
-              placeholder="Your testimonial..."
-              className="w-full px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none min-h-[100px]"
-              value={form.content}
-              onChange={handleChange}
-            />
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <div>
+              <input
+                type="text"
+                {...register('author')}
+                placeholder="Your Name"
+                className="w-full px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none"
+              />
+              {errors.author && <p className="text-red-400 text-sm mt-1">{errors.author.message}</p>}
+            </div>
+            <div>
+              <input
+                type="text"
+                {...register('company')}
+                placeholder="Your Company (optional)"
+                className="w-full px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none"
+              />
+            </div>
+            <div>
+              <textarea
+                {...register('content')}
+                placeholder="Your testimonial..."
+                className="w-full px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none min-h-[100px]"
+              />
+              {errors.content && <p className="text-red-400 text-sm mt-1">{errors.content.message}</p>}
+            </div>
             <button
               type="submit"
               className="px-6 py-2 rounded-md bg-purple-600 text-white font-semibold hover:bg-purple-700 transition"
-              disabled={formStatus === 'loading'}
+              disabled={isSubmitting}
             >
-              {formStatus === 'loading' ? 'Submitting...' : 'Submit'}
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>
-            {formStatus === 'success' && <p className="text-green-400">Thank you for your feedback!</p>}
-            {formStatus === 'error' && <p className="text-red-400">{formError}</p>}
           </form>
         </div>
         <div className="mt-12">

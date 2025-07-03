@@ -23,8 +23,7 @@ export default {
       path: '/podcasts',
       handler: 'podcast.create',
       config: {
-        policies: [],
-        middlewares: [],
+        policies: ['global::is-authenticated'],
       },
     },
     {
@@ -32,8 +31,7 @@ export default {
       path: '/podcasts/:id',
       handler: 'podcast.update',
       config: {
-        policies: [],
-        middlewares: [],
+        policies: ['global::is-authenticated'],
       },
     },
     {
@@ -41,9 +39,16 @@ export default {
       path: '/podcasts/:id',
       handler: 'podcast.delete',
       config: {
-        policies: [],
-        middlewares: [],
+        policies: ['global::is-authenticated'],
       },
     },
+    {
+      method: 'PUT',
+      path: '/podcasts/:id/like',
+      handler: 'podcast.like',
+      config: {
+        policies: ['global::is-authenticated'],
+      },
+    }
   ],
 };

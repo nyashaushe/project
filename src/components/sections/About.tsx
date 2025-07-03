@@ -32,7 +32,7 @@ const About: React.FC = () => {
         ]);
         setTeamMembers(team);
         setValues(vals);
-      } catch (err) {
+      } catch {
         setError('Failed to load about data.');
       } finally {
         setLoading(false);

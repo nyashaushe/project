@@ -24,7 +24,7 @@ const Newsletter: React.FC = () => {
     try {
       await subscribe(email);
       setIsSubmitted(true);
-    } catch (err) {
+    } catch {
       setError('Failed to subscribe. Please try again.');
     } finally {
       setLoading(false);

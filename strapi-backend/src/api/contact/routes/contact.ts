@@ -4,8 +4,8 @@
  * contact router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreRouter('api::contact.contact');
+export default factories.createCoreRouter('api::contact.contact');
 
 export {};

@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Calendar, User, Tag, ChevronRight, Clock } from 'lucide-react';
+import { Search, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Button from '../ui/Button';
 import { fetchBlogPosts, BlogPost } from '@/services/api/blog';
+import Skeleton from '../ui/Skeleton';
 
 const categories = [
   'All',
@@ -18,17 +19,38 @@ const categories = [
 
 const Blog: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [meta, setMeta] = useState<{}>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const getBlogPosts = async () => {
       try {
         setLoading(true);
-        const posts = await fetchBlogPosts();
-        setBlogPosts(posts);
+        const params: {} = {
+          pagination: { page, pageSize: 10 },
+          sort: 'publishedAt:desc',
+        };
+        if (searchQuery) {
+          params.filters = {
+            $or: [
+              { title: { $containsi: searchQuery } },
+              { content: { $containsi: searchQuery } },
+            ],
+          };
+        }
+        if (selectedCategory !== 'All') {
+          params.filters = {
+            ...params.filters,
+            categories: { $containsi: selectedCategory },
+          };
+        }
+        const { data, meta } = await fetchBlogPosts(params);
+        setBlogPosts(page === 1 ? data : [...blogPosts, ...data]);
+        setMeta(meta);
       } catch (err) {
         setError('Failed to fetch blog posts.');
         console.error(err);
@@ -37,25 +59,41 @@ const Blog: React.FC = () => {
       }
     };
     getBlogPosts();
-  }, []);
+  }, [searchQuery, selectedCategory, page]);
 
-  console.log('blogPosts:', blogPosts); // Add this line for debugging
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPage(1);
+    // The useEffect hook will automatically refetch the posts
+  };
 
-  const filteredPosts = blogPosts.filter(post => {
-    console.log('Filtering post:', post); // Add this line for debugging
-    // Ensure post and its properties exist before accessing them
-    if (!post || typeof post.title === 'undefined' || typeof post.content === 'undefined') {
-      console.log('Skipping invalid post:', post); // Add this line for debugging
-      return false; // Skip invalid posts
+  const loadMore = () => {
+    if (meta && meta.pagination.page < meta.pagination.pageCount) {
+      setPage(page + 1);
     }
+  };
 
-    const matchesSearch = (post.title as string).toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         (post.content as string).toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || (post.categories && post.categories.includes(selectedCategory));
-    return matchesSearch && matchesCategory;
-  });
-
-  if (loading) return <div className="text-center text-white py-20">Loading blog posts...</div>;
+  if (loading && page === 1) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-gray-800 rounded-xl overflow-hidden">
+                <Skeleton className="h-48" />
+                <div className="p-6">
+                  <Skeleton className="h-4 w-1/4 mb-4" />
+                  <Skeleton className="h-6 w-3/4 mb-2" />
+                  <Skeleton className="h-4 w-full mb-4" />
+                  <Skeleton className="h-10 w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
   if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
   return (
@@ -75,7 +113,7 @@ const Blog: React.FC = () => {
         </motion.div>
 
         {/* Search and Filter */}
-        <div className="mb-12">
+        <form onSubmit={handleSearch} className="mb-12">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             <div className="relative w-full md:w-96">
               <input
@@ -91,7 +129,11 @@ const Blog: React.FC = () => {
               {categories.map((category) => (
                 <button
                   key={category}
-                  onClick={() => setSelectedCategory(category)}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setPage(1);
+                  }}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     selectedCategory === category
                       ? 'bg-blue-500 text-white'
@@ -103,11 +145,11 @@ const Blog: React.FC = () => {
               ))}
             </div>
           </div>
-        </div>
+        </form>
 
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredPosts.map((post, index) => (
+          {blogPosts.map((post, index) => (
             <motion.article
               key={post.id}
               initial={{ opacity: 0, y: 20 }}
@@ -136,15 +178,9 @@ const Blog: React.FC = () => {
                   <span>{post.author}</span>
                   <span>•</span>
                   <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-                  {/* Assuming readTime is not directly from Strapi, or needs calculation */}
-                  {/* <span>•</span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-4 w-4" />
-                    {post.readTime}
-                  </span> */}
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">{post.title}</h3>
-                <p className="text-gray-400 mb-4">{post.content.substring(0, 150)}...</p> {/* Use content as excerpt */}
+                <p className="text-gray-400 mb-4">{post.content.substring(0, 150)}...</p>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {post.categories && post.categories.map((tag: string) => (
                     <span
@@ -169,13 +205,14 @@ const Blog: React.FC = () => {
         </div>
 
         {/* Load More Button */}
-        {/* You might implement pagination with Strapi for this */}
-        {/* <div className="text-center mt-12">
-          <Button variant="ghost" className="group">
-            Load More Articles
-            <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
-          </Button>
-        </div> */}
+        {meta && meta.pagination.page < meta.pagination.pageCount && (
+          <div className="text-center mt-12">
+            <Button variant="ghost" className="group" onClick={loadMore} disabled={loading}>
+              {loading ? 'Loading...' : 'Load More Articles'}
+              <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -4,8 +4,8 @@
  * about router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreRouter('api::about.about');
+export default factories.createCoreRouter('api::about.about');
 
 export {};

@@ -4,8 +4,8 @@
  * newsletter service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreService('api::newsletter.newsletter');
+export default factories.createCoreService('api::newsletter.newsletter');
 
 export {};

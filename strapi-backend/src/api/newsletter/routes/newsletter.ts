@@ -4,8 +4,8 @@
  * newsletter router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+import { factories } from '@strapi/strapi';
 
-module.exports = createCoreRouter('api::newsletter.newsletter');
+export default factories.createCoreRouter('api::newsletter.newsletter');
 
 export {};

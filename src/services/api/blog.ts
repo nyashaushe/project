@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337/api';
+import { fetchCollection, fetchSingleton, createItem } from './apiService';
 
 export interface BlogPost {
   id: number;
@@ -12,20 +10,6 @@ export interface BlogPost {
   publishedAt: string;
 }
 
-export async function fetchBlogPosts(params?: Record<string, any>): Promise<BlogPost[]> {
-  const response = await axios.get(`${API_URL}/blogs`, { params });
-  return response.data.data.map((item: any) => ({
-    id: item.id,
-    ...item.attributes
-  }));
-}
-
-export async function fetchBlogPost(id: number): Promise<BlogPost> {
-  const response = await axios.get(`${API_URL}/blogs/${id}`);
-  return { id: response.data.data.id, ...response.data.data.attributes };
-}
-
-export async function createBlogPost(blogPostData: Omit<BlogPost, 'id' | 'publishedAt'>): Promise<BlogPost> {
-  const response = await axios.post(`${API_URL}/blogs`, { data: blogPostData });
-  return { id: response.data.data.id, ...response.data.data.attributes };
-}
+export const fetchBlogPosts = (params?: Record<string, {}>) => fetchCollection<BlogPost>('blogs', params);
+export const fetchBlogPost = (id: number) => fetchSingleton<BlogPost>(`blogs/${id}`);
+export const createBlogPost = (blogPostData: Omit<BlogPost, 'id' | 'publishedAt'>) => createItem<BlogPost>('blogs', blogPostData);

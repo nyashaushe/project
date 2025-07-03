@@ -40,6 +40,8 @@ const navigation = {
   ],
 };
 
+import NewsletterForm from '../forms/NewsletterForm';
+
 const Footer: React.FC = () => {
   // Animation variants
   const containerVariants = {
@@ -241,12 +243,21 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-        <motion.div 
-          className="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24"
+        <motion.div
+          className="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24 flex flex-col md:flex-row justify-between items-center"
           variants={itemVariants}
         >
+          <div className="md:w-1/2">
+            <h3 className="text-sm font-semibold leading-6 text-white">Subscribe to our newsletter</h3>
+            <p className="mt-2 text-sm leading-6 text-gray-300">
+              The latest news, articles, and resources, sent to your inbox weekly.
+            </p>
+            <div className="mt-6">
+              <NewsletterForm />
+            </div>
+          </div>
           <motion.p 
-            className="text-xs leading-5 text-gray-400"
+            className="text-xs leading-5 text-gray-400 mt-8 md:mt-0"
             whileHover={{ color: "#E9D5FF" }}
           >
             &copy; {new Date().getFullYear()} Baobab Stack, Inc. All rights reserved.

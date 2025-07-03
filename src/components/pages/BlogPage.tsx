@@ -20,7 +20,7 @@ const BlogPage: React.FC = () => {
         const posts = await fetchBlogPosts();
         // Select first 2 as featured, or filter by a 'featured' flag if available
         setFeaturedPosts(posts.slice(0, 2));
-      } catch (err) {
+      } catch {
         setError('Failed to load featured articles.');
       } finally {
         setLoading(false);

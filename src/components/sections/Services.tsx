@@ -23,7 +23,7 @@ const Services: React.FC = () => {
         setLoading(true);
         const data = await fetchServices();
         setServices(data);
-      } catch (err) {
+      } catch {
         setError('Failed to load services.');
       } finally {
         setLoading(false);

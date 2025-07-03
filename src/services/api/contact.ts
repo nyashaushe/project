@@ -1,6 +1,10 @@
-import axios from 'axios';
+import { createItem, fetchSingleton } from './apiService';
 
-const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337/api';
+export interface ContactInfo {
+  email: string;
+  phone?: string;
+  address?: string;
+}
 
 export interface ContactFormSubmission {
   id?: number;
@@ -15,7 +19,6 @@ export interface ContactFormSubmission {
   submittedAt?: string;
 }
 
-export async function submitContactForm(data: Omit<ContactFormSubmission, 'id' | 'submittedAt'>): Promise<ContactFormSubmission> {
-  const response = await axios.post(`${API_URL}/contact-forms`, { data });
-  return { id: response.data.data.id, ...response.data.data.attributes };
-}
+export const fetchContactInfo = () => fetchSingleton<ContactInfo>('contact-info');
+export const submitContactForm = (data: Omit<ContactFormSubmission, 'id' | 'submittedAt'>) =>
+  createItem<ContactFormSubmission>('contact-forms', data);

@@ -1,19 +1,22 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, MessageSquare } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Volume2, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 import Button from '../ui/Button';
 import ShareButtons from '../ui/ShareButtons';
-import { useAudioPlayer } from '../../hooks/useAudioPlayer';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentEpisode, togglePlayPause } from '../../features/audioPlayerSlice';
+import { RootState } from '../../store';
 import LikeButton from '../ui/LikeButton';
-import { useLikes } from '../../hooks/useLikes';
+import { likePodcast } from '../../services/api/podcast';
+import { fetchComments, createComment, likeComment, Comment } from '../../services/api/comment';
 import CommentSection from '../ui/CommentSection';
-import { useComments, PodcastComment } from '../../hooks/useComments';
 import Link from 'next/link';
 import { useToast } from '../../contexts/ToastContext';
 import { fetchPodcasts, Podcast } from '@/services/api/podcast'; // Import Strapi podcast service
+import Skeleton from '../ui/Skeleton';
 
 // Mock categories (can be fetched from Strapi if you have a categories collection)
 const CATEGORIES = ['All', 'Technology', 'Development', 'Business', 'Design'];
@@ -26,29 +29,45 @@ interface PodcastEpisodeProps {
 }
 
 const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlaying, isActive }) => {
-  // Note: Likes and Comments would ideally be managed via Strapi for persistence
-  // For now, keeping the local state for demonstration, but in a real app,
-  // these would interact with Strapi's API for likes/comments if you set them up.
-  const { likes, isLiked, toggleLike } = useLikes({
-    initialLikes: 0, // Initial likes from Strapi, if available
-    isLiked: false, // Initial liked status from Strapi, if available
-    onLikeChange: (isLiked) => {
-      console.log(`Episode ${episode.id} ${isLiked ? 'liked' : 'unliked'}`);
-      // TODO: Implement API call to update likes in Strapi
-    }
-  });
+  const [likes, setLikes] = useState(episode.likes || 0);
+  const [comments, setComments] = useState<Comment[]>([]);
 
-  const { comments, addComment, likeComment } = useComments({
-    initialComments: [], // Initial comments from Strapi, if available
-    onCommentAdd: async (comment) => {
-      console.log('Adding comment:', comment);
-      // TODO: Implement API call to add comment to Strapi
-    },
-    onCommentLike: async (commentId) => {
-      console.log('Liking comment:', commentId);
-      // TODO: Implement API call to like comment in Strapi
+  useEffect(() => {
+    fetchComments(episode.id).then(setComments);
+  }, [episode.id]);
+
+  const handleLike = async () => {
+    try {
+      const updatedPodcast = await likePodcast(episode.id);
+      setLikes(updatedPodcast.likes);
+    } catch (error) {
+      console.error('Failed to like podcast:', error);
     }
-  });
+  };
+
+  const handleAddComment = async (content: string) => {
+    try {
+      const newComment = await createComment({
+        content,
+        author: 'Anonymous', // Or replace with actual user data
+        podcast: episode.id,
+      });
+      setComments([...comments, newComment]);
+    } catch (error) {
+      console.error('Failed to add comment:', error);
+    }
+  };
+
+  const handleLikeComment = async (commentId: number) => {
+    try {
+      const updatedComment = await likeComment(commentId);
+      setComments(
+        comments.map((c) => (c.id === commentId ? updatedComment : c))
+      );
+    } catch (error) {
+      console.error('Failed to like comment:', error);
+    }
+  };
 
   const { showToast } = useToast();
 
@@ -100,8 +119,7 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
             
             <LikeButton
               likes={likes}
-              isLiked={isLiked}
-              onToggle={toggleLike}
+              onToggle={handleLike}
             />
           </div>
           
@@ -122,8 +140,8 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
         <CommentSection
           episodeId={episode.id}
           comments={comments}
-          onAddComment={addComment}
-          onLikeComment={likeComment}
+          onAddComment={handleAddComment}
+          onLikeComment={handleLikeComment}
         />
       </div>
       <div className="mt-4">
@@ -141,138 +159,34 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
   );
 };
 
-const AudioPlayer: React.FC<{
-  currentEpisode: Podcast | null;
-  isPlaying: boolean;
-  currentTime: number;
-  duration: number;
-  volume: number;
-  onPlayPause: () => void;
-  onVolumeChange: (volume: number) => void;
-  onSeek: (time: number) => void;
-  onSkipForward: () => void;
-  onSkipBackward: () => void;
-}> = ({
-  currentEpisode,
-  isPlaying,
-  currentTime,
-  duration,
-  volume,
-  onPlayPause,
-  onVolumeChange,
-  onSeek,
-  onSkipForward,
-  onSkipBackward
-}) => {
-  if (!currentEpisode) return null;
-
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
-
-  return (
-    <motion.div
-      className="fixed bottom-0 left-0 right-0 bg-gray-900/90 backdrop-blur-md border-t border-gray-800 p-4 z-50"
-      initial={{ y: 100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", damping: 20 }}
-    >
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center space-x-4 w-full md:w-auto">
-          {currentEpisode?.imageUrl && (
-            <Image
-              src={currentEpisode.imageUrl}
-              alt={currentEpisode.title}
-              width={48}
-              height={48}
-              className="w-12 h-12 rounded object-cover"
-              style={{ objectFit: 'cover' }}
-            />
-          )}
-          <div>
-            <h4 className="text-white font-medium text-sm">{currentEpisode?.title}</h4>
-            <p className="text-gray-400 text-xs">{currentEpisode?.description}</p> {/* Using description as host for now */}
-          </div>
-        </div>
-        
-        <div className="flex-1 max-w-xl">
-          <div className="flex items-center justify-center space-x-4">
-            <motion.button
-              className="text-gray-400 hover:text-white transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={onSkipBackward}
-            >
-              <SkipBack size={20} />
-            </motion.button>
-            <motion.button
-              className="p-3 rounded-full bg-blue-500 text-white"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={onPlayPause}
-              title="Play or pause episode"
-            >
-              {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-            </motion.button>
-            <motion.button
-              className="text-gray-400 hover:text-white transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={onSkipForward}
-            >
-              <SkipForward size={20} />
-            </motion.button>
-          </div>
-          <div className="flex items-center space-x-2 mt-2">
-            <span className="text-gray-400 text-xs">{formatTime(currentTime)}</span>
-            <input
-              type="range"
-              min={0}
-              max={duration}
-              value={currentTime}
-              onChange={(e) => onVolumeChange(Number(e.target.value))}
-              className="w-20 accent-blue-500"
-              title="Volume control"
-            />
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
 const PodcastPage: React.FC = () => {
+  const dispatch = useDispatch();
+  const { currentEpisode, isPlaying } = useSelector((state: RootState) => state.audioPlayer);
   const [episodes, setEpisodes] = useState<Podcast[]>([]);
+  const [meta, setMeta] = useState<{}>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [currentEpisode, setCurrentEpisode] = useState<Podcast | null>(null);
-  const {
-    isPlaying,
-    currentTime,
-    duration,
-    volume,
-    togglePlayPause,
-    setVolume,
-    skipForward,
-    skipBackward,
-    seek
-  } = useAudioPlayer({
-    audioUrl: currentEpisode?.audioUrl || '',
-    onEnded: () => {
-      setCurrentEpisode(null);
-    }
-  });
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const getPodcastsData = async () => {
       try {
         setLoading(true);
-        const data = await fetchPodcasts();
-        setEpisodes(data);
-        if (data.length > 0) {
+        const params: {} = {
+          pagination: { page, pageSize: 10 },
+          sort: 'publishedAt:desc',
+        };
+        if (selectedCategory !== 'All') {
+          params.filters = {
+            ...params.filters,
+            category: { $eqi: selectedCategory },
+          };
+        }
+        const { data, meta } = await fetchPodcasts(params);
+        setEpisodes(page === 1 ? data : [...episodes, ...data]);
+        setMeta(meta);
+        if (page === 1 && data.length > 0) {
           setCurrentEpisode(data[0]); // Set the first episode as featured by default
         }
       } catch (err) {
@@ -283,14 +197,35 @@ const PodcastPage: React.FC = () => {
       }
     };
     getPodcastsData();
-  }, []);
+  }, [selectedCategory, page]);
 
-  const filteredEpisodes = episodes.filter(episode => {
-    const matchesCategory = selectedCategory === 'All' || (episode.category && episode.category === selectedCategory);
-    return matchesCategory;
-  });
+  const loadMore = () => {
+    if (meta && meta.pagination.page < meta.pagination.pageCount) {
+      setPage(page + 1);
+    }
+  };
 
-  if (loading) return <div className="text-center text-white py-20">Loading podcasts...</div>;
+  if (loading && page === 1) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-gray-800 rounded-xl overflow-hidden">
+                <Skeleton className="h-48" />
+                <div className="p-6">
+                  <Skeleton className="h-4 w-1/4 mb-4" />
+                  <Skeleton className="h-6 w-3/4 mb-2" />
+                  <Skeleton className="h-4 w-full mb-4" />
+                  <Skeleton className="h-10 w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
   if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
   return (
@@ -436,7 +371,7 @@ const PodcastPage: React.FC = () => {
 
           {/* Episodes Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredEpisodes.map((episode, index) => (
+            {episodes.map((episode) => (
               <PodcastEpisode
                 key={episode.id}
                 episode={episode}
@@ -446,6 +381,16 @@ const PodcastPage: React.FC = () => {
               />
             ))}
           </div>
+
+          {/* Load More Button */}
+          {meta && meta.pagination.page < meta.pagination.pageCount && (
+            <div className="text-center mt-12">
+              <Button variant="ghost" className="group" onClick={loadMore} disabled={loading}>
+                {loading ? 'Loading...' : 'Load More Episodes'}
+                <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 
@@ -496,19 +441,6 @@ const PodcastPage: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Audio player */}
-      <AudioPlayer
-        currentEpisode={currentEpisode}
-        isPlaying={isPlaying}
-        currentTime={currentTime}
-        duration={duration}
-        volume={volume}
-        onPlayPause={togglePlayPause}
-        onVolumeChange={setVolume}
-        onSeek={seek}
-        onSkipForward={skipForward}
-        onSkipBackward={skipBackward}
-      />
     </div>
   );
 };

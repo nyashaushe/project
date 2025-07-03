@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useParams } from 'next/navigation';
-import { Clock, Calendar, User, Facebook, Twitter, Linkedin, ChevronLeft } from 'lucide-react';
+import { Calendar, User, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import Button from '../ui/Button';
 import { fetchBlogPost, BlogPost } from '@/services/api/blog';
@@ -21,7 +21,7 @@ const BlogPostPage: React.FC = () => {
         setLoading(true);
         const data = await fetchBlogPost(Number(id));
         setPost(data);
-      } catch (err) {
+      } catch {
         setError('Failed to load blog post.');
       } finally {
         setLoading(false);

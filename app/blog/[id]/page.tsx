@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+
 import BlogPost from '../../../src/components/pages/BlogPost';
 
 export default function DynamicBlogPost({ params }: { params: { id: string } }) {
