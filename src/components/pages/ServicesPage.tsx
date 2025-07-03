@@ -1,8 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import StarField from '../ui/StarField';
+import { getStrapiContent } from '@/lib/strapiApi';
+
+interface Service {
+  id: number;
+  name: string;
+  description: string;
+  icon?: string;
+}
 
 const ServicesPage: React.FC = () => {
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        setLoading(true);
+        const res = await getStrapiContent('services');
+        setServices(res.data || []);
+      } catch (err) {
+        setError('Failed to load services.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchServices();
+  }, []);
+
   return (
     <StarField>
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
@@ -27,9 +54,31 @@ const ServicesPage: React.FC = () => {
 
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Service cards will go here */}
-            </div>
+            {loading ? (
+              <div className="text-center text-white py-10">Loading services...</div>
+            ) : error ? (
+              <div className="text-center text-red-500 py-10">{error}</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {services.map(service => (
+                  <motion.div
+                    key={service.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="bg-gray-800 rounded-xl p-8 shadow-lg border border-violet-400/10"
+                  >
+                    {service.icon && (
+                      <div className="mb-4 text-4xl text-violet-400">
+                        <span>{service.icon}</span>
+                      </div>
+                    )}
+                    <h2 className="text-2xl font-bold text-white mb-4">{service.name}</h2>
+                    <p className="text-gray-300">{service.description}</p>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </div>
