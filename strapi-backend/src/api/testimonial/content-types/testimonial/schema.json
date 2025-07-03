@@ -1,37 +1,26 @@
 {
+  "kind": "collectionType",
   "collectionName": "testimonials",
   "info": {
     "singularName": "testimonial",
     "pluralName": "testimonials",
     "displayName": "Testimonial",
-    "description": "User testimonials"
+    "description": "User testimonials for social proof"
   },
   "options": {
     "draftAndPublish": true
   },
   "attributes": {
-    "content": {
-      "type": "text",
-      "required": true
-    },
-    "author": {
+    "name": {
       "type": "string",
       "required": true
     },
-    "role": {
-      "type": "string"
+    "feedback": {
+      "type": "text",
+      "required": true
     },
     "company": {
       "type": "string"
-    },
-    "image": {
-      "type": "string"
-    },
-    "rating": {
-      "type": "integer"
-    },
-    "publishedAt": {
-      "type": "datetime"
     }
   }
 }

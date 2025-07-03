@@ -16,6 +16,7 @@
     "seed": "node seed.ts"
   },
   "dependencies": {
+    "@_sh/strapi-plugin-ckeditor": "^6.0.2",
     "@strapi/plugin-cloud": "5.16.1",
     "@strapi/plugin-users-permissions": "5.16.1",
     "@strapi/strapi": "5.16.1",
@@ -24,6 +25,7 @@
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
     "sharp": "^0.34.2",
+    "strapi-plugin-email-designer": "^2.2.1",
     "styled-components": "^6.0.0"
   },
   "devDependencies": {
