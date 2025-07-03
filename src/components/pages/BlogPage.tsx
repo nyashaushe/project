@@ -60,21 +60,6 @@ const BlogPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Quick Access Navigation to All Main Sections */}
-        <nav aria-label="Main sections navigation" className="container mx-auto px-4 mb-12">
-          <ul className="flex flex-wrap justify-center gap-4">
-            <li><Link href="/blog" passHref legacyBehavior><Button as="a" variant="ghost" aria-label="Go to Blog">Blog</Button></Link></li>
-            <li><Link href="/podcast" passHref legacyBehavior><Button as="a" variant="ghost" aria-label="Go to Podcast">Podcast</Button></Link></li>
-            <li><Link href="/testimonials" passHref legacyBehavior><Button as="a" variant="ghost" aria-label="Go to Testimonials">Testimonials</Button></Link></li>
-            <li><Link href="/newsletter" passHref legacyBehavior><Button as="a" variant="ghost" aria-label="Go to Newsletter">Newsletter</Button></Link></li>
-            <li><Link href="/contact" passHref legacyBehavior><Button as="a" variant="ghost" aria-label="Go to Contact">Contact</Button></Link></li>
-            <li><Link href="/about" passHref legacyBehavior><Button as="a" variant="ghost" aria-label="Go to About">About</Button></Link></li>
-            <li><Link href="/features" passHref legacyBehavior><Button as="a" variant="ghost" aria-label="Go to Features">Features</Button></Link></li>
-            <li><Link href="/portfolio" passHref legacyBehavior><Button as="a" variant="ghost" aria-label="Go to Portfolio">Portfolio</Button></Link></li>
-            <li><Link href="/services" passHref legacyBehavior><Button as="a" variant="ghost" aria-label="Go to Services">Services</Button></Link></li>
-          </ul>
-        </nav>
-
         {/* Featured Posts */}
         <section className="py-20">
           <div className="container mx-auto px-4">
