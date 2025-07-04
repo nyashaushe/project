@@ -5,14 +5,12 @@ import { motion } from 'framer-motion';
 import { Play, Pause, SkipBack, SkipForward, Volume2, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 import Button from '../ui/Button';
-import ShareButtons from '../ui/ShareButtons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentEpisode, togglePlayPause } from '../../features/audioPlayerSlice';
 import { RootState } from '../../store';
-import LikeButton from '../ui/LikeButton';
 import { likePodcast } from '../../services/api/podcast';
 import { fetchComments, createComment, likeComment, Comment } from '../../services/api/comment';
-import CommentSection from '../ui/CommentSection';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useToast } from '../../contexts/ToastContext';
 import { fetchPodcasts, Podcast } from '@/services/api/podcast'; // Import Strapi podcast service
@@ -20,6 +18,10 @@ import Skeleton from '../ui/Skeleton';
 
 // Mock categories (can be fetched from Strapi if you have a categories collection)
 const CATEGORIES = ['All', 'Technology', 'Development', 'Business', 'Design'];
+
+const CommentSection = dynamic(() => import('../ui/CommentSection'), { ssr: false });
+const LikeButton = dynamic(() => import('../ui/LikeButton'), { ssr: false });
+const ShareButtons = dynamic(() => import('../ui/ShareButtons'), { ssr: false });
 
 interface PodcastEpisodeProps {
   episode: Podcast;

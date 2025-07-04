@@ -1,10 +1,16 @@
+'use client';
+
 import React from 'react';
+import dynamic from 'next/dynamic';
 import Hero from '../sections/Hero';
-import Services from '../sections/Services';
-import Testimonials from '../sections/Testimonials';
-import Stats from '../sections/Stats';
-import TechStack from '../sections/TechStack';
-import ProjectPortfolio from '../sections/ProjectPortfolio';
+
+const Services = dynamic(() => import('../sections/Services'), { ssr: false });
+const Stats = dynamic(() => import('../sections/Stats'), { ssr: false });
+const Features = dynamic(() => import('../sections/Features'), { ssr: false });
+const Portfolio = dynamic(() => import('../sections/Portfolio'), { ssr: false });
+const Pricing = dynamic(() => import('../sections/Pricing'), { ssr: false });
+const Testimonials = dynamic(() => import('../sections/Testimonials'), { ssr: false });
+const TechStack = dynamic(() => import('../sections/TechStack'), { ssr: false });
 
 const HomePage: React.FC = () => {
   return (
@@ -12,7 +18,9 @@ const HomePage: React.FC = () => {
       <Hero />
       <Services />
       <Stats />
-      <ProjectPortfolio />
+      <Features />
+      <Portfolio />
+      <Pricing />
       <Testimonials />
       <TechStack />
     </>

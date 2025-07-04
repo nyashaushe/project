@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { fetchTeamMembers, fetchCompanyValues, TeamMember, CompanyValue } from '../../services/api/about';
 
 const AboutPage: React.FC = () => {
@@ -14,8 +15,8 @@ const AboutPage: React.FC = () => {
           fetchTeamMembers(),
           fetchCompanyValues(),
         ]);
-        setTeamMembers(teamData);
-        setCompanyValues(valuesData);
+        setTeamMembers(teamData.data || []);
+        setCompanyValues(valuesData.data || []);
       } catch (error) {
         console.error('Failed to fetch about page data:', error);
       }
@@ -51,7 +52,14 @@ const AboutPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {teamMembers.map((member) => (
               <div key={member.id} className="text-center">
-                <img src={member.image} alt={member.name} className="w-32 h-32 rounded-full mx-auto mb-4" />
+                <Image
+                  src={member.image}
+                  alt={member.name}
+                  width={128}
+                  height={128}
+                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+                  priority={false}
+                />
                 <h4 className="text-xl font-bold text-white mb-2">{member.name}</h4>
                 <p className="text-gray-400">{member.role}</p>
               </div>

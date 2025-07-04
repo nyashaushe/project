@@ -5,7 +5,8 @@ import { motion } from 'framer-motion';
 import { useParams } from 'next/navigation';
 import { Calendar, User, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
-import Button from '../ui/Button';
+import dynamic from 'next/dynamic';
+const Button = dynamic(() => import('../ui/Button'), { ssr: false });
 import { fetchBlogPost, BlogPost } from '@/services/api/blog';
 
 const BlogPostPage: React.FC = () => {

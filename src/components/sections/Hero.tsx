@@ -4,7 +4,10 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Button from '../ui/Button';
-import CalendarBooking from '../forms/CalendarBooking';
+import dynamic from 'next/dynamic';
+
+// Dynamically import CalendarBooking for modal
+const CalendarBooking = dynamic(() => import('../forms/CalendarBooking'), { ssr: false });
 
 const Hero: React.FC = () => {
   const [showBooking, setShowBooking] = useState(false);

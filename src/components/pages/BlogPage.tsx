@@ -4,9 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Button from '../ui/Button';
-import Blog from '../sections/Blog';
+import dynamic from 'next/dynamic';
 import { fetchBlogPosts, BlogPost } from '@/services/api/blog';
 import Link from 'next/link';
+
+const Blog = dynamic(() => import('../sections/Blog'), { ssr: false });
 
 const BlogPage: React.FC = () => {
   const [featuredPosts, setFeaturedPosts] = useState<BlogPost[]>([]);

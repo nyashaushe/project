@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Send } from 'lucide-react';
 import Image from 'next/image'; // Import Next.js Image component
-import type { PodcastComment, User } from '../../hooks/useComments';
+import type { PodcastComment } from '../../hooks/useComments';
 import { useToast } from '../../contexts/ToastContext';
 
 interface CommentSectionProps {
   comments: PodcastComment[];
-  onAddComment: (content: string) => Promise<void>;
+  onAddComment: () => Promise<void>; // Remove unused 'content' param
   onLikeComment: () => Promise<void>;
 }
 
@@ -27,12 +27,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     setIsSubmitting(true);
     try {
       // In a real app, you would get the current user from your auth context
-      const currentUser: User = {
-        name: 'Current User',
-        avatar: '/avatars/default.jpg'
-      };
+      // const currentUser: User = {
+      //   name: 'Current User',
+      //   avatar: '/avatars/default.jpg'
+      // };
 
-      await onAddComment(newComment);
+      await onAddComment();
       setNewComment('');
       showToast('Comment added successfully', 'success');
     } catch {
@@ -45,14 +45,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   return (
     <div className="space-y-6">
       {/* Comment Form */}
-      <form onSubmit={handleSubmit} className="flex gap-2">
+      <form onSubmit={handleSubmit} className="flex gap-2" aria-label="Add a comment form">
+        <label htmlFor="new-comment" className="sr-only">Add a comment</label>
         <input
+          id="new-comment"
           type="text"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Add a comment..."
           className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
           disabled={isSubmitting}
+          aria-label="Comment input"
         />
         <motion.button
           type="submit"
@@ -60,8 +63,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           disabled={isSubmitting || !newComment.trim()}
+          aria-label="Post comment"
         >
-          <Send className="w-4 h-4" />
+          <Send className="w-4 h-4" aria-hidden="true" />
           <span>Post</span>
         </motion.button>
       </form>
@@ -103,11 +107,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                     } hover:text-purple-400 transition-colors`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    aria-label={`Like comment by ${comment.user.name}`}
                   >
                     <Heart
                       className={`w-4 h-4 ${
                         comment.isLiked ? 'fill-purple-400' : ''
                       }`}
+                      aria-hidden="true"
                     />
                     <span>{comment.likes}</span>
                   </motion.button>
@@ -121,4 +127,4 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   );
 };
 
-export default CommentSection; 
+export default CommentSection;

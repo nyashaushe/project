@@ -3,12 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+const LikeButton = dynamic(() => import('../ui/LikeButton'), { ssr: false });
+const ShareButtons = dynamic(() => import('../ui/ShareButtons'), { ssr: false });
+const CommentSection = dynamic(() => import('../ui/CommentSection'), { ssr: false });
 import { useAudioPlayer } from '../../hooks/useAudioPlayer';
 import { useLikes } from '../../hooks/useLikes';
 import { useComments } from '../../hooks/useComments';
-import LikeButton from '../ui/LikeButton';
-import ShareButtons from '../ui/ShareButtons';
-import CommentSection from '../ui/CommentSection';
 import { useToast } from '../../contexts/ToastContext';
 import Image from 'next/image';
 import { fetchPodcast, Podcast } from '@/services/api/podcast';

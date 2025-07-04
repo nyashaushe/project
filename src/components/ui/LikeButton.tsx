@@ -17,15 +17,17 @@ const LikeButton: React.FC<LikeButtonProps> = ({ likes, isLiked, onToggle }) => 
       } hover:text-purple-400 transition-colors`}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
+      aria-label={isLiked ? 'Unlike' : 'Like'}
     >
       <Heart
         className={`w-4 h-4 ${
           isLiked ? 'fill-purple-400' : ''
         }`}
+        aria-hidden="true"
       />
       <span>{likes}</span>
     </motion.button>
   );
 };
 
-export default LikeButton; 
+export default LikeButton;

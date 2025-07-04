@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import StarField from '../ui/StarField';
+import dynamic from 'next/dynamic';
 import { getStrapiContent } from '@/lib/strapiApi';
+
+const StarField = dynamic(() => import('../ui/StarField'), { ssr: false });
+const MotionSection = dynamic(() => import('framer-motion').then(mod => mod.motion.section), { ssr: false });
 
 interface Service {
   id: number;
@@ -21,7 +23,7 @@ const ServicesPage: React.FC = () => {
         setLoading(true);
         const res = await getStrapiContent('services');
         setServices(res.data || []);
-      } catch (err) {
+      } catch {
         setError('Failed to load services.');
       } finally {
         setLoading(false);
@@ -36,7 +38,7 @@ const ServicesPage: React.FC = () => {
         <section className="relative py-32 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent" />
           <div className="container mx-auto px-4 relative z-10">
-            <motion.div
+            <MotionSection
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
@@ -48,7 +50,7 @@ const ServicesPage: React.FC = () => {
               <p className="text-xl text-gray-300 mb-8">
                 Discover how we can help transform your business with our comprehensive range of services.
               </p>
-            </motion.div>
+            </MotionSection>
           </div>
         </section>
 

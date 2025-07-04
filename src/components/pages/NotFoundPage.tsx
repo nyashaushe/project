@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import StarField from '../ui/StarField';
+const StarField = dynamic(() => import('../ui/StarField'), { ssr: false });
+import Link from 'next/link';
 
 const NotFoundPage: React.FC = () => {
   return (
@@ -19,7 +20,7 @@ const NotFoundPage: React.FC = () => {
             The page you're looking for doesn't exist or has been moved.
           </p>
           <Link
-            to="/"
+            href="/"
             className="inline-block bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Go Back Home

@@ -94,6 +94,8 @@ const ContactForm: React.FC = () => {
                   {...register('name')}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="John Doe"
+                  aria-required="true"
+                  aria-label="Your Name"
                 />
                 {errors.name && (
                   <p className="mt-1 text-sm text-red-400">{errors.name.message}</p>
@@ -110,6 +112,8 @@ const ContactForm: React.FC = () => {
                   {...register('email')}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="john@example.com"
+                  aria-required="true"
+                  aria-label="Email Address"
                 />
                 {errors.email && (
                   <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
@@ -127,6 +131,7 @@ const ContactForm: React.FC = () => {
                     {...register('phone')}
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     placeholder="+1 (555) 123-4567"
+                    aria-label="Phone Number"
                   />
                 </div>
                 <div>
@@ -138,6 +143,7 @@ const ContactForm: React.FC = () => {
                     {...register('company')}
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     placeholder="Your Company"
+                    aria-label="Company"
                   />
                 </div>
               </div>
@@ -160,16 +166,17 @@ const ContactForm: React.FC = () => {
                 <select
                   id="subject"
                   {...register('subject')}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select"
                   defaultValue=""
-                  style={{ color: 'white' }}
+                  aria-required="true"
+                  aria-label="Subject"
                 >
-                  <option value="" disabled style={{ backgroundColor: '#1f2937', color: 'green' }}>Select a subject</option>
-                  <option value="General Inquiry" style={{ backgroundColor: '#1f2937', color: 'green' }}>General Inquiry</option>
-                  <option value="Service Request" style={{ backgroundColor: '#1f2937', color: 'green' }}>Service Request</option>
-                  <option value="Partnership Opportunity" style={{ backgroundColor: '#1f2937', color: 'green' }}>Partnership Opportunity</option>
-                  <option value="Technical Support" style={{ backgroundColor: '#1f2937', color: 'green' }}>Technical Support</option>
-                  <option value="Other" style={{ backgroundColor: '#1f2937', color: 'green' }}>Other</option>
+                  <option value="" disabled className="custom-select-option">Select a subject</option>
+                  <option value="General Inquiry" className="custom-select-option">General Inquiry</option>
+                  <option value="Service Request" className="custom-select-option">Service Request</option>
+                  <option value="Partnership Opportunity" className="custom-select-option">Partnership Opportunity</option>
+                  <option value="Technical Support" className="custom-select-option">Technical Support</option>
+                  <option value="Other" className="custom-select-option">Other</option>
                 </select>
                 {errors.subject && (
                   <p className="mt-1 text-sm text-red-400">{errors.subject.message}</p>
@@ -186,6 +193,8 @@ const ContactForm: React.FC = () => {
                   rows={4}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="Tell us about your project or questions..."
+                  aria-required="true"
+                  aria-label="Message"
                 />
                 {errors.message && (
                   <p className="mt-1 text-sm text-red-400">{errors.message.message}</p>
@@ -200,6 +209,7 @@ const ContactForm: React.FC = () => {
                       type="checkbox"
                       {...register('subscribeToNewsletter')}
                       className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                      aria-label="Subscribe to newsletter"
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -216,6 +226,7 @@ const ContactForm: React.FC = () => {
                       type="checkbox"
                       {...register('agreeToPrivacyPolicy')}
                       className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                      aria-label="Agree to privacy policy"
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -235,13 +246,13 @@ const ContactForm: React.FC = () => {
 
           <div className="flex justify-between mt-6">
             {currentStep > 0 && (
-              <Button type="button" variant="secondary" onClick={handlePrevious}>
-                <ArrowLeft size={20} className="mr-2" /> Previous
+              <Button type="button" variant="secondary" onClick={handlePrevious} aria-label="Previous Step">
+                <ArrowLeft size={20} className="mr-2" aria-hidden="true" /> Previous
               </Button>
             )}
             {currentStep < steps.length - 1 && (
-              <Button type="button" variant="primary" onClick={handleNext} className="ml-auto">
-                Next <ArrowRight size={20} className="ml-2" />
+              <Button type="button" variant="primary" onClick={handleNext} className="ml-auto" aria-label="Next Step">
+                Next <ArrowRight size={20} className="ml-2" aria-hidden="true" />
               </Button>
             )}
             {currentStep === steps.length - 1 && (
@@ -250,6 +261,7 @@ const ContactForm: React.FC = () => {
                 variant="primary"
                 className="w-full"
                 disabled={isSubmitting}
+                aria-label="Submit Contact Form"
               >
                 {isSubmitting ? 'Sending...' : 'Schedule Consultation'}
               </Button>

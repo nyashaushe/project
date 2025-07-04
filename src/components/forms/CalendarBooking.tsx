@@ -121,6 +121,8 @@ const CalendarBooking: React.FC = () => {
                 required
                 className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="John Doe"
+                aria-label="Your Name"
+                aria-required="true"
               />
             </div>
           </div>
@@ -142,6 +144,8 @@ const CalendarBooking: React.FC = () => {
                 required
                 className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="john@example.com"
+                aria-label="Email Address"
+                aria-required="true"
               />
             </div>
           </div>
@@ -163,6 +167,8 @@ const CalendarBooking: React.FC = () => {
                 required
                 className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="+1 (555) 123-4567"
+                aria-label="Phone Number"
+                aria-required="true"
               />
             </div>
           </div>
@@ -185,6 +191,8 @@ const CalendarBooking: React.FC = () => {
                   onChange={handleChange}
                   required
                   className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  aria-label="Preferred Date"
+                  aria-required="true"
                 />
               </div>
             </div>
@@ -202,12 +210,13 @@ const CalendarBooking: React.FC = () => {
                   value={formData.time}
                   onChange={handleChange}
                   required
-                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  style={{ color: 'white' }}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select"
+                  aria-label="Preferred Time"
+                  aria-required="true"
                 >
-                  <option value="" disabled style={{ backgroundColor: '#1f2937', color: 'white' }}>Select a time</option>
+                  <option value="" disabled className="custom-select-option">Select a time</option>
                   {timeSlots.map((slot, index) => (
-                    <option key={index} value={slot} style={{ backgroundColor: '#1f2937', color: 'white' }}>
+                    <option key={index} value={slot} className="custom-select-option">
                       {slot}
                     </option>
                   ))}
@@ -232,6 +241,7 @@ const CalendarBooking: React.FC = () => {
                 rows={3}
                 className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="Tell us about your project or questions..."
+                aria-label="Message"
               />
             </div>
           </div>
@@ -247,6 +257,7 @@ const CalendarBooking: React.FC = () => {
             variant="primary" 
             className="w-full mt-6"
             disabled={isSubmitting}
+            aria-label="Schedule Consultation"
           >
             {isSubmitting ? 'Scheduling...' : 'Schedule Consultation'}
           </Button>

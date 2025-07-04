@@ -1,7 +1,6 @@
-'use client';
+"use client";
 
-
-import BlogPost from '../../../src/components/pages/BlogPost';
+import BlogPost from "@/components/pages/BlogPost";
 
 export default function DynamicBlogPost({ params }: { params: { id: string } }) {
   const { id } = params;

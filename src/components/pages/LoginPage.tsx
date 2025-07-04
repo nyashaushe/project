@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -7,11 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { useToast } from '../../contexts/ToastContext';
-import Button from '../ui/Button';
 import { login } from '../../services/api/auth';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../features/authSlice';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const Button = dynamic(() => import('../ui/Button'), { ssr: false });
 
 const schema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
