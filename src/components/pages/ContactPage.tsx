@@ -3,7 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { fetchContactInfo, ContactInfo } from '../../services/api/contact';
 import { motion } from 'framer-motion';
-import ContactForm from '../forms/ContactForm';
+import dynamic from 'next/dynamic';
+
+const ContactForm = dynamic(() => import('../forms/ContactForm'), { ssr: false });
 
 const ContactPage: React.FC = () => {
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
@@ -22,7 +24,7 @@ const ContactPage: React.FC = () => {
   }, []);
 
   return (
-    <div className=""> {/* Removed min-h-screen */}
+    <div className="">
         {/* Hero Section */}
         <section className="relative py-32 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent" />
@@ -53,31 +55,6 @@ const ContactPage: React.FC = () => {
         <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="bg-gray-800 rounded-xl p-8"
-              >
-                <h2 className="text-2xl font-bold text-white mb-6">Contact Information</h2>
-                {contactInfo && (
-                  <div className="text-gray-300 space-y-4">
-                    <p>
-                      <strong>Email:</strong> {contactInfo.email}
-                    </p>
-                    {contactInfo.phone && (
-                      <p>
-                        <strong>Phone:</strong> {contactInfo.phone}
-                      </p>
-                    )}
-                    {contactInfo.address && (
-                      <p>
-                        <strong>Address:</strong> {contactInfo.address}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, y: 0 }}
