@@ -1,4 +1,4 @@
-import { fetchCollection } from './apiService';
+import { getStaticData } from '../clientDataService';
 
 export interface TechStackItem {
   id: number;
@@ -6,4 +6,4 @@ export interface TechStackItem {
   icon: string;
 }
 
-export const fetchTechStack = () => fetchCollection<TechStackItem>('tech-stacks');
+export const fetchTechStack = () => getStaticData<TechStackItem>('techstack');

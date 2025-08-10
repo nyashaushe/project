@@ -1,4 +1,4 @@
-import { fetchCollection } from './apiService';
+import { getStaticData, ApiResponse } from "../clientDataService";
 
 export interface TeamMember {
   id: number;
@@ -9,7 +9,11 @@ export interface TeamMember {
   social: Record<string, string>;
 }
 
-export const fetchTeamMembers = () => fetchCollection<TeamMember>('team-members');
+export const fetchTeamMembers = async (): Promise<
+  ApiResponse<TeamMember[]>
+> => {
+  return await getStaticData<TeamMember>("team");
+};
 
 export interface CompanyValue {
   id: number;
@@ -18,4 +22,8 @@ export interface CompanyValue {
   icon: string;
 }
 
-export const fetchCompanyValues = () => fetchCollection<CompanyValue>('company-values');
+export const fetchCompanyValues = async (): Promise<
+  ApiResponse<CompanyValue[]>
+> => {
+  return await getStaticData<CompanyValue>("values");
+};

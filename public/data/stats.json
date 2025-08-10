@@ -1,0 +1,35 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "icon": "Users",
+      "value": "100+",
+      "label": "Happy Clients"
+    },
+    {
+      "id": 2,
+      "icon": "CheckCircle",
+      "value": "250+",
+      "label": "Projects Completed"
+    },
+    {
+      "id": 3,
+      "icon": "Clock",
+      "value": "5+",
+      "label": "Years Experience"
+    },
+    {
+      "id": 4,
+      "icon": "Award",
+      "value": "15+",
+      "label": "Industry Awards"
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 4,
+      "page": 1,
+      "pageSize": 10
+    }
+  }
+}

@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
-import Image from 'next/image'; // Import Next.js Image component
-import Button from '../ui/Button';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import Image from "next/image"; // Import Next.js Image component
+import Button from "../ui/Button";
 
-import { fetchTestimonials, Testimonial } from '@/services/api/testimonial';
+import { fetchTestimonials, Testimonial } from "@/services/api/testimonial";
 
 // Mock data for client logos (can be fetched from Strapi if a 'ClientLogo' collection type exists)
 
 // Mock data for client logos
 const clientLogos = [
-  { id: 1, name: 'TechStart', logo: '/logos/techstart.svg' },
-  { id: 2, name: 'InnovateX', logo: '/logos/innovatex.svg' },
-  { id: 3, name: 'GrowthLabs', logo: '/logos/growthlabs.svg' },
-  { id: 4, name: 'DataFlow', logo: '/logos/dataflow.svg' },
-  { id: 5, name: 'CloudNine', logo: '/logos/cloudnine.svg' },
-  { id: 6, name: 'FutureTech', logo: '/logos/futuretech.svg' }
+  { id: 1, name: "TechStart", logo: "/logos/techstart.svg" },
+  { id: 2, name: "InnovateX", logo: "/logos/innovatex.svg" },
+  { id: 3, name: "GrowthLabs", logo: "/logos/growthlabs.svg" },
+  { id: 4, name: "DataFlow", logo: "/logos/dataflow.svg" },
+  { id: 5, name: "CloudNine", logo: "/logos/cloudnine.svg" },
+  { id: 6, name: "FutureTech", logo: "/logos/futuretech.svg" },
 ];
 
 const Testimonials: React.FC = () => {
@@ -30,10 +30,10 @@ const Testimonials: React.FC = () => {
     const getTestimonials = async () => {
       try {
         setLoading(true);
-        const fetchedTestimonials = await fetchTestimonials();
-        setTestimonials(fetchedTestimonials);
+        const response = await fetchTestimonials();
+        setTestimonials(response.data);
       } catch (err) {
-        setError('Failed to fetch testimonials.');
+        setError("Failed to fetch testimonials.");
         console.error(err);
       } finally {
         setLoading(false);
@@ -42,16 +42,29 @@ const Testimonials: React.FC = () => {
     getTestimonials();
   }, []);
 
-  if (loading) return <div className="text-center text-white py-20">Loading testimonials...</div>;
-  if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
-  if (testimonials.length === 0) return <div className="text-center text-gray-400 py-20">No testimonials available.</div>;
+  if (loading)
+    return (
+      <div className="text-center text-white py-20">
+        Loading testimonials...
+      </div>
+    );
+  if (error)
+    return <div className="text-center text-red-500 py-20">{error}</div>;
+  if (testimonials.length === 0)
+    return (
+      <div className="text-center text-gray-400 py-20">
+        No testimonials available.
+      </div>
+    );
 
   const nextTestimonial = () => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
   const prevTestimonial = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setCurrentIndex(
+      (prev) => (prev - 1 + testimonials.length) % testimonials.length
+    );
   };
 
   return (
@@ -92,25 +105,29 @@ const Testimonials: React.FC = () => {
                 <div className="flex flex-col md:flex-row gap-8">
                   <div className="md:w-1/3">
                     <div className="relative">
-                      {testimonials[currentIndex].image && typeof testimonials[currentIndex].image === 'object' && (
-                        <Image
-                          src={testimonials[currentIndex].image.url}
-                          alt={testimonials[currentIndex].author}
-                          width={128}
-                          height={128}
-                          className="w-32 h-32 rounded-full object-cover mx-auto"
-                        />
-                      )}
+                      {testimonials[currentIndex].image &&
+                        typeof testimonials[currentIndex].image ===
+                          "object" && (
+                          <Image
+                            src={testimonials[currentIndex].image.url}
+                            alt={testimonials[currentIndex].author}
+                            width={128}
+                            height={128}
+                            className="w-32 h-32 rounded-full object-cover mx-auto"
+                          />
+                        )}
                       {/* Fallback for string image URL or if image is not an object */}
-                      {testimonials[currentIndex].image && typeof testimonials[currentIndex].image === 'string' && (
-                        <Image
-                          src={testimonials[currentIndex].image}
-                          alt={testimonials[currentIndex].author}
-                          width={128}
-                          height={128}
-                          className="w-32 h-32 rounded-full object-cover mx-auto"
-                        />
-                      )}
+                      {testimonials[currentIndex].image &&
+                        typeof testimonials[currentIndex].image ===
+                          "string" && (
+                          <Image
+                            src={testimonials[currentIndex].image}
+                            alt={testimonials[currentIndex].author}
+                            width={128}
+                            height={128}
+                            className="w-32 h-32 rounded-full object-cover mx-auto"
+                          />
+                        )}
                       {!testimonials[currentIndex].image && (
                         <Image
                           src="/avatars/default.jpg" // Default avatar if no image is provided
@@ -126,14 +143,23 @@ const Testimonials: React.FC = () => {
                       <h3 className="text-xl font-semibold text-white">
                         {testimonials[currentIndex].author}
                       </h3>
-                      {testimonials[currentIndex].role && <p className="text-gray-400">{testimonials[currentIndex].role}</p>}
+                      {testimonials[currentIndex].role && (
+                        <p className="text-gray-400">
+                          {testimonials[currentIndex].role}
+                        </p>
+                      )}
                       {/* Assuming 'company' is not directly from Strapi testimonial, or needs to be added to schema */}
                       {/* <p className="text-purple-400">{testimonials[currentIndex].company}</p> */}
                       {testimonials[currentIndex].rating && (
                         <div className="flex justify-center mt-2">
-                          {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
-                            <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                          ))}
+                          {[...Array(testimonials[currentIndex].rating)].map(
+                            (_, i) => (
+                              <Star
+                                key={i}
+                                className="w-5 h-5 text-yellow-400 fill-current"
+                              />
+                            )
+                          )}
                         </div>
                       )}
                     </div>
@@ -212,7 +238,8 @@ const Testimonials: React.FC = () => {
             Ready to Transform Your Business?
           </h3>
           <p className="text-gray-300 mb-8">
-            Join our growing list of satisfied clients and experience the Baobab Stack difference.
+            Join our growing list of satisfied clients and experience the Baobab
+            Stack difference.
           </p>
           <Button variant="primary" size="lg">
             Get Started

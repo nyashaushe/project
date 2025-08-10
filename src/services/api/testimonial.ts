@@ -1,4 +1,4 @@
-import { fetchCollection, createItem } from './apiService';
+import { getStaticData, ApiResponse, DataParams } from "../clientDataService";
 
 export interface Testimonial {
   id: number;
@@ -11,5 +11,16 @@ export interface Testimonial {
   publishedAt: string;
 }
 
-export const fetchTestimonials = (params?: Record<string, {}>) => fetchCollection<Testimonial>('testimonials', params);
-export const submitTestimonial = (data: Omit<Testimonial, 'id' | 'publishedAt'>) => createItem<Testimonial>('testimonials', data);
+export async function fetchTestimonials(
+  params?: DataParams
+): Promise<ApiResponse<Testimonial[]>> {
+  return await getStaticData<Testimonial>("testimonials", params);
+}
+
+export async function submitTestimonial(): Promise<Testimonial> {
+  // POST request functionality would be implemented via API routes
+  // This would typically submit to /api/testimonials endpoint
+  throw new Error(
+    "Testimonial submission not implemented - use API routes instead"
+  );
+}

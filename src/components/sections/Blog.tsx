@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Search, ChevronRight } from 'lucide-react';
-import Image from 'next/image';
-import Button from '../ui/Button';
-import { fetchBlogPosts, BlogPost } from '@/services/api/blog';
-import Skeleton from '../ui/Skeleton';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Search, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import Button from "../ui/Button";
+import { fetchBlogPosts, BlogPost } from "@/services/api/blog";
+import Skeleton from "../ui/Skeleton";
 
 const categories = [
-  'All',
-  'Technology',
-  'Development',
-  'Design',
-  'Business',
-  'Marketing'
+  "All",
+  "Technology",
+  "Development",
+  "Design",
+  "Business",
+  "Marketing",
 ];
 
 const Blog: React.FC = () => {
@@ -22,17 +22,17 @@ const Blog: React.FC = () => {
   const [meta, setMeta] = useState<{}>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
     const getBlogPosts = async () => {
       try {
         setLoading(true);
-        const params: {} = {
+        const params: object = {
           pagination: { page, pageSize: 10 },
-          sort: 'publishedAt:desc',
+          sort: "publishedAt:desc",
         };
         if (searchQuery) {
           params.filters = {
@@ -42,17 +42,19 @@ const Blog: React.FC = () => {
             ],
           };
         }
-        if (selectedCategory !== 'All') {
+        if (selectedCategory !== "All") {
           params.filters = {
             ...params.filters,
             categories: { $containsi: selectedCategory },
           };
         }
-        const { data, meta } = await fetchBlogPosts(params);
-        setBlogPosts(page === 1 ? data : [...blogPosts, ...data]);
-        setMeta(meta);
+        const response = await fetchBlogPosts(params);
+        setBlogPosts(
+          page === 1 ? response.data : [...blogPosts, ...response.data]
+        );
+        setMeta(response.meta);
       } catch (err) {
-        setError('Failed to fetch blog posts.');
+        setError("Failed to fetch blog posts.");
         console.error(err);
       } finally {
         setLoading(false);
@@ -94,7 +96,8 @@ const Blog: React.FC = () => {
       </section>
     );
   }
-  if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
+  if (error)
+    return <div className="text-center text-red-500 py-20">{error}</div>;
 
   return (
     <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
@@ -108,7 +111,8 @@ const Blog: React.FC = () => {
         >
           <h2 className="text-4xl font-bold text-white mb-4">Our Blog</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Stay updated with the latest insights, trends, and best practices in technology and development.
+            Stay updated with the latest insights, trends, and best practices in
+            technology and development.
           </p>
         </motion.div>
 
@@ -136,8 +140,8 @@ const Blog: React.FC = () => {
                   }}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     selectedCategory === category
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-800 text-gray-400 hover:bg-gray-700"
                   }`}
                 >
                   {category}
@@ -159,7 +163,7 @@ const Blog: React.FC = () => {
             >
               <div className="relative h-48">
                 <Image
-                  src={post.featuredImage || '/blog/default.jpg'} // Use a default image if none is provided
+                  src={post.featuredImage || "/blog/default.jpg"} // Use a default image if none is provided
                   alt={post.title}
                   layout="fill"
                   objectFit="cover"
@@ -179,22 +183,27 @@ const Blog: React.FC = () => {
                   <span>•</span>
                   <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">{post.title}</h3>
-                <p className="text-gray-400 mb-4">{post.content.substring(0, 150)}...</p>
+                <h3 className="text-xl font-bold text-white mb-2">
+                  {post.title}
+                </h3>
+                <p className="text-gray-400 mb-4">
+                  {post.content.substring(0, 150)}...
+                </p>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {post.categories && post.categories.map((tag: string) => (
-                    <span
-                      key={tag}
-                      className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded-full"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                  {post.categories &&
+                    post.categories.map((tag: string) => (
+                      <span
+                        key={tag}
+                        className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded-full"
+                      >
+                        {tag}
+                      </span>
+                    ))}
                 </div>
                 <Button
                   variant="ghost"
                   className="w-full group"
-                  onClick={() => window.location.href = `/blog/${post.id}`}
+                  onClick={() => (window.location.href = `/blog/${post.id}`)}
                 >
                   Read More
                   <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -205,14 +214,21 @@ const Blog: React.FC = () => {
         </div>
 
         {/* Load More Button */}
-        {meta && meta.pagination.page < meta.pagination.pageCount && (
-          <div className="text-center mt-12">
-            <Button variant="ghost" className="group" onClick={loadMore} disabled={loading}>
-              {loading ? 'Loading...' : 'Load More Articles'}
-              <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </div>
-        )}
+        {meta &&
+          meta.pagination &&
+          page * meta.pagination.pageSize < meta.pagination.total && (
+            <div className="text-center mt-12">
+              <Button
+                variant="ghost"
+                className="group"
+                onClick={loadMore}
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "Load More Articles"}
+                <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </div>
+          )}
       </div>
     </section>
   );

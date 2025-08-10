@@ -1,0 +1,53 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "E-Commerce Platform",
+      "description": "A modern e-commerce platform built with React and Node.js, featuring real-time inventory management, payment processing, and analytics dashboard.",
+      "image": "/portfolio/ecommerce-platform.jpg",
+      "link": "https://example-ecommerce.com"
+    },
+    {
+      "id": 2,
+      "title": "Healthcare Management System",
+      "description": "Comprehensive healthcare management solution with patient records, appointment scheduling, and telemedicine capabilities.",
+      "image": "/portfolio/healthcare-system.jpg",
+      "link": "https://example-healthcare.com"
+    },
+    {
+      "id": 3,
+      "title": "Financial Dashboard",
+      "description": "Real-time financial analytics dashboard with data visualization, reporting, and automated insights for investment firms.",
+      "image": "/portfolio/financial-dashboard.jpg",
+      "link": "https://example-finance.com"
+    },
+    {
+      "id": 4,
+      "title": "Learning Management System",
+      "description": "Interactive online learning platform with course management, progress tracking, and collaborative learning features.",
+      "image": "/portfolio/lms-platform.jpg",
+      "link": "https://example-lms.com"
+    },
+    {
+      "id": 5,
+      "title": "Restaurant Chain App",
+      "description": "Mobile app for restaurant chain with online ordering, loyalty program, and location-based services.",
+      "image": "/portfolio/restaurant-app.jpg",
+      "link": "https://example-restaurant.com"
+    },
+    {
+      "id": 6,
+      "title": "IoT Monitoring Platform",
+      "description": "Industrial IoT monitoring platform with real-time sensor data, predictive maintenance, and automated alerts.",
+      "image": "/portfolio/iot-platform.jpg",
+      "link": "https://example-iot.com"
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 6,
+      "page": 1,
+      "pageSize": 10
+    }
+  }
+}

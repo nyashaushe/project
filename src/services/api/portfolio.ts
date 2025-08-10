@@ -1,4 +1,4 @@
-import { fetchCollection } from './apiService';
+import { getStaticData } from "../clientDataService";
 
 export interface PortfolioItem {
   id: number;
@@ -8,4 +8,5 @@ export interface PortfolioItem {
   link?: string;
 }
 
-export const fetchPortfolioItems = () => fetchCollection<PortfolioItem>('portfolio-items');
+export const fetchPortfolioItems = () =>
+  getStaticData<PortfolioItem>("portfolio");

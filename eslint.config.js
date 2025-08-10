@@ -5,7 +5,7 @@ import nextPlugin from '@next/eslint-plugin-next';
 export default tseslint.config(
   {
     // Global ignores
-    ignores: ['dist', '.next', 'node_modules', 'strapi-backend/dist'],
+  ignores: ['dist', '.next', 'node_modules'],
   },
   {
     // Next.js specific configuration

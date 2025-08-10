@@ -9,7 +9,7 @@ export interface Comment {
   likes: number;
 }
 
-// useComments hook for persistent comments via Strapi
+// useComments hook for persistent comments
 export function useComments(podcastId: number) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);

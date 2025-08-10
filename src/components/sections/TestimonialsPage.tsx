@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { fetchTestimonials, submitTestimonial, Testimonial } from '../../services/api/testimonial';
-import { useToast } from '../../contexts/ToastContext';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { fetchTestimonials, Testimonial } from "../../services/api/testimonial";
+// Testimonial submission now uses direct API route calls
+import { useToast } from "../../contexts/ToastContext";
 
 const schema = z.object({
-  author: z.string().min(1, { message: 'Name is required' }),
+  author: z.string().min(1, { message: "Name is required" }),
   company: z.string().optional(),
-  content: z.string().min(1, { message: 'Testimonial is required' }),
+  content: z.string().min(1, { message: "Testimonial is required" }),
 });
 
 type TestimonialFormData = z.infer<typeof schema>;
@@ -32,12 +33,12 @@ const TestimonialsPage: React.FC = () => {
 
   useEffect(() => {
     fetchTestimonials()
-      .then((data) => {
-        setTestimonials(data);
+      .then((response) => {
+        setTestimonials(response.data);
         setLoading(false);
       })
       .catch(() => {
-        setError('Failed to load testimonials.');
+        setError("Failed to load testimonials.");
         setLoading(false);
       });
   }, []);
@@ -45,12 +46,31 @@ const TestimonialsPage: React.FC = () => {
   const onSubmit = async (data: TestimonialFormData) => {
     setIsSubmitting(true);
     try {
-      const newTestimonial = await submitTestimonial(data);
+      const response = await fetch("/api/testimonials", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to submit testimonial");
+      }
+
+      const result = await response.json();
+      const newTestimonial = result.data;
+
       setTestimonials([newTestimonial, ...testimonials]);
       reset();
-      showToast('Thank you for your feedback!', 'success');
-    } catch {
-      showToast('Failed to submit testimonial. Please try again.', 'error');
+      showToast("Thank you for your feedback!", "success");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to submit testimonial. Please try again.";
+      showToast(errorMessage, "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -66,39 +86,49 @@ const TestimonialsPage: React.FC = () => {
           </p>
         </div>
         <div className="max-w-xl mx-auto mb-12">
-          <h3 className="text-xl font-bold text-white mb-4">Submit Your Testimonial</h3>
+          <h3 className="text-xl font-bold text-white mb-4">
+            Submit Your Testimonial
+          </h3>
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <input
                 type="text"
-                {...register('author')}
+                {...register("author")}
                 placeholder="Your Name"
                 className="w-full px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none"
               />
-              {errors.author && <p className="text-red-400 text-sm mt-1">{errors.author.message}</p>}
+              {errors.author && (
+                <p className="text-red-400 text-sm mt-1">
+                  {errors.author.message}
+                </p>
+              )}
             </div>
             <div>
               <input
                 type="text"
-                {...register('company')}
+                {...register("company")}
                 placeholder="Your Company (optional)"
                 className="w-full px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none"
               />
             </div>
             <div>
               <textarea
-                {...register('content')}
+                {...register("content")}
                 placeholder="Your testimonial..."
                 className="w-full px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none min-h-[100px]"
               />
-              {errors.content && <p className="text-red-400 text-sm mt-1">{errors.content.message}</p>}
+              {errors.content && (
+                <p className="text-red-400 text-sm mt-1">
+                  {errors.content.message}
+                </p>
+              )}
             </div>
             <button
               type="submit"
               className="px-6 py-2 rounded-md bg-purple-600 text-white font-semibold hover:bg-purple-700 transition"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
+              {isSubmitting ? "Submitting..." : "Submit"}
             </button>
           </form>
         </div>
@@ -110,12 +140,21 @@ const TestimonialsPage: React.FC = () => {
             <p className="text-red-400">{error}</p>
           ) : testimonials.length > 0 ? (
             <ul className="space-y-6">
-              {testimonials.map(testimonial => (
-                <li key={testimonial.id} className="bg-gray-800 rounded-lg p-6 text-left">
-                  <p className="text-gray-200 italic mb-2">"{testimonial.content}"</p>
+              {testimonials.map((testimonial) => (
+                <li
+                  key={testimonial.id}
+                  className="bg-gray-800 rounded-lg p-6 text-left"
+                >
+                  <p className="text-gray-200 italic mb-2">
+                    "{testimonial.content}"
+                  </p>
                   <div className="flex items-center gap-2">
-                    <span className="text-white font-semibold">{testimonial.author}</span>
-                    <span className="text-gray-400 text-sm">{testimonial.company}</span>
+                    <span className="text-white font-semibold">
+                      {testimonial.author}
+                    </span>
+                    <span className="text-gray-400 text-sm">
+                      {testimonial.company}
+                    </span>
                   </div>
                 </li>
               ))}

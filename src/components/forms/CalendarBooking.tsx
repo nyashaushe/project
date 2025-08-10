@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Button from '../ui/Button';
-import { Calendar, Clock, User, Mail, Phone, MessageSquare } from 'lucide-react';
+import { Calendar, Clock, User, Mail } from 'lucide-react';
 
 interface BookingFormData {
   name: string;
@@ -98,228 +98,209 @@ const CalendarBooking: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
-              Your Name *
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <User className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="John Doe"
-                aria-label="Your Name"
-                aria-required="true"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
-              Email Address *
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="john@example.com"
-                aria-label="Email Address"
-                aria-required="true"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-1">
-              Phone Number *
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Phone className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-                className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="+1 (555) 123-4567"
-                aria-label="Phone Number"
-                aria-required="true"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="w-full max-w-2xl mx-auto bg-white/5 border border-white/10 rounded-lg p-4 sm:p-8 shadow-xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-w-0">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="min-w-0 w-full"
+        >
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="date" className="block text-sm font-medium text-gray-300 mb-1">
-                Preferred Date *
+              <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
+                Your Name *
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Calendar className="h-5 w-5 text-gray-400" />
+                  <User className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  id="date"
-                  name="date"
-                  type="date"
-                  min={today}
-                  value={formData.date}
+                  id="name"
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
                   required
                   className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  aria-label="Preferred Date"
+                  placeholder="John Doe"
+                  aria-label="Your Name"
                   aria-required="true"
                 />
               </div>
             </div>
+
             <div>
-              <label htmlFor="time" className="block text-sm font-medium text-gray-300 mb-1">
-                Preferred Time *
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
+                Email Address *
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Clock className="h-5 w-5 text-gray-400" />
+                  <Mail className="h-5 w-5 text-gray-400" />
                 </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="john@example.com"
+                  aria-label="Email Address"
+                  aria-required="true"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-1">
+                Phone Number *
+              </label>
+              <div className="relative">
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-4 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="(555) 123-4567"
+                  aria-label="Phone Number"
+                  aria-required="true"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <label htmlFor="date" className="block text-sm font-medium text-gray-300 mb-1">
+                  Date *
+                </label>
+                <input
+                  id="date"
+                  name="date"
+                  type="date"
+                  value={formData.date}
+                  onChange={handleChange}
+                  min={today}
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  aria-label="Date"
+                  aria-required="true"
+                />
+              </div>
+              <div className="flex-1">
+                <label htmlFor="time" className="block text-sm font-medium text-gray-300 mb-1">
+                  Time *
+                </label>
                 <select
                   id="time"
                   name="time"
                   value={formData.time}
                   onChange={handleChange}
                   required
-                  className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select"
-                  aria-label="Preferred Time"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  aria-label="Time"
                   aria-required="true"
                 >
-                  <option value="" disabled className="custom-select-option">Select a time</option>
-                  {timeSlots.map((slot, index) => (
-                    <option key={index} value={slot} className="custom-select-option">
-                      {slot}
-                    </option>
+                  <option value="" disabled>Select a time</option>
+                  {timeSlots.map((slot) => (
+                    <option key={slot} value={slot}>{slot}</option>
                   ))}
                 </select>
               </div>
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-1">
-              Message (Optional)
-            </label>
-            <div className="relative">
-              <div className="absolute top-3 left-3 flex items-start pointer-events-none">
-                <MessageSquare className="h-5 w-5 text-gray-400" />
-              </div>
+            <div>
+              <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-1">
+                Message
+              </label>
               <textarea
                 id="message"
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 rows={3}
-                className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Tell us about your project or questions..."
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Let us know any details or questions..."
                 aria-label="Message"
               />
             </div>
-          </div>
 
-          {submitError && (
-            <div className="p-3 bg-red-900/30 border border-red-500/50 rounded-lg">
-              <p className="text-sm text-red-400">{submitError}</p>
-            </div>
-          )}
+            {submitError && (
+              <div className="text-red-500 text-sm mb-2">{submitError}</div>
+            )}
 
-          <Button 
-            type="submit" 
-            variant="primary" 
-            className="w-full mt-6"
-            disabled={isSubmitting}
-            aria-label="Schedule Consultation"
-          >
-            {isSubmitting ? 'Scheduling...' : 'Schedule Consultation'}
-          </Button>
-        </form>
-      </motion.div>
+            <Button
+              type="submit"
+              variant="primary"
+              className="w-full mt-4"
+              disabled={isSubmitting}
+              aria-label="Book Consultation"
+            >
+              {isSubmitting ? 'Booking...' : 'Book Consultation'}
+            </Button>
+          </form>
+        </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="lg:pl-6"
-      >
-        <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 backdrop-blur-sm border border-white/10 rounded-lg p-6">
-          <h3 className="text-xl font-semibold text-white mb-4">Book a Consultation</h3>
-          <p className="text-gray-400 mb-6">
-            Schedule a free 30-minute consultation with our experts to discuss your project needs and how we can help you achieve your business goals.
-          </p>
-          
-          <div className="space-y-4 mb-6">
-            <div className="flex items-start">
-              <Calendar className="h-5 w-5 text-purple-400 mr-3 mt-1" />
-              <div>
-                <h4 className="text-white font-medium">What to Expect</h4>
-                <p className="text-gray-400 text-sm">
-                  A 30-minute video call with one of our specialists to discuss your needs, answer questions, and explore potential solutions.
-                </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="lg:pl-6 min-w-0 w-full"
+        >
+          <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 backdrop-blur-sm border border-white/10 rounded-lg p-6">
+            <h3 className="text-xl font-semibold text-white mb-4">Book a Consultation</h3>
+            <p className="text-gray-400 mb-6">
+              Schedule a free 30-minute consultation with our experts to discuss your project needs and how we can help you achieve your business goals.
+            </p>
+            
+            <div className="space-y-4 mb-6">
+              <div className="flex items-start">
+                <Calendar className="h-5 w-5 text-purple-400 mr-3 mt-1" />
+                <div>
+                  <h4 className="text-white font-medium">What to Expect</h4>
+                  <p className="text-gray-400 text-sm">
+                    A 30-minute video call with one of our specialists to discuss your needs, answer questions, and explore potential solutions.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <Clock className="h-5 w-5 text-purple-400 mr-3 mt-1" />
+                <div>
+                  <h4 className="text-white font-medium">Availability</h4>
+                  <p className="text-gray-400 text-sm">
+                    Monday to Friday, 9:00 AM - 5:00 PM EST. Select your preferred date and time, and we'll confirm via email.
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="flex items-start">
-              <Clock className="h-5 w-5 text-purple-400 mr-3 mt-1" />
-              <div>
-                <h4 className="text-white font-medium">Availability</h4>
-                <p className="text-gray-400 text-sm">
-                  Monday to Friday, 9:00 AM - 5:00 PM EST. Select your preferred date and time, and we'll confirm via email.
-                </p>
-              </div>
+
+            <div className="border-t border-white/10 pt-6">
+              <h4 className="text-lg font-medium text-white mb-3">Why Book a Consultation?</h4>
+              <ul className="space-y-2 text-gray-300">
+                <li className="flex items-start">
+                  <span className="text-purple-400 mr-2">•</span>
+                  <span>Get personalized advice for your specific business needs</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-purple-400 mr-2">•</span>
+                  <span>Learn about our services and how they can benefit you</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-purple-400 mr-2">•</span>
+                  <span>Discuss project timelines, budgets, and expectations</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-purple-400 mr-2">•</span>
+                  <span>No obligation or pressure to commit</span>
+                </li>
+              </ul>
             </div>
           </div>
-
-          <div className="border-t border-white/10 pt-6">
-            <h4 className="text-lg font-medium text-white mb-3">Why Book a Consultation?</h4>
-            <ul className="space-y-2 text-gray-300">
-              <li className="flex items-start">
-                <span className="text-purple-400 mr-2">•</span>
-                <span>Get personalized advice for your specific business needs</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-purple-400 mr-2">•</span>
-                <span>Learn about our services and how they can benefit you</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-purple-400 mr-2">•</span>
-                <span>Discuss project timelines, budgets, and expectations</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-purple-400 mr-2">•</span>
-                <span>No obligation or pressure to commit</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 };

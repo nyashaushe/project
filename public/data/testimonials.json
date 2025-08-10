@@ -1,0 +1,71 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "content": "Working with Baobab Stack has been transformative for our business. Their expertise in modern web technologies and attention to detail helped us launch our platform 3 months ahead of schedule. The team's communication was excellent throughout the entire process, and they delivered exactly what we envisioned.",
+      "author": "Sarah Chen",
+      "role": "CTO",
+      "company": "TechStart Solutions",
+      "image": "/images/testimonials/sarah-chen.jpg",
+      "rating": 5,
+      "publishedAt": "2024-01-20T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "content": "The development team at Baobab Stack exceeded our expectations. They not only built a robust e-commerce platform but also provided valuable insights on user experience and performance optimization. Our conversion rates increased by 40% after the launch. Highly recommended!",
+      "author": "Michael Rodriguez",
+      "role": "Founder & CEO",
+      "company": "InnovateX Commerce",
+      "image": "/images/testimonials/michael-rodriguez.jpg",
+      "rating": 5,
+      "publishedAt": "2024-01-15T14:30:00Z"
+    },
+    {
+      "id": 3,
+      "content": "Baobab Stack delivered a scalable and maintainable solution that perfectly fits our growing needs. Their use of modern technologies like React and Node.js, combined with their agile development approach, made the entire project smooth and efficient. The final product is both beautiful and functional.",
+      "author": "Emily Watson",
+      "role": "Product Manager",
+      "company": "GrowthLabs Inc",
+      "image": "/images/testimonials/emily-watson.jpg",
+      "rating": 5,
+      "publishedAt": "2024-01-10T09:15:00Z"
+    },
+    {
+      "id": 4,
+      "content": "From initial consultation to final deployment, Baobab Stack demonstrated professionalism and technical excellence. They helped us migrate our legacy system to a modern cloud-based architecture, resulting in 60% faster load times and significantly reduced maintenance costs.",
+      "author": "David Kim",
+      "role": "Head of Engineering",
+      "company": "DataFlow Analytics",
+      "image": "/images/testimonials/david-kim.jpg",
+      "rating": 5,
+      "publishedAt": "2024-01-05T16:45:00Z"
+    },
+    {
+      "id": 5,
+      "content": "The team's expertise in full-stack development is impressive. They built our SaaS platform from the ground up, implementing complex features like real-time collaboration and advanced analytics. The code quality is exceptional, and they provided comprehensive documentation for future maintenance.",
+      "author": "Lisa Thompson",
+      "role": "VP of Technology",
+      "company": "CloudNine Systems",
+      "image": "/images/testimonials/lisa-thompson.jpg",
+      "rating": 5,
+      "publishedAt": "2023-12-28T11:20:00Z"
+    },
+    {
+      "id": 6,
+      "content": "Baobab Stack's approach to problem-solving is methodical and innovative. They helped us optimize our application's performance and implement best practices for security and scalability. Our system now handles 10x more traffic without any issues. Outstanding work!",
+      "author": "James Wilson",
+      "role": "Technical Director",
+      "company": "FutureTech Innovations",
+      "image": "/images/testimonials/james-wilson.jpg",
+      "rating": 5,
+      "publishedAt": "2023-12-20T13:10:00Z"
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 6,
+      "page": 1,
+      "pageSize": 10
+    }
+  }
+}

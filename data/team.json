@@ -1,0 +1,76 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "John Smith",
+      "role": "CEO & Founder",
+      "image": "/team/john-smith.jpg",
+      "bio": "Visionary leader with 15+ years of experience in technology and business strategy. Passionate about building innovative solutions that drive real business value.",
+      "social": {
+        "linkedin": "https://linkedin.com/in/johnsmith",
+        "twitter": "https://twitter.com/johnsmith"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Sarah Johnson",
+      "role": "CTO",
+      "image": "/team/sarah-johnson.jpg",
+      "bio": "Technical architect and full-stack developer with expertise in modern web technologies, cloud infrastructure, and AI/ML solutions.",
+      "social": {
+        "linkedin": "https://linkedin.com/in/sarahjohnson",
+        "github": "https://github.com/sarahjohnson"
+      }
+    },
+    {
+      "id": 3,
+      "name": "Michael Chen",
+      "role": "Lead Developer",
+      "image": "/team/michael-chen.jpg",
+      "bio": "Senior software engineer specializing in React, Node.js, and cloud-native applications. Committed to writing clean, scalable code.",
+      "social": {
+        "linkedin": "https://linkedin.com/in/michaelchen",
+        "github": "https://github.com/michaelchen"
+      }
+    },
+    {
+      "id": 4,
+      "name": "Emily Rodriguez",
+      "role": "UX/UI Designer",
+      "image": "/team/emily-rodriguez.jpg",
+      "bio": "Creative designer focused on user-centered design principles. Expert in creating intuitive interfaces that enhance user experience.",
+      "social": {
+        "linkedin": "https://linkedin.com/in/emilyrodriguez",
+        "dribbble": "https://dribbble.com/emilyrodriguez"
+      }
+    },
+    {
+      "id": 5,
+      "name": "David Wilson",
+      "role": "DevOps Engineer",
+      "image": "/team/david-wilson.jpg",
+      "bio": "Infrastructure specialist with expertise in containerization, CI/CD pipelines, and cloud platforms. Ensures reliable and scalable deployments.",
+      "social": {
+        "linkedin": "https://linkedin.com/in/davidwilson",
+        "github": "https://github.com/davidwilson"
+      }
+    },
+    {
+      "id": 6,
+      "name": "Lisa Thompson",
+      "role": "Project Manager",
+      "image": "/team/lisa-thompson.jpg",
+      "bio": "Experienced project manager with a track record of delivering complex projects on time and within budget. Expert in agile methodologies.",
+      "social": {
+        "linkedin": "https://linkedin.com/in/lisathompson"
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 6,
+      "page": 1,
+      "pageSize": 10
+    }
+  }
+}

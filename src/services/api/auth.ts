@@ -1,21 +1,48 @@
+// Authentication service using Next.js API routes
+import { User } from "../../types";
 
-import axios from 'axios';
+export interface AuthResponse {
+  user: User;
+  jwt: string;
+}
 
-const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337/api';
-
-export const login = async (identifier, password) => {
-  const { data } = await axios.post(`${API_URL}/auth/local`, {
-    identifier,
-    password,
+export const login = async (
+  email: string,
+  password: string
+): Promise<AuthResponse> => {
+  const response = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
   });
-  return data;
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Login failed");
+  }
+
+  return response.json();
 };
 
-export const register = async (username, email, password) => {
-  const { data } = await axios.post(`${API_URL}/auth/local/register`, {
-    username,
-    email,
-    password,
+export const register = async (
+  username: string,
+  email: string,
+  password: string
+): Promise<AuthResponse> => {
+  const response = await fetch("/api/auth/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, email, password }),
   });
-  return data;
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Registration failed");
+  }
+
+  return response.json();
 };

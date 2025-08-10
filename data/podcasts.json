@@ -1,0 +1,81 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "The Future of Web Development",
+      "description": "Exploring emerging trends in web development, from AI integration to serverless architectures.",
+      "audioUrl": "/podcasts/future-web-dev.mp3",
+      "videoUrl": "/podcasts/future-web-dev.mp4",
+      "duration": "45:30",
+      "publishedAt": "2024-01-15T10:00:00Z",
+      "imageUrl": "/podcasts/future-web-dev-cover.jpg",
+      "category": "Technology",
+      "likes": 127,
+      "isLiked": false,
+      "comments": [],
+      "host": "Sarah Johnson",
+      "date": "2024-01-15",
+      "guest": "John Smith",
+      "type": "interview"
+    },
+    {
+      "id": 2,
+      "title": "Building Scalable Cloud Applications",
+      "description": "Best practices for designing and deploying applications that scale with your business needs.",
+      "audioUrl": "/podcasts/scalable-cloud-apps.mp3",
+      "videoUrl": "/podcasts/scalable-cloud-apps.mp4",
+      "duration": "38:15",
+      "publishedAt": "2024-01-08T14:30:00Z",
+      "imageUrl": "/podcasts/scalable-cloud-apps-cover.jpg",
+      "category": "Cloud Computing",
+      "likes": 89,
+      "isLiked": false,
+      "comments": [],
+      "host": "Michael Chen",
+      "date": "2024-01-08",
+      "guest": "Emily Rodriguez",
+      "type": "technical"
+    },
+    {
+      "id": 3,
+      "title": "AI and Machine Learning in Business",
+      "description": "How artificial intelligence is transforming business operations and creating new opportunities.",
+      "audioUrl": "/podcasts/ai-ml-business.mp3",
+      "videoUrl": "/podcasts/ai-ml-business.mp4",
+      "duration": "52:45",
+      "publishedAt": "2024-01-01T09:00:00Z",
+      "imageUrl": "/podcasts/ai-ml-business-cover.jpg",
+      "category": "Artificial Intelligence",
+      "likes": 203,
+      "isLiked": true,
+      "comments": [],
+      "host": "David Wilson",
+      "date": "2024-01-01",
+      "guest": "Lisa Thompson",
+      "type": "business"
+    },
+    {
+      "id": 4,
+      "title": "DevOps Best Practices",
+      "description": "Essential DevOps practices for modern software development teams and continuous delivery.",
+      "audioUrl": "/podcasts/devops-best-practices.mp3",
+      "duration": "41:20",
+      "publishedAt": "2023-12-25T16:00:00Z",
+      "imageUrl": "/podcasts/devops-best-practices-cover.jpg",
+      "category": "DevOps",
+      "likes": 156,
+      "isLiked": false,
+      "comments": [],
+      "host": "Sarah Johnson",
+      "date": "2023-12-25",
+      "type": "educational"
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 4,
+      "page": 1,
+      "pageSize": 10
+    }
+  }
+}

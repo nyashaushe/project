@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { likeComment } from '../services/api/comment';
 
-// useLikes hook for persistent likes via Strapi
+// useLikes hook for persistent likes
 export function useLikes(initialLikes: number, commentId: number) {
   const [likes, setLikes] = useState<number>(initialLikes);
   const [isLiking, setIsLiking] = useState<boolean>(false);

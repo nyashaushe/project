@@ -1,0 +1,47 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Custom Web Development",
+      "description": "Build scalable, responsive web applications tailored to your business needs using modern technologies and best practices.",
+      "icon": "Code"
+    },
+    {
+      "id": 2,
+      "title": "AI & Machine Learning",
+      "description": "Integrate intelligent automation and machine learning capabilities to enhance your business processes and decision-making.",
+      "icon": "Brain"
+    },
+    {
+      "id": 3,
+      "title": "Cloud Infrastructure",
+      "description": "Deploy and manage robust cloud solutions that scale with your business while ensuring security and reliability.",
+      "icon": "Cloud"
+    },
+    {
+      "id": 4,
+      "title": "Mobile App Development",
+      "description": "Create native and cross-platform mobile applications that deliver exceptional user experiences across all devices.",
+      "icon": "Smartphone"
+    },
+    {
+      "id": 5,
+      "title": "Digital Marketing",
+      "description": "Boost your online presence with data-driven marketing strategies, SEO optimization, and targeted campaigns.",
+      "icon": "TrendingUp"
+    },
+    {
+      "id": 6,
+      "title": "Consulting & Strategy",
+      "description": "Get expert guidance on technology decisions, digital transformation, and strategic planning for your business growth.",
+      "icon": "Users"
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 6,
+      "page": 1,
+      "pageSize": 10
+    }
+  }
+}

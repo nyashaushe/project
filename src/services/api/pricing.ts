@@ -1,4 +1,4 @@
-import { fetchCollection } from './apiService';
+import { getStaticData } from "../clientDataService";
 
 export interface PricingPlan {
   id: number;
@@ -9,4 +9,4 @@ export interface PricingPlan {
   popular?: boolean;
 }
 
-export const fetchPricingPlans = () => fetchCollection<PricingPlan>('pricing-plans');
+export const fetchPricingPlans = () => getStaticData<PricingPlan>("pricing");

@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { useParams } from 'next/navigation';
-import { Calendar, User, ChevronLeft } from 'lucide-react';
-import Image from 'next/image';
-import dynamic from 'next/dynamic';
-const Button = dynamic(() => import('../ui/Button'), { ssr: false });
-import { fetchBlogPost, BlogPost } from '@/services/api/blog';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useParams } from "next/navigation";
+import { Calendar, User, ChevronLeft } from "lucide-react";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+const Button = dynamic(() => import("../ui/Button"), { ssr: false });
+import { fetchBlogPost, BlogPost } from "@/services/api/blog";
 
 const BlogPostPage: React.FC = () => {
   const { id } = useParams();
@@ -20,10 +20,10 @@ const BlogPostPage: React.FC = () => {
     const getPost = async () => {
       try {
         setLoading(true);
-        const data = await fetchBlogPost(Number(id));
-        setPost(data);
+        const response = await fetchBlogPost(Number(id));
+        setPost(response.data);
       } catch {
-        setError('Failed to load blog post.');
+        setError("Failed to load blog post.");
       } finally {
         setLoading(false);
       }
@@ -31,8 +31,14 @@ const BlogPostPage: React.FC = () => {
     getPost();
   }, [id]);
 
-  if (loading) return <div className="text-center text-white py-20">Loading...</div>;
-  if (error || !post) return <div className="text-center text-red-500 py-20">{error || 'Blog post not found.'}</div>;
+  if (loading)
+    return <div className="text-center text-white py-20">Loading...</div>;
+  if (error || !post)
+    return (
+      <div className="text-center text-red-500 py-20">
+        {error || "Blog post not found."}
+      </div>
+    );
 
   return (
     <article className="py-20 bg-gradient-to-b from-gray-900 to-black">
@@ -42,7 +48,8 @@ const BlogPostPage: React.FC = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-8">
+          className="mb-8"
+        >
           <Button
             variant="ghost"
             className="group"
@@ -57,7 +64,8 @@ const BlogPostPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12">
+          className="text-center mb-12"
+        >
           {post.categories && post.categories.length > 0 && (
             <span className="px-3 py-1 bg-blue-500 text-white text-sm rounded-full mb-4 inline-block">
               {post.categories[0]}
@@ -84,14 +92,15 @@ const BlogPostPage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mb-12">
+            className="mb-12"
+          >
             <Image
               src={post.featuredImage}
               alt={post.title}
               width={1024}
               height={400}
               className="w-full h-[400px] object-cover rounded-xl"
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: "cover" }}
             />
           </motion.div>
         )}

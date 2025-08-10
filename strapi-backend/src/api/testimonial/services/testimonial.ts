@@ -1,5 +1,0 @@
-/**
- * testimonial service
- */
-
-export default () => ({});

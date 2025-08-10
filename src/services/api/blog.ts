@@ -1,4 +1,8 @@
-import { getStrapiContent } from '@/lib/strapiApi';
+import {
+  getStaticData,
+  getStaticItem,
+  ApiResponse,
+} from "../clientDataService";
 
 export interface BlogPost {
   id: number;
@@ -11,7 +15,10 @@ export interface BlogPost {
 }
 
 type BlogPostFilters = {
-  $or?: Array<{ title?: { $containsi: string }; content?: { $containsi: string } }>;
+  $or?: Array<{
+    title?: { $containsi: string };
+    content?: { $containsi: string };
+  }>;
   categories?: { $containsi: string };
 };
 
@@ -21,36 +28,26 @@ type BlogPostParams = {
   filters?: BlogPostFilters;
 };
 
-export async function fetchBlogPosts(params: BlogPostParams = {}) {
-  // Convert params object to query string for Strapi
-  const query = new URLSearchParams();
-  if (params.pagination) {
-    query.append('pagination[page]', params.pagination.page);
-    query.append('pagination[pageSize]', params.pagination.pageSize);
-  }
-  if (params.sort) {
-    query.append('sort', params.sort);
-  }
-  if (params.filters) {
-    if (params.filters.$or) {
-      params.filters.$or.forEach((filter, i) => {
-        if (filter.title) query.append(`filters[$or][${i}][title][$containsi]`, filter.title.$containsi);
-        if (filter.content) query.append(`filters[$or][${i}][content][$containsi]`, filter.content.$containsi);
-      });
-    }
-    if (params.filters.categories) {
-      query.append('filters[categories][$containsi]', params.filters.categories.$containsi);
-    }
-  }
-  const url = `blogs?${query.toString()}`;
-  return await getStrapiContent(url);
+export async function fetchBlogPosts(
+  params: BlogPostParams = {}
+): Promise<ApiResponse<BlogPost[]>> {
+  return await getStaticData<BlogPost>("blog", {
+    pagination: params.pagination,
+    sort: params.sort,
+    filters: params.filters,
+  });
 }
 
-export async function fetchBlogPost(id: number) {
-  return await getStrapiContent(`blogs/${id}`);
+export async function fetchBlogPost(
+  id: number
+): Promise<ApiResponse<BlogPost>> {
+  return await getStaticItem<BlogPost>("blog", id);
 }
 
 export async function createBlogPost(/* blogPostData: Omit<BlogPost, 'id' | 'publishedAt'> */) {
-  // POST request to Strapi (not implemented here, see Strapi docs for auth)
-  // You can use fetch or axios for POST requests
+  // POST request functionality would be implemented via API routes
+  // This would typically submit to /api/blog endpoint
+  throw new Error(
+    "Blog post creation not implemented - use API routes instead"
+  );
 }

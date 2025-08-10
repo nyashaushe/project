@@ -1,4 +1,4 @@
-#Content Management with strapi
+#Content Management and backend (Strapi removed)
 -Podcasts - both audio and video
 -articles
 -send newsletters

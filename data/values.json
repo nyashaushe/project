@@ -1,0 +1,47 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Innovation",
+      "description": "We embrace cutting-edge technologies and creative solutions to solve complex challenges and drive progress.",
+      "icon": "Lightbulb"
+    },
+    {
+      "id": 2,
+      "title": "Excellence",
+      "description": "We strive for the highest quality in everything we do, from code to customer service, ensuring exceptional results.",
+      "icon": "Award"
+    },
+    {
+      "id": 3,
+      "title": "Collaboration",
+      "description": "We believe in the power of teamwork and open communication to achieve shared goals and create lasting partnerships.",
+      "icon": "Users"
+    },
+    {
+      "id": 4,
+      "title": "Integrity",
+      "description": "We conduct business with honesty, transparency, and ethical practices, building trust with clients and partners.",
+      "icon": "Heart"
+    },
+    {
+      "id": 5,
+      "title": "Growth",
+      "description": "We are committed to continuous learning and improvement, both personally and professionally, to stay ahead of the curve.",
+      "icon": "Target"
+    },
+    {
+      "id": 6,
+      "title": "Impact",
+      "description": "We focus on creating meaningful solutions that make a real difference in our clients' businesses and communities.",
+      "icon": "Zap"
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 6,
+      "page": 1,
+      "pageSize": 10
+    }
+  }
+}

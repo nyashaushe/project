@@ -1,4 +1,4 @@
-import { fetchCollection } from './apiService';
+import { getStaticData } from "../clientDataService";
 
 export interface Stat {
   id: number;
@@ -7,4 +7,4 @@ export interface Stat {
   label: string;
 }
 
-export const fetchStats = () => fetchCollection<Stat>('stats');
+export const fetchStats = () => getStaticData<Stat>("stats");

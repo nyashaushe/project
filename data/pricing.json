@@ -1,0 +1,59 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Starter",
+      "price": "$2,500",
+      "description": "Perfect for small businesses and startups looking to establish their digital presence.",
+      "features": [
+        "Custom website design",
+        "Responsive mobile layout",
+        "Basic SEO optimization",
+        "Contact form integration",
+        "3 months support",
+        "SSL certificate included"
+      ],
+      "popular": false
+    },
+    {
+      "id": 2,
+      "name": "Professional",
+      "price": "$5,000",
+      "description": "Ideal for growing businesses that need advanced features and functionality.",
+      "features": [
+        "Everything in Starter",
+        "E-commerce functionality",
+        "Content management system",
+        "Advanced SEO features",
+        "Analytics integration",
+        "6 months support",
+        "Performance optimization"
+      ],
+      "popular": true
+    },
+    {
+      "id": 3,
+      "name": "Enterprise",
+      "price": "$10,000+",
+      "description": "Comprehensive solution for large organizations with complex requirements.",
+      "features": [
+        "Everything in Professional",
+        "Custom integrations",
+        "Advanced security features",
+        "Multi-language support",
+        "API development",
+        "12 months support",
+        "Dedicated project manager",
+        "Training and documentation"
+      ],
+      "popular": false
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 3,
+      "page": 1,
+      "pageSize": 10
+    }
+  }
+}
