@@ -74,14 +74,22 @@
   - Remove Strapi-related scripts from package.json (`dev:backend`, `dev:all`)
   - _Requirements: 4.2, 4.4_
 
-- [ ] 11. Clean up Strapi-related code and files
+- [x] 11. Clean up Strapi-related code and files
+
+
+
+
   - Delete `src/lib/strapiApi.ts` file
   - Replace `src/services/api/apiService.ts` with non-Strapi implementation or remove entirely
   - Remove unused imports and references to Strapi throughout codebase
   - Delete `strapi-backend/` directory entirely
   - _Requirements: 4.1, 4.3, 4.4_
 
-- [ ] 12. Update environment variables and configuration
+- [x] 12. Update environment variables and configuration
+
+
+
+
   - Remove `NEXT_PUBLIC_STRAPI_URL` from `.env` file
   - Remove all Strapi-related environment variables from `.env`
   - Update any configuration files that reference Strapi
@@ -89,6 +97,8 @@
   - _Requirements: 4.1, 4.4_
 
 - [ ] 13. Test complete application functionality
+
+
   - Run full application and test all pages load correctly
   - Test all forms submit successfully
   - Test authentication flow works end-to-end

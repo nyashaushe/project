@@ -7,8 +7,8 @@ import { useToast } from '../../contexts/ToastContext';
 
 interface CommentSectionProps {
   comments: PodcastComment[];
-  onAddComment: () => Promise<void>; // Remove unused 'content' param
-  onLikeComment: () => Promise<void>;
+  onAddComment: (content: string, author: string) => Promise<void>;
+  onLikeComment: (commentId: number) => Promise<void>;
 }
 
 const CommentSection: React.FC<CommentSectionProps> = ({
@@ -32,7 +32,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
       //   avatar: '/avatars/default.jpg'
       // };
 
-      await onAddComment();
+      await onAddComment(newComment.trim(), 'Anonymous User');
       setNewComment('');
       showToast('Comment added successfully', 'success');
     } catch {
@@ -101,7 +101,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                 <p className="text-gray-300 mt-1">{comment.content}</p>
                 <div className="flex items-center gap-4 mt-2">
                   <motion.button
-                    onClick={() => onLikeComment()}
+                    onClick={() => onLikeComment(comment.id)}
                     className={`flex items-center gap-1 text-sm ${
                       comment.isLiked ? 'text-purple-400' : 'text-gray-400'
                     } hover:text-purple-400 transition-colors`}

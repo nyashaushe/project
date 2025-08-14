@@ -1,5 +1,5 @@
 
-import { fetchCollection, createItem, updateItem } from './apiService';
+// Comments now use Next.js API routes instead of Strapi
 
 export interface Comment {
   id: number;

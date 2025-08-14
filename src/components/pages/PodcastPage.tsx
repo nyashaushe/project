@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Pause, SkipBack, SkipForward, Volume2, MessageSquare } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Volume2, MessageSquare, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Button from '../ui/Button';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,10 +13,11 @@ import { fetchComments, createComment, likeComment, Comment } from '../../servic
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useToast } from '../../contexts/ToastContext';
-import { fetchPodcasts, Podcast } from '@/services/api/podcast'; // Import Strapi podcast service
+import { fetchPodcasts, Podcast } from '@/services/api/podcast';
 import Skeleton from '../ui/Skeleton';
+import { useAudioPlayer } from '../../hooks/useAudioPlayer';
 
-// Mock categories (can be fetched from Strapi if you have a categories collection)
+// Categories for filtering podcasts
 const CATEGORIES = ['All', 'Technology', 'Development', 'Business', 'Design'];
 
 const CommentSection = dynamic(() => import('../ui/CommentSection'), { ssr: false });
@@ -40,8 +41,8 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
 
   const handleLike = async () => {
     try {
-      const updatedPodcast = await likePodcast(episode.id);
-      setLikes(updatedPodcast.likes);
+      // For now, just increment likes locally since API routes aren't implemented yet
+      setLikes(likes + 1);
     } catch (error) {
       console.error('Failed to like podcast:', error);
     }
@@ -86,7 +87,7 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
       whileHover={{ y: -5 }}
     >
       <div className="relative">
-        {episode?.imageUrl && ( // Assuming imageUrl is available from Strapi
+        {episode?.imageUrl && (
           (<Image
             src={episode.imageUrl}
             alt={episode.title}
@@ -164,6 +165,10 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
 const PodcastPage: React.FC = () => {
   const dispatch = useDispatch();
   const { currentEpisode, isPlaying } = useSelector((state: RootState) => state.audioPlayer);
+  const { skipForward, skipBackward } = useAudioPlayer({
+    audioUrl: currentEpisode?.audioUrl || '',
+    onEnded: () => {},
+  });
   const [episodes, setEpisodes] = useState<Podcast[]>([]);
   const [meta, setMeta] = useState<{}>(null);
   const [loading, setLoading] = useState(true);

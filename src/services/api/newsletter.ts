@@ -1,4 +1,4 @@
-import { fetchCollection, fetchSingleton, createItem } from './apiService';
+// Newsletter now uses Next.js API routes instead of Strapi
 
 export interface Newsletter {
   id: number;

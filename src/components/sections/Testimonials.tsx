@@ -8,7 +8,7 @@ import Button from "../ui/Button";
 
 import { fetchTestimonials, Testimonial } from "@/services/api/testimonial";
 
-// Mock data for client logos (can be fetched from Strapi if a 'ClientLogo' collection type exists)
+// Client logos data
 
 // Mock data for client logos
 const clientLogos = [
@@ -148,7 +148,7 @@ const Testimonials: React.FC = () => {
                           {testimonials[currentIndex].role}
                         </p>
                       )}
-                      {/* Assuming 'company' is not directly from Strapi testimonial, or needs to be added to schema */}
+                      {/* Company field can be added to testimonial data structure if needed */}
                       {/* <p className="text-purple-400">{testimonials[currentIndex].company}</p> */}
                       {testimonials[currentIndex].rating && (
                         <div className="flex justify-center mt-2">

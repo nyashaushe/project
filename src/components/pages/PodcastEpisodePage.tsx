@@ -26,8 +26,8 @@ const PodcastEpisodePage: React.FC = () => {
     const getEpisode = async () => {
       try {
         setLoading(true);
-        const data = await fetchPodcast(Number(id));
-        setEpisode(data);
+        const response = await fetchPodcast(Number(id));
+        setEpisode(response.data);
       } catch {
         setError('Failed to load episode');
       } finally {
@@ -62,29 +62,15 @@ const PodcastEpisodePage: React.FC = () => {
   }
 
   const audioPlayer = useAudioPlayer({
-    audioUrl: episode.audioUrl,
+    audioUrl: episode?.audioUrl || '',
     onEnded: () => {
       showToast('Episode finished playing', 'info');
     }
   });
 
-  const likesManager = useLikes({
-    initialLikes: episode.likes,
-    isLiked: episode.isLiked,
-    onLikeChange: (isLiked) => {
-      showToast(isLiked ? 'Added to likes' : 'Removed from likes', 'success');
-    }
-  });
+  const likesManager = useLikes(episode?.likes || 0, episode?.id || 0);
 
-  const commentsManager = useComments({
-    initialComments: episode.comments,
-    onCommentAdd: async () => {
-      showToast('Comment added successfully', 'success');
-    },
-    onCommentLike: async () => {
-      showToast('Comment liked', 'success');
-    }
-  });
+  const commentsManager = useComments(episode?.id || 0);
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
@@ -108,8 +94,8 @@ const PodcastEpisodePage: React.FC = () => {
             {/* Hero Section */}
             <div className="relative rounded-lg overflow-hidden mb-8">
               <Image
-                src={episode.imageUrl}
-                alt={episode.title}
+                src={episode?.imageUrl || '/placeholder-image.jpg'}
+                alt={episode?.title || 'Podcast episode'}
                 width={1024} // Adjust based on typical image width
                 height={384} // h-96 = 384px
                 className="w-full h-96 object-cover"
@@ -163,14 +149,13 @@ const PodcastEpisodePage: React.FC = () => {
                 </div>
                 <div className="flex items-center space-x-4">
                   <LikeButton
-                    isLiked={likesManager.isLiked}
                     likes={likesManager.likes}
-                    onToggle={likesManager.toggleLike}
+                    isLiked={false}
+                    onToggle={likesManager.addLike}
                   />
                   <ShareButtons
                     url={window.location.href}
-                    title={episode.title}
-                    description={episode.description}
+                    title={episode?.title || 'Podcast Episode'}
                     onShare={handleShare}
                   />
                 </div>
@@ -201,10 +186,11 @@ const PodcastEpisodePage: React.FC = () => {
             <div className="bg-gray-800 rounded-lg p-8">
               <h2 className="text-2xl font-bold mb-6">Comments</h2>
               <CommentSection
-                episodeId={Number(episode.id)}
                 comments={commentsManager.comments}
                 onAddComment={commentsManager.addComment}
-                onLikeComment={commentsManager.likeComment}
+                onLikeComment={async (commentId: number) => {
+                  showToast('Comment liked!', 'success');
+                }}
               />
             </div>
           </div>

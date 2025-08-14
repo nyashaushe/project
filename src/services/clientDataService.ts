@@ -7,7 +7,7 @@
  * Generic response format matching legacy API structure
  */
 export interface ApiResponse<T> {
-  data: T | T[];
+  data: T;
   meta?: {
     pagination?: {
       total: number;

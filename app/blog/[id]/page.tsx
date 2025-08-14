@@ -9,5 +9,5 @@ export default function DynamicBlogPost({ params }: { params: { id: string } }) 
     return <div>Loading...</div>;
   }
 
-  return <BlogPost id={Number(id)} />;
+  return <BlogPost />;
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { getStrapiContent } from '@/lib/strapiApi';
+import { fetchServices } from '@/services/api/services';
 
 const StarField = dynamic(() => import('../ui/StarField'), { ssr: false });
 const MotionSection = dynamic(() => import('framer-motion').then(mod => mod.motion.section), { ssr: false });
@@ -18,10 +18,10 @@ const ServicesPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const loadServices = async () => {
       try {
         setLoading(true);
-        const res = await getStrapiContent('services');
+        const res = await fetchServices();
         setServices(res.data || []);
       } catch {
         setError('Failed to load services.');
@@ -29,7 +29,7 @@ const ServicesPage: React.FC = () => {
         setLoading(false);
       }
     };
-    fetchServices();
+    loadServices();
   }, []);
 
   return (

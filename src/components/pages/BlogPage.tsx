@@ -117,9 +117,8 @@ const BlogPage: React.FC = () => {
                         ? post.content.slice(0, 120) + "..."
                         : "No summary available."}
                     </p>
-                    <Link href={`/blog/${post.id}`} passHref legacyBehavior>
+                    <Link href={`/blog/${post.id}`}>
                       <Button
-                        as="a"
                         variant="ghost"
                         className="group"
                         aria-label={`Read article: ${post.title || "Untitled"}`}
