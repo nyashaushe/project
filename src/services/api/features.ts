@@ -1,5 +1,3 @@
-import { getStaticData } from "../clientDataService";
-
 export interface Feature {
   id: number;
   title: string;
@@ -7,4 +5,19 @@ export interface Feature {
   icon?: string;
 }
 
-export const fetchFeatures = () => getStaticData<Feature>("features");
+export const fetchFeatures = async () => {
+  try {
+    const response = await fetch('/api/features');
+    if (!response.ok) {
+      throw new Error('Failed to fetch features');
+    }
+    const data = await response.json();
+    return { data, success: true };
+  } catch (error) {
+    return {
+      data: [],
+      success: false,
+      message: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+};

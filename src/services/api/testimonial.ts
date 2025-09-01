@@ -1,4 +1,14 @@
-import { getStaticData, ApiResponse, DataParams } from "../clientDataService";
+export interface ApiResponse<T> {
+  data: T;
+  success: boolean;
+  message?: string;
+}
+
+export interface DataParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
 
 export interface Testimonial {
   id: number;
@@ -14,7 +24,25 @@ export interface Testimonial {
 export async function fetchTestimonials(
   params?: DataParams
 ): Promise<ApiResponse<Testimonial[]>> {
-  return await getStaticData<Testimonial>("testimonials", params);
+  try {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.set('page', params.page.toString());
+    if (params?.limit) searchParams.set('limit', params.limit.toString());
+    if (params?.search) searchParams.set('search', params.search);
+
+    const response = await fetch(`/api/testimonials?${searchParams}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch testimonials');
+    }
+    const data = await response.json();
+    return { data, success: true };
+  } catch (error) {
+    return {
+      data: [],
+      success: false,
+      message: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
 }
 
 export async function submitTestimonial(): Promise<Testimonial> {

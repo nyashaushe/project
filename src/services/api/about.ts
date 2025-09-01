@@ -1,4 +1,8 @@
-import { getStaticData, ApiResponse } from "../clientDataService";
+export interface ApiResponse<T> {
+  data: T;
+  success: boolean;
+  message?: string;
+}
 
 export interface TeamMember {
   id: number;
@@ -12,7 +16,20 @@ export interface TeamMember {
 export const fetchTeamMembers = async (): Promise<
   ApiResponse<TeamMember[]>
 > => {
-  return await getStaticData<TeamMember>("team");
+  try {
+    const response = await fetch('/api/team');
+    if (!response.ok) {
+      throw new Error('Failed to fetch team members');
+    }
+    const data = await response.json();
+    return { data, success: true };
+  } catch (error) {
+    return {
+      data: [],
+      success: false,
+      message: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
 };
 
 export interface CompanyValue {
@@ -25,5 +42,7 @@ export interface CompanyValue {
 export const fetchCompanyValues = async (): Promise<
   ApiResponse<CompanyValue[]>
 > => {
-  return await getStaticData<CompanyValue>("values");
+  // Company values would need a dedicated API route if needed
+  // For now, return empty array
+  return { data: [], success: true };
 };
