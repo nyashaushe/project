@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Search, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Button from "../ui/Button";
-import { fetchBlogPosts, BlogPost } from "@/services/api/blog";
+import { BlogPost } from "@/services/api/blog";
 import Skeleton from "../ui/Skeleton";
 
 const categories = [
@@ -30,29 +30,21 @@ const Blog: React.FC = () => {
     const getBlogPosts = async () => {
       try {
         setLoading(true);
-        const params: any = {
-          pagination: { page, pageSize: 10 },
-          sort: "publishedAt:desc",
-        };
-        if (searchQuery) {
-          params.filters = {
-            $or: [
-              { title: { $containsi: searchQuery } },
-              { content: { $containsi: searchQuery } },
-            ],
-          };
+        const params = new URLSearchParams({
+          limit: '10',
+          offset: ((page - 1) * 10).toString(),
+        });
+
+        const response = await fetch(`/api/blog?${params}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch blog posts');
         }
-        if (selectedCategory !== "All") {
-          params.filters = {
-            ...params.filters,
-            categories: { $containsi: selectedCategory },
-          };
-        }
-        const response = await fetchBlogPosts(params);
+
+        const result = await response.json();
         setBlogPosts(
-          page === 1 ? response.data : [...blogPosts, ...response.data]
+          page === 1 ? result.data : [...blogPosts, ...result.data]
         );
-        setMeta(response.meta);
+        setMeta(result.meta);
       } catch (err) {
         setError("Failed to fetch blog posts.");
         console.error(err);

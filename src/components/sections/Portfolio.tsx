@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Github } from 'lucide-react';
 import Image from 'next/image';
 import Button from '../ui/Button';
-import { fetchPortfolioItems, PortfolioItem } from '@/services/api/portfolio';
+import { PortfolioItem } from '@/services/api/portfolio';
 
 const categories = ['All', 'Web', 'Mobile', 'AI', 'Cloud'];
 
@@ -19,9 +19,12 @@ const Portfolio: React.FC = () => {
     const getPortfolio = async () => {
       try {
         setLoading(true);
-        const data = await fetchPortfolioItems();
-        // Ensure data is an array before setting state
-        setPortfolio(Array.isArray(data) ? data : []);
+        const response = await fetch('/api/portfolio');
+        if (!response.ok) {
+          throw new Error('Failed to fetch portfolio items');
+        }
+        const result = await response.json();
+        setPortfolio(result.data || []);
       } catch {
         setError('Failed to load portfolio.');
       } finally {
@@ -71,11 +74,10 @@ const Portfolio: React.FC = () => {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
-                selectedCategory === category
-                  ? 'bg-indigo-500 text-white'
-                  : 'bg-white/5 text-gray-300 hover:bg-white/10'
-              }`}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${selectedCategory === category
+                ? 'bg-indigo-500 text-white'
+                : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                }`}
             >
               {category}
             </button>

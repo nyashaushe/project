@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { fetchContactInfo, ContactInfo } from '../../services/api/contact';
+import { ContactInfo } from '../../services/api/contact';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 
@@ -13,8 +13,12 @@ const ContactPage: React.FC = () => {
   useEffect(() => {
     const getContactInfo = async () => {
       try {
-        const response = await fetchContactInfo();
-        setContactInfo(response.data);
+        const response = await fetch('/api/contact-info');
+        if (!response.ok) {
+          throw new Error('Failed to fetch contact info');
+        }
+        const result = await response.json();
+        setContactInfo(result.data);
       } catch (error) {
         console.error('Failed to fetch contact info:', error);
       }

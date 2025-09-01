@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Button from "../ui/Button";
 import dynamic from "next/dynamic";
-import { fetchBlogPosts, BlogPost } from "@/services/api/blog";
+import { BlogPost } from "@/services/api/blog";
 import Link from "next/link";
 
 const Blog = dynamic(() => import("../sections/Blog"), { ssr: false });
@@ -19,9 +19,12 @@ const BlogPage: React.FC = () => {
     const getFeatured = async () => {
       try {
         setLoading(true);
-        const response = await fetchBlogPosts();
-        // Select first 2 as featured, or filter by a 'featured' flag if available
-        setFeaturedPosts(response.data.slice(0, 2));
+        const response = await fetch('/api/blog?limit=2');
+        if (!response.ok) {
+          throw new Error('Failed to fetch blog posts');
+        }
+        const result = await response.json();
+        setFeaturedPosts(result.data);
       } catch {
         setError("Failed to load featured articles.");
       } finally {

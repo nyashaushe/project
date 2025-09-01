@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Monitor, Zap, Bot, BarChart } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { fetchServices, Service } from '@/services/api/services';
+import { Service } from '@/services/api/services';
 
 const ICONS: Record<string, React.ElementType> = {
   Monitor,
@@ -21,9 +21,12 @@ const Services: React.FC = () => {
     const getServices = async () => {
       try {
         setLoading(true);
-        const data = await fetchServices();
-        // Ensure data is an array before setting state
-        setServices(Array.isArray(data) ? data : []);
+        const response = await fetch('/api/services');
+        if (!response.ok) {
+          throw new Error('Failed to fetch services');
+        }
+        const result = await response.json();
+        setServices(result.data || []);
       } catch {
         setError('Failed to load services.');
       } finally {
@@ -58,24 +61,24 @@ const Services: React.FC = () => {
 
   return (
     <section className="py-24 relative overflow-hidden">
-      <motion.div 
+      <motion.div
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
       >
-        <motion.div 
+        <motion.div
           className="text-center mb-16"
           variants={itemVariants}
         >
-          <motion.h2 
+          <motion.h2
             className="text-3xl font-bold text-white mb-4"
             whileHover={{ scale: 1.05, color: "#A78BFA" }}
           >
             Our Solutions
           </motion.h2>
-          <motion.p 
+          <motion.p
             className="text-gray-400 max-w-2xl mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -91,21 +94,21 @@ const Services: React.FC = () => {
               <motion.div
                 key={service.id}
                 variants={itemVariants}
-                whileHover={{ 
-                  y: -10, 
+                whileHover={{
+                  y: -10,
                   boxShadow: "0 10px 25px -5px rgba(167, 139, 250, 0.4)",
                   background: "linear-gradient(to bottom right, rgba(126, 34, 206, 0.3), rgba(79, 70, 229, 0.2))"
                 }}
                 className="card-gradient rounded-lg p-6 transition-all duration-300 backdrop-blur-sm border border-purple-500/10"
               >
-                <motion.div 
+                <motion.div
                   className="bg-white/10 rounded-lg p-3 w-fit mb-4"
                   variants={iconVariants}
                   whileHover="hover"
                 >
                   <Icon className="w-6 h-6 text-white" />
                 </motion.div>
-                <motion.h3 
+                <motion.h3
                   className="text-lg font-semibold text-white mb-2"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -113,7 +116,7 @@ const Services: React.FC = () => {
                 >
                   {service.title}
                 </motion.h3>
-                <motion.p 
+                <motion.p
                   className="text-gray-400 text-sm"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}

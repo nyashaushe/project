@@ -13,7 +13,7 @@ import { fetchComments, createComment, likeComment, Comment } from '../../servic
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useToast } from '../../contexts/ToastContext';
-import { fetchPodcasts, Podcast } from '@/services/api/podcast';
+import { Podcast } from '@/services/api/podcast';
 import Skeleton from '../ui/Skeleton';
 import { useAudioPlayer } from '../../hooks/useAudioPlayer';
 
@@ -196,11 +196,15 @@ const PodcastPage: React.FC = () => {
             category: { $eqi: selectedCategory },
           };
         }
-        const { data, meta } = await fetchPodcasts(params);
-        setEpisodes(page === 1 ? data : [...episodes, ...data]);
-        setMeta(meta);
-        if (page === 1 && data.length > 0) {
-          setCurrentEpisode(data[0]); // Set the first episode as featured by default
+        const response = await fetch(`/api/podcasts?limit=10&offset=${(page - 1) * 10}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch podcasts');
+        }
+        const result = await response.json();
+        setEpisodes(page === 1 ? result.data : [...episodes, ...result.data]);
+        setMeta(result.meta);
+        if (page === 1 && result.data.length > 0) {
+          setCurrentEpisode(result.data[0]); // Set the first episode as featured by default
         }
       } catch (err) {
         setError('Failed to load podcasts.');
