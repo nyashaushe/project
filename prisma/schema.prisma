@@ -1,0 +1,223 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Blog {
+  id            Int      @id @default(autoincrement())
+  title         String
+  content       String
+  author        String
+  categories    String[] // Array of categories
+  featuredImage String?
+  publishedAt   DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("blogs")
+}
+
+model Portfolio {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  image       String?
+  link        String?
+  category    String?
+  tags        String[] // Array of tags
+  github      String?
+  live        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("portfolio")
+}
+
+model Testimonial {
+  id          Int      @id @default(autoincrement())
+  content     String
+  author      String
+  role        String
+  company     String
+  image       String?
+  rating      Int      @default(5)
+  publishedAt DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+model Podcast {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  audioUrl    String?
+  videoUrl    String?
+  duration    String?
+  publishedAt DateTime
+  imageUrl    String?
+  category    String?
+  likes       Int      @default(0)
+  host        String?
+  guest       String?
+  type        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  comments    Comment[]
+
+  @@map("podcasts")
+}
+
+model Team {
+  id        Int      @id @default(autoincrement())
+  name      String
+  role      String
+  image     String?
+  bio       String?
+  social    Json? // Store social links as JSON
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("team")
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  icon        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("services")
+}
+
+model Feature {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  icon        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("features")
+}
+
+model Pricing {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       String
+  description String
+  features    String[] // Array of features
+  popular     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("pricing")
+}
+
+model TechStack {
+  id          Int      @id @default(autoincrement())
+  name        String
+  category    String?
+  icon        String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("tech_stack")
+}
+
+model Stats {
+  id        Int      @id @default(autoincrement())
+  label     String
+  value     String
+  icon      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("stats")
+}
+
+model Values {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  icon        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("values")
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  content     String
+  author      String
+  email       String?
+  podcastId   Int?
+  blogId      Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  podcast     Podcast? @relation(fields: [podcastId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+model Newsletter {
+  id          Int      @id @default(autoincrement())
+  title       String
+  content     String
+  publishedAt DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("newsletters")
+}
+
+model Subscriber {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  subscribedAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("subscribers")
+}
+
+model ContactInfo {
+  id        Int      @id @default(autoincrement())
+  email     String
+  phone     String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contact_info")
+}
+
+model ContactFormSubmission {
+  id                     Int      @id @default(autoincrement())
+  name                   String
+  email                  String
+  phone                  String?
+  company                String?
+  subject                String
+  message                String
+  subscribeToNewsletter  Boolean  @default(false)
+  agreeToPrivacyPolicy   Boolean  @default(true)
+  submittedAt            DateTime @default(now())
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@map("contact_form_submissions")
+}

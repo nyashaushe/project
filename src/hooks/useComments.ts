@@ -32,7 +32,7 @@ export function useComments(podcastId: number) {
   const addComment = async (content: string, author: string) => {
     setIsSubmitting(true);
     try {
-      const newComment = await createComment({ content, author, podcast: podcastId });
+      const newComment = await createComment({ content, author, podcastId });
       setComments((prev) => [...prev, newComment]);
     } catch {
       setError('Failed to add comment');

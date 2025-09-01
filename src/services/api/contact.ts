@@ -1,3 +1,5 @@
+import { prisma } from '../../lib/prisma';
+
 // Contact forms now use Next.js API routes instead of Strapi
 
 export interface ContactInfo {
@@ -20,21 +22,51 @@ export interface ContactFormSubmission {
 }
 
 export const fetchContactInfo = async (): Promise<{ data: ContactInfo }> => {
-  // For now, return mock contact info since API routes aren't implemented yet
-  return {
-    data: {
-      email: 'contact@example.com',
-      phone: '+1 (555) 123-4567',
-      address: '123 Main St, City, State 12345'
+  try {
+    const contactInfo = await prisma.contactInfo.findFirst({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (!contactInfo) {
+      throw new Error('Contact info not found');
     }
-  };
+
+    return {
+      data: {
+        email: contactInfo.email,
+        phone: contactInfo.phone || undefined,
+        address: contactInfo.address || undefined,
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching contact info:', error);
+    throw new Error('Failed to fetch contact info');
+  }
 };
 
 export const submitContactForm = async (data: Omit<ContactFormSubmission, 'id' | 'submittedAt'>): Promise<ContactFormSubmission> => {
-  // For now, return mock response since API routes aren't implemented yet
-  return {
-    id: Date.now(),
-    ...data,
-    submittedAt: new Date().toISOString(),
-  };
+  try {
+    const submission = await prisma.contactFormSubmission.create({
+      data: {
+        ...data,
+        submittedAt: new Date(),
+      },
+    });
+
+    return {
+      id: submission.id,
+      name: submission.name,
+      email: submission.email,
+      phone: submission.phone || undefined,
+      company: submission.company || undefined,
+      subject: submission.subject,
+      message: submission.message,
+      subscribeToNewsletter: submission.subscribeToNewsletter,
+      agreeToPrivacyPolicy: submission.agreeToPrivacyPolicy,
+      submittedAt: submission.submittedAt.toISOString(),
+    };
+  } catch (error) {
+    console.error('Error submitting contact form:', error);
+    throw new Error('Failed to submit contact form');
+  }
 };

@@ -60,7 +60,7 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
       const newComment = await createComment({
         content,
         author,
-        podcast: episode.id,
+        podcastId: episode.id,
       });
       setComments([...comments, newComment]);
     } catch (error) {

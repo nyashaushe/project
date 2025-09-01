@@ -1,3 +1,5 @@
+import { prisma } from '../../lib/prisma';
+
 // Newsletter now uses Next.js API routes instead of Strapi
 
 export interface Newsletter {
@@ -8,42 +10,62 @@ export interface Newsletter {
 }
 
 export const fetchNewsletters = async (params?: Record<string, any>): Promise<{ data: Newsletter[] }> => {
-  // Mock implementation - replace with actual API call when ready
-  return {
-    data: [
-      {
-        id: 1,
-        title: 'Welcome to Our Newsletter',
-        content: 'This is our first newsletter with exciting updates...',
-        publishedAt: new Date().toISOString(),
-      },
-      {
-        id: 2,
-        title: 'Monthly Tech Updates',
-        content: 'Here are the latest technology trends and updates...',
-        publishedAt: new Date().toISOString(),
-      }
-    ]
-  };
+  try {
+    const newsletters = await prisma.newsletter.findMany({
+      orderBy: { publishedAt: 'desc' },
+      take: params?.limit || 10,
+      skip: params?.offset || 0,
+    });
+
+    return {
+      data: newsletters.map(newsletter => ({
+        ...newsletter,
+        publishedAt: newsletter.publishedAt.toISOString(),
+      })),
+    };
+  } catch (error) {
+    console.error('Error fetching newsletters:', error);
+    throw new Error('Failed to fetch newsletters');
+  }
 };
 
 export const fetchNewsletter = async (id: number): Promise<{ data: Newsletter }> => {
-  // Mock implementation - replace with actual API call when ready
-  return {
-    data: {
-      id,
-      title: 'Sample Newsletter',
-      content: 'This is a sample newsletter content...',
-      publishedAt: new Date().toISOString(),
+  try {
+    const newsletter = await prisma.newsletter.findUnique({
+      where: { id },
+    });
+
+    if (!newsletter) {
+      throw new Error('Newsletter not found');
     }
-  };
+
+    return {
+      data: {
+        ...newsletter,
+        publishedAt: newsletter.publishedAt.toISOString(),
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching newsletter:', error);
+    throw new Error('Failed to fetch newsletter');
+  }
 };
 
 export const createNewsletter = async (newsletterData: Omit<Newsletter, 'id' | 'publishedAt'>): Promise<Newsletter> => {
-  // Mock implementation - replace with actual API call when ready
-  return {
-    id: Date.now(),
-    ...newsletterData,
-    publishedAt: new Date().toISOString(),
-  };
+  try {
+    const newsletter = await prisma.newsletter.create({
+      data: {
+        ...newsletterData,
+        publishedAt: new Date(),
+      },
+    });
+
+    return {
+      ...newsletter,
+      publishedAt: newsletter.publishedAt.toISOString(),
+    };
+  } catch (error) {
+    console.error('Error creating newsletter:', error);
+    throw new Error('Failed to create newsletter');
+  }
 };
