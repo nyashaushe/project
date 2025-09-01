@@ -19,7 +19,7 @@ const categories = [
 
 const Blog: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [meta, setMeta] = useState<{}>(null);
+  const [meta, setMeta] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,7 +30,7 @@ const Blog: React.FC = () => {
     const getBlogPosts = async () => {
       try {
         setLoading(true);
-        const params: object = {
+        const params: any = {
           pagination: { page, pageSize: 10 },
           sort: "publishedAt:desc",
         };
@@ -138,11 +138,10 @@ const Blog: React.FC = () => {
                     setSelectedCategory(category);
                     setPage(1);
                   }}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    selectedCategory === category
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-800 text-gray-400 hover:bg-gray-700"
-                  }`}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === category
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+                    }`}
                 >
                   {category}
                 </button>

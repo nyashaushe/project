@@ -76,7 +76,8 @@ const Stats: React.FC = () => {
       try {
         setLoading(true);
         const data = await fetchStats();
-        setStats(data);
+        // Ensure data is an array before setting state
+        setStats(Array.isArray(data) ? data : []);
       } catch {
         setError('Failed to load stats.');
       } finally {

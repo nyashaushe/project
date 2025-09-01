@@ -119,8 +119,7 @@ export async function getStaticData<T>(
     }
 
     throw new DataServiceError(
-      `Failed to load data for ${dataType}: ${
-        error instanceof Error ? error.message : "Unknown error"
+      `Failed to load data for ${dataType}: ${error instanceof Error ? error.message : "Unknown error"
       }`,
       "LOAD_ERROR"
     );
@@ -158,8 +157,7 @@ export async function getStaticItem<T extends { id: number }>(
     }
 
     throw new DataServiceError(
-      `Failed to load item ${id} from ${dataType}: ${
-        error instanceof Error ? error.message : "Unknown error"
+      `Failed to load item ${id} from ${dataType}: ${error instanceof Error ? error.message : "Unknown error"
       }`,
       "LOAD_ITEM_ERROR"
     );
@@ -200,7 +198,7 @@ function matchesFilter<T>(item: T, key: string, value: any): boolean {
   const itemValue = (item as any)[key];
 
   if (typeof value === "object" && value !== null) {
-  // Handle legacy-style filters like { $containsi: "search" }
+    // Handle legacy-style filters like { $containsi: "search" }
     if (value.$containsi) {
       return String(itemValue)
         .toLowerCase()
@@ -242,7 +240,7 @@ function applySorting<T>(data: T[], sortParam: string): T[] {
 
   return [...data].sort((a, b) => {
     const aValue = (a as any)[field];
-    const bValue = (b as unknown)[field];
+    const bValue = (b as any)[field];
 
     let comparison = 0;
 

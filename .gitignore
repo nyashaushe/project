@@ -34,3 +34,5 @@ out/
 # Next.js specific
 next-env.d.ts
 .next
+
+.vercel

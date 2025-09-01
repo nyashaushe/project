@@ -30,8 +30,8 @@ const About: React.FC = () => {
           fetchTeamMembers(),
           fetchCompanyValues(),
         ]);
-        setTeamMembers(team);
-        setValues(vals);
+        setTeamMembers(team.data || []);
+        setValues(vals.data || []);
       } catch {
         setError('Failed to load about data.');
       } finally {
@@ -80,7 +80,7 @@ const About: React.FC = () => {
           </div>
           <h3 className="text-2xl font-semibold text-white text-center mb-4">Our Mission</h3>
           <p className="text-gray-300 text-center max-w-3xl mx-auto">
-            To empower businesses with cutting-edge technology solutions that drive growth, 
+            To empower businesses with cutting-edge technology solutions that drive growth,
             enhance efficiency, and create lasting value in an ever-evolving digital landscape.
           </p>
         </motion.div>

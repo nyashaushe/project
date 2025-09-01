@@ -20,7 +20,8 @@ const Portfolio: React.FC = () => {
       try {
         setLoading(true);
         const data = await fetchPortfolioItems();
-        setPortfolio(data);
+        // Ensure data is an array before setting state
+        setPortfolio(Array.isArray(data) ? data : []);
       } catch {
         setError('Failed to load portfolio.');
       } finally {

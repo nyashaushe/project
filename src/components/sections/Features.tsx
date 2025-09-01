@@ -21,7 +21,8 @@ const Features: React.FC = () => {
       try {
         setLoading(true);
         const data = await fetchFeatures();
-        setFeatures(data);
+        // Ensure data is an array before setting state
+        setFeatures(Array.isArray(data) ? data : []);
       } catch {
         setError('Failed to load features.');
       } finally {

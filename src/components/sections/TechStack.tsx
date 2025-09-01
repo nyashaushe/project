@@ -29,7 +29,7 @@ const TechStack: React.FC = () => {
       try {
         setLoading(true);
         const data = await fetchTechStack();
-        setTechStack(data);
+        setTechStack(data.data || []);
       } catch {
         setError('Failed to load tech stack.');
       } finally {
@@ -54,8 +54,8 @@ const TechStack: React.FC = () => {
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } },
-    hover: { 
-      y: -10, 
+    hover: {
+      y: -10,
       scale: 1.1,
       transition: { type: "spring", stiffness: 300 }
     }
@@ -64,7 +64,7 @@ const TechStack: React.FC = () => {
   const iconVariants = {
     hidden: { rotate: -30, scale: 0 },
     visible: { rotate: 0, scale: 1, transition: { type: "spring", damping: 10 } },
-    hover: { 
+    hover: {
       rotate: [0, -10, 10, -5, 5, 0],
       scale: 1.2,
       transition: { duration: 0.5 }
@@ -79,24 +79,24 @@ const TechStack: React.FC = () => {
 
   return (
     <section className="py-24 relative overflow-hidden">
-      <motion.div 
+      <motion.div
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
       >
-        <motion.div 
+        <motion.div
           className="text-center mb-16"
           variants={containerVariants}
         >
-          <motion.h2 
+          <motion.h2
             className="text-3xl font-bold text-white mb-4"
             variants={itemVariants}
             whileHover={{ scale: 1.05, color: "#A78BFA" }}
           >
             Our Tech Stack
           </motion.h2>
-          <motion.p 
+          <motion.p
             className="text-gray-400 max-w-2xl mx-auto"
             variants={itemVariants}
           >
@@ -108,25 +108,25 @@ const TechStack: React.FC = () => {
         ) : error ? (
           <div className="text-center text-red-500 py-10">{error}</div>
         ) : (
-          <motion.div 
+          <motion.div
             className="flex flex-wrap justify-center gap-10"
             variants={containerVariants}
           >
             {techStack.map((tech, index) => (
-              <motion.div 
-                key={tech.id} 
+              <motion.div
+                key={tech.id}
                 className="flex flex-col items-center"
                 variants={itemVariants}
                 whileHover="hover"
                 custom={index}
               >
-                <motion.div 
+                <motion.div
                   className="mb-2 bg-white/5 p-4 rounded-full backdrop-blur-sm"
                   variants={iconVariants}
                 >
                   {iconMap[tech.name] || <SiReact className="w-8 h-8 text-cyan-400" />} {/* fallback icon */}
                 </motion.div>
-                <motion.span 
+                <motion.span
                   className="text-lg font-medium text-gray-400"
                   variants={textVariants}
                 >

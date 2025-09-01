@@ -107,9 +107,9 @@ const Testimonials: React.FC = () => {
                     <div className="relative">
                       {testimonials[currentIndex].image &&
                         typeof testimonials[currentIndex].image ===
-                          "object" && (
+                        "string" && (
                           <Image
-                            src={testimonials[currentIndex].image.url}
+                            src={testimonials[currentIndex].image}
                             alt={testimonials[currentIndex].author}
                             width={128}
                             height={128}
@@ -119,7 +119,7 @@ const Testimonials: React.FC = () => {
                       {/* Fallback for string image URL or if image is not an object */}
                       {testimonials[currentIndex].image &&
                         typeof testimonials[currentIndex].image ===
-                          "string" && (
+                        "string" && (
                           <Image
                             src={testimonials[currentIndex].image}
                             alt={testimonials[currentIndex].author}

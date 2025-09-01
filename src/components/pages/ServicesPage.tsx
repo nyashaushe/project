@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { fetchServices } from '@/services/api/services';
+import { motion } from 'framer-motion';
+import { fetchServices, Service } from '@/services/api/services';
 
 const StarField = dynamic(() => import('../ui/StarField'), { ssr: false });
-const MotionSection = dynamic(() => import('framer-motion').then(mod => mod.motion.section), { ssr: false });
-
-interface Service {
-  id: number;
-  name: string;
-  description: string;
-  icon?: string;
-}
 
 const ServicesPage: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
@@ -38,7 +31,7 @@ const ServicesPage: React.FC = () => {
         <section className="relative py-32 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent" />
           <div className="container mx-auto px-4 relative z-10">
-            <MotionSection
+            <motion.section
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
@@ -50,7 +43,7 @@ const ServicesPage: React.FC = () => {
               <p className="text-xl text-gray-300 mb-8">
                 Discover how we can help transform your business with our comprehensive range of services.
               </p>
-            </MotionSection>
+            </motion.section>
           </div>
         </section>
 
@@ -75,7 +68,7 @@ const ServicesPage: React.FC = () => {
                         <span>{service.icon}</span>
                       </div>
                     )}
-                    <h2 className="text-2xl font-bold text-white mb-4">{service.name}</h2>
+                    <h2 className="text-2xl font-bold text-white mb-4">{service.title}</h2>
                     <p className="text-gray-300">{service.description}</p>
                   </motion.div>
                 ))}

@@ -19,6 +19,22 @@ export interface ContactFormSubmission {
   submittedAt?: string;
 }
 
-export const fetchContactInfo = () => fetchSingleton<ContactInfo>('contact-info');
-export const submitContactForm = (data: Omit<ContactFormSubmission, 'id' | 'submittedAt'>) =>
-  createItem<ContactFormSubmission>('contact-forms', data);
+export const fetchContactInfo = async (): Promise<{ data: ContactInfo }> => {
+  // For now, return mock contact info since API routes aren't implemented yet
+  return {
+    data: {
+      email: 'contact@example.com',
+      phone: '+1 (555) 123-4567',
+      address: '123 Main St, City, State 12345'
+    }
+  };
+};
+
+export const submitContactForm = async (data: Omit<ContactFormSubmission, 'id' | 'submittedAt'>): Promise<ContactFormSubmission> => {
+  // For now, return mock response since API routes aren't implemented yet
+  return {
+    id: Date.now(),
+    ...data,
+    submittedAt: new Date().toISOString(),
+  };
+};

@@ -33,26 +33,33 @@ interface PodcastEpisodeProps {
 
 const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlaying, isActive }) => {
   const [likes, setLikes] = useState(episode.likes || 0);
+  const [isLiked, setIsLiked] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
 
   useEffect(() => {
-    fetchComments(episode.id).then(setComments);
+    fetchComments(episode.id).then(result => setComments(result.data));
   }, [episode.id]);
 
   const handleLike = async () => {
     try {
-      // For now, just increment likes locally since API routes aren't implemented yet
-      setLikes(likes + 1);
+      // Toggle the liked state and update likes count
+      if (isLiked) {
+        setLikes(likes - 1);
+        setIsLiked(false);
+      } else {
+        setLikes(likes + 1);
+        setIsLiked(true);
+      }
     } catch (error) {
       console.error('Failed to like podcast:', error);
     }
   };
 
-  const handleAddComment = async (content: string) => {
+  const handleAddComment = async (content: string, author: string) => {
     try {
       const newComment = await createComment({
         content,
-        author: 'Anonymous', // Or replace with actual user data
+        author,
         podcast: episode.id,
       });
       setComments([...comments, newComment]);
@@ -105,7 +112,7 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
       </div>
       <div className="p-4">
         <p className="text-gray-300 text-sm mb-4">{episode?.description}</p>
-        
+
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
@@ -119,17 +126,17 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
               )}
               <span>{isPlaying && isActive ? 'Pause' : 'Play'}</span>
             </button>
-            
+
             <LikeButton
               likes={likes}
+              isLiked={isLiked}
               onToggle={handleLike}
             />
           </div>
-          
+
           <ShareButtons
             url={`/podcast/${episode?.id}`}
             title={episode?.title}
-            description={episode?.description}
             onShare={handleShare}
           />
         </div>
@@ -141,7 +148,6 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
           <h4 className="text-white font-medium">Comments</h4>
         </div>
         <CommentSection
-          episodeId={episode.id}
           comments={comments}
           onAddComment={handleAddComment}
           onLikeComment={handleLikeComment}
@@ -151,7 +157,7 @@ const PodcastEpisode: React.FC<PodcastEpisodeProps> = ({ episode, onPlay, isPlay
         <Link
           href={`/podcast/${episode?.id}`}
           className="inline-flex items-center text-blue-500 hover:text-blue-400 transition-colors"
-          >
+        >
           <span>View full episode</span>
           <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -167,10 +173,10 @@ const PodcastPage: React.FC = () => {
   const { currentEpisode, isPlaying } = useSelector((state: RootState) => state.audioPlayer);
   const { skipForward, skipBackward } = useAudioPlayer({
     audioUrl: currentEpisode?.audioUrl || '',
-    onEnded: () => {},
+    onEnded: () => { },
   });
   const [episodes, setEpisodes] = useState<Podcast[]>([]);
-  const [meta, setMeta] = useState<{}>(null);
+  const [meta, setMeta] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -180,7 +186,7 @@ const PodcastPage: React.FC = () => {
     const getPodcastsData = async () => {
       try {
         setLoading(true);
-        const params: {} = {
+        const params: any = {
           pagination: { page, pageSize: 10 },
           sort: 'publishedAt:desc',
         };
@@ -308,7 +314,7 @@ const PodcastPage: React.FC = () => {
                   </div>
                   <div className="flex items-center gap-4">
                     <button
-                      onClick={togglePlayPause}
+                      onClick={() => dispatch(togglePlayPause())}
                       className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
                       title="Play or pause episode"
                     >
@@ -365,11 +371,10 @@ const PodcastPage: React.FC = () => {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  selectedCategory === category
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === category
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  }`}
               >
                 {category}
               </button>

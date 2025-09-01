@@ -6,6 +6,10 @@ export interface PortfolioItem {
   description: string;
   image?: string;
   link?: string;
+  category?: string;
+  tags?: string[];
+  github?: string;
+  live?: string;
 }
 
 export const fetchPortfolioItems = () =>

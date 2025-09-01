@@ -15,7 +15,7 @@ const Pricing: React.FC = () => {
       try {
         setLoading(true);
         const data = await fetchPricingPlans();
-        setPlans(data);
+        setPlans(data.data || []);
       } catch {
         setError('Failed to load pricing plans.');
       } finally {
@@ -37,15 +37,13 @@ const Pricing: React.FC = () => {
             <span className={`text-sm ${!isYearly ? 'text-white' : 'text-gray-400'}`}>Monthly</span>
             <button
               onClick={() => setIsYearly(!isYearly)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                isYearly ? 'bg-primary' : 'bg-gray-600'
-              }`}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isYearly ? 'bg-primary' : 'bg-gray-600'
+                }`}
               aria-label="Toggle yearly pricing"
             >
               <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  isYearly ? 'translate-x-6' : 'translate-x-1'
-                }`}
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isYearly ? 'translate-x-6' : 'translate-x-1'
+                  }`}
               />
             </button>
             <span className={`text-sm ${isYearly ? 'text-white' : 'text-gray-400'}`}>
@@ -65,9 +63,8 @@ const Pricing: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`pricing-card rounded-lg p-8 relative ${
-                  plan.popular ? 'border-2 border-primary' : ''
-                }`}
+                className={`pricing-card rounded-lg p-8 relative ${plan.popular ? 'border-2 border-primary' : ''
+                  }`}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-1 rounded-full text-sm font-medium">

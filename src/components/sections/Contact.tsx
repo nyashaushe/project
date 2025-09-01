@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, Linkedin, Twitter, Github } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Linkedin, Twitter, Github, Globe } from 'lucide-react';
 import Button from '../ui/Button';
 
 interface ContactFormData {
@@ -24,7 +24,7 @@ const Contact: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       // TODO: Replace with actual API call
       await new Promise(resolve => setTimeout(resolve, 1000));

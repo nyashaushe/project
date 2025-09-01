@@ -22,7 +22,8 @@ const Services: React.FC = () => {
       try {
         setLoading(true);
         const data = await fetchServices();
-        setServices(data);
+        // Ensure data is an array before setting state
+        setServices(Array.isArray(data) ? data : []);
       } catch {
         setError('Failed to load services.');
       } finally {

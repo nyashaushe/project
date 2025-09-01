@@ -19,8 +19,8 @@ export function useComments(podcastId: number) {
   useEffect(() => {
     setLoading(true);
     fetchComments(podcastId)
-      .then((result) => {
-        setComments(result.data);
+      .then((result: any) => {
+        setComments(result.data || []);
         setLoading(false);
       })
       .catch(() => {

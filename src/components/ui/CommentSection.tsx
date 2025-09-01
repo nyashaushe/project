@@ -2,11 +2,18 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Send } from 'lucide-react';
 import Image from 'next/image'; // Import Next.js Image component
-import type { PodcastComment } from '../../hooks/useComments';
 import { useToast } from '../../contexts/ToastContext';
 
+interface Comment {
+  id: number;
+  content: string;
+  author: string;
+  podcast: number;
+  likes: number;
+}
+
 interface CommentSectionProps {
-  comments: PodcastComment[];
+  comments: Comment[];
   onAddComment: (content: string, author: string) => Promise<void>;
   onLikeComment: (commentId: number) => Promise<void>;
 }
@@ -80,39 +87,25 @@ const CommentSection: React.FC<CommentSectionProps> = ({
             className="bg-gray-800/50 rounded-lg p-4"
           >
             <div className="flex items-start gap-3">
-              {comment.user.avatar ? (
-                <Image
-                  src={comment.user.avatar}
-                  alt={comment.user.name}
-                  width={32} // Specify width
-                  height={32} // Specify height
-                  className="w-8 h-8 rounded-full"
-                />
-              ) : (
-                <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white">
-                  {comment.user.name[0]}
-                </div>
-              )}
+              <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white">
+                {comment.author[0]}
+              </div>
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <h5 className="text-white font-medium">{comment.user.name}</h5>
-                  <span className="text-gray-400 text-sm">{comment.date}</span>
+                  <h5 className="text-white font-medium">{comment.author}</h5>
+                  <span className="text-gray-400 text-sm">Just now</span>
                 </div>
                 <p className="text-gray-300 mt-1">{comment.content}</p>
                 <div className="flex items-center gap-4 mt-2">
                   <motion.button
                     onClick={() => onLikeComment(comment.id)}
-                    className={`flex items-center gap-1 text-sm ${
-                      comment.isLiked ? 'text-purple-400' : 'text-gray-400'
-                    } hover:text-purple-400 transition-colors`}
+                    className="flex items-center gap-1 text-sm text-gray-400 hover:text-purple-400 transition-colors"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    aria-label={`Like comment by ${comment.user.name}`}
+                    aria-label={`Like comment by ${comment.author}`}
                   >
                     <Heart
-                      className={`w-4 h-4 ${
-                        comment.isLiked ? 'fill-purple-400' : ''
-                      }`}
+                      className="w-4 h-4"
                       aria-hidden="true"
                     />
                     <span>{comment.likes}</span>

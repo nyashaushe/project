@@ -6,5 +6,29 @@ export interface Subscriber {
   subscribedAt: string;
 }
 
-export const fetchSubscribers = (params?: Record<string, {}>) => fetchCollection<Subscriber>('subscribers', params);
-export const subscribe = (email: string) => createItem<Subscriber>('subscribers', { email });
+export const fetchSubscribers = async (params?: Record<string, any>): Promise<{ data: Subscriber[] }> => {
+  // Mock implementation - replace with actual API call when ready
+  return {
+    data: [
+      {
+        id: 1,
+        email: 'user1@example.com',
+        subscribedAt: new Date().toISOString(),
+      },
+      {
+        id: 2,
+        email: 'user2@example.com',
+        subscribedAt: new Date().toISOString(),
+      }
+    ]
+  };
+};
+
+export const subscribe = async (email: string): Promise<Subscriber> => {
+  // Mock implementation - replace with actual API call when ready
+  return {
+    id: Date.now(),
+    email,
+    subscribedAt: new Date().toISOString(),
+  };
+};
