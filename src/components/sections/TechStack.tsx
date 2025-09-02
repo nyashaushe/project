@@ -28,8 +28,8 @@ const TechStack: React.FC = () => {
     const getTechStack = async () => {
       try {
         setLoading(true);
-        const data = await fetchTechStack();
-        setTechStack(data.data || []);
+        const response = await fetchTechStack();
+        setTechStack(response.data || []);
       } catch {
         setError('Failed to load tech stack.');
       } finally {

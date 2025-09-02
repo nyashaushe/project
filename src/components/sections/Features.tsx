@@ -20,9 +20,9 @@ const Features: React.FC = () => {
     const getFeatures = async () => {
       try {
         setLoading(true);
-        const data = await fetchFeatures();
+        const response = await fetchFeatures();
         // Ensure data is an array before setting state
-        setFeatures(Array.isArray(data) ? data : []);
+        setFeatures(Array.isArray(response.data) ? response.data : []);
       } catch {
         setError('Failed to load features.');
       } finally {
