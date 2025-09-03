@@ -16,22 +16,28 @@ const Portfolio: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const getPortfolio = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/portfolio');
-        if (!response.ok) {
-          throw new Error('Failed to fetch portfolio items');
-        }
-        const result = await response.json();
-        setPortfolio(result.data || []);
-      } catch {
-        setError('Failed to load portfolio.');
-      } finally {
-        setLoading(false);
+    // Use only the two specified projects
+    const projectData = [
+      {
+        id: 1,
+        title: "Ruscle Investments",
+        description: "Financial services website",
+        category: "Web",
+        tags: ["React", "NextJS", "Tailwind"],
+        live: "https://ruscleinvestments.co.zw"
+      },
+      {
+        id: 2,
+        title: "ColorTech",
+        description: "Technology solutions provider",
+        category: "Web",
+        tags: ["React", "NextJS", "Tailwind"],
+        live: "https://colortech.co.zw"
       }
-    };
-    getPortfolio();
+    ];
+    
+    setPortfolio(projectData);
+    setLoading(false);
   }, []);
 
   const filteredProjects = selectedCategory === 'All'
@@ -96,13 +102,11 @@ const Portfolio: React.FC = () => {
               >
                 <div className="relative h-64 overflow-hidden rounded-2xl">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <Image
-                    src="/portfolio/iot-platform.jpg"
-                    alt={project.title}
-                    layout="fill"
-                    objectFit="cover"
-                    className="transition-transform duration-300 group-hover:scale-110"
-                  />
+                  <div 
+                    className="w-full h-full bg-blue-900 flex items-center justify-center"
+                  >
+                    <span className="text-white text-lg font-medium">{project.title}</span>
+                  </div>
                   <div className="absolute inset-0 flex items-end p-6">
                     <div>
                       <h3 className="text-xl font-semibold text-white">{project.title}</h3>
