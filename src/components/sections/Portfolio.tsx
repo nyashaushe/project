@@ -101,19 +101,20 @@ const Portfolio: React.FC = () => {
                 className="group relative"
               >
                 <div className="relative h-64 overflow-hidden rounded-2xl">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div 
-                    className="w-full h-full bg-blue-900 flex items-center justify-center"
-                  >
-                    <span className="text-white text-lg font-medium">{project.title}</span>
-                  </div>
-                  <div className="absolute inset-0 flex items-end p-6">
-                    <div>
-                      <h3 className="text-xl font-semibold text-white">{project.title}</h3>
-                      <p className="mt-2 text-sm text-gray-200">{project.description}</p>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                    <iframe 
+                      src={project.live}
+                      title={project.title}
+                      className="w-full h-full border-0 transform scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 flex items-end p-6 z-20">
+                      <div>
+                        <h3 className="text-xl font-semibold text-white">{project.title}</h3>
+                        <p className="mt-2 text-sm text-gray-200">{project.description}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {project.tags && project.tags.map((tag: string) => (
                     <span
