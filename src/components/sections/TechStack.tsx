@@ -29,7 +29,8 @@ const TechStack: React.FC = () => {
       try {
         setLoading(true);
         const response = await fetchTechStack();
-        setTechStack(response.data || []);
+        // Ensure data is an array before setting state
+        setTechStack(Array.isArray(response.data) ? response.data : []);
       } catch {
         setError('Failed to load tech stack.');
       } finally {

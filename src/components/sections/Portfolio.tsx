@@ -97,7 +97,7 @@ const Portfolio: React.FC = () => {
                 <div className="relative h-64 overflow-hidden rounded-2xl">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <Image
-                    src={project.image || '/portfolio/default.jpg'}
+                    src="/portfolio/iot-platform.jpg"
                     alt={project.title}
                     layout="fill"
                     objectFit="cover"

@@ -15,7 +15,8 @@ const Pricing: React.FC = () => {
       try {
         setLoading(true);
         const response = await fetchPricingPlans();
-        setPlans(response.data || []);
+        // Ensure data is an array before setting state
+        setPlans(Array.isArray(response.data) ? response.data : []);
       } catch {
         setError('Failed to load pricing plans.');
       } finally {
